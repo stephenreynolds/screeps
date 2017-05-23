@@ -16,6 +16,9 @@
       "check-format",
       "allow-pascal-case",
       "allow-leading-underscore"
+    ],
+    "one-line": [
+      false
     ]
   }
 }

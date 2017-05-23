@@ -8,7 +8,7 @@ import * as Config from "../../config/config";
  * @param {(Structure | RoomPosition)} target
  * @returns {number}
  */
-export function moveTo(creep: Creep, target: Structure | RoomPosition): number {
+export function moveTo(creep: Creep, target: RoomPosition): number {
   let result: number = 0;
 
   // Execute moves by cached paths at first
@@ -67,7 +67,8 @@ export function getEnergy(creep: Creep, roomObject: RoomObject): void {
   if (energy) {
     if (creep.pos.isNearTo(energy)) {
       creep.pickup(energy);
-    } else {
+    }
+    else {
       moveTo(creep, energy.pos);
     }
   }
@@ -87,10 +88,20 @@ export function canWork(creep: Creep): boolean {
   if (working && _.sum(creep.carry) === 0) {
     creep.memory.working = false;
     return false;
-  } else if (!working && _.sum(creep.carry) === creep.carryCapacity) {
+  }
+  else if (!working && _.sum(creep.carry) === creep.carryCapacity) {
     creep.memory.working = true;
     return true;
-  } else {
+  }
+  else {
     return creep.memory.working;
+  }
+}
+
+export function harvest(creep: Creep) {
+  const source = Game.getObjectById(creep.memory.sourceId) as Source;
+
+  if (creep.harvest(source) === ERR_NOT_IN_RANGE) {
+    moveTo(creep, source.pos);
   }
 }

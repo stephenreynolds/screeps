@@ -12,22 +12,17 @@ export function run(creep: Creep): void {
     creepActions.moveToRenew(creep, creep.room.find<Spawn>(FIND_MY_SPAWNS)[0]);
   }
   else if (creep.memory.working) {
-    transfer(creep);
+    upgrade(creep);
   }
   else if (!creep.memory.working) {
     creepActions.harvest(creep);
   }
 }
 
-function transfer(creep: Creep) {
-  const structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
-    filter: (s: Structure) => {
-      return s.structureType === STRUCTURE_SPAWN ||
-             s.structureType === STRUCTURE_EXTENSION;
-    }
-  }) as Structure;
+function upgrade(creep: Creep) {
+  const controller = creep.room.controller as Controller;
 
-  if (creep.transfer(structure, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-    creepActions.moveTo(creep, structure.pos);
+  if (creep.upgradeController(controller) === ERR_NOT_IN_RANGE) {
+    creepActions.moveTo(creep, controller.pos);
   }
 }

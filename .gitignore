@@ -2,7 +2,6 @@
 /yarn.lock
 
 # Ignore basic folders
-/dist
 /node_modules
 
 # Screeps config file

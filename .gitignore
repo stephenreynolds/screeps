@@ -3,6 +3,7 @@
 
 # Ignore basic folders
 /node_modules
+/dist
 
 # Screeps config file
 /config.json

@@ -8,13 +8,8 @@ import * as Config from "../../config/config";
  * @param {(Structure | RoomPosition)} target
  * @returns {number}
  */
-export function moveTo(creep: Creep, target: RoomPosition): number {
-  let result: number = 0;
-
-  // Execute moves by cached paths at first
-  result = creep.moveTo(target);
-
-  return result;
+export function moveTo(creep: Creep, target: RoomPosition) {
+  creep.memory.moveTarget = target;
 }
 
 /**

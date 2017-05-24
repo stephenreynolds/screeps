@@ -9,7 +9,9 @@
     "noUnusedParameters": true,
     "noUnusedLocals": true,
     "sourceMap": true,
-    "baseUrl": "./src/"
+    "baseUrl": "./src/",
+    "allowJs": true,
+    "forceConsistentCasingInFileNames": true
   },
   "compileOnSave": false,
   "include": [

@@ -1,10 +1,11 @@
 /**
- * Role: Repairer
- * Description: repairs structures, or builds structures, or upgrades controller.
+ * Role: Rampart Repairer
+ * Description: repairs ramparts, or repairs walls, or repairs other.
+ *   or builds structures, or upgrades controller.
  */
 
 import * as creepActions from "../creepActions";
-import * as roleBuilder from "./builder";
+import * as roleWallRepairer from "./wallRepairer";
 
 export function run(creep: Creep): void {
   if (creep.memory.working && _.sum(creep.carry) === 0) {
@@ -23,18 +24,18 @@ export function run(creep: Creep): void {
 }
 
 function repair(creep: Creep) {
-  const structure = creep.room.find<Structure>(FIND_STRUCTURES, {
+  const rampart = creep.room.find<Structure>(FIND_STRUCTURES, {
       filter: (s: Structure) => {
-        return s.hits < s.hitsMax && s.structureType !== STRUCTURE_WALL;
+        return s.hits < s.hitsMax && s.structureType === STRUCTURE_RAMPART;
       }
     })[0];
 
-  if (structure !== undefined) {
-    if (creep.repair(structure) === ERR_NOT_IN_RANGE) {
-      creepActions.moveTo(creep, structure.pos);
+  if (rampart !== undefined) {
+    if (creep.repair(rampart) === ERR_NOT_IN_RANGE) {
+      creepActions.moveTo(creep, rampart.pos);
     }
   }
   else {
-    roleBuilder.run(creep);
+    roleWallRepairer.run(creep);
   }
 }

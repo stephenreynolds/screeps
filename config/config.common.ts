@@ -135,7 +135,7 @@ export function init(options: EnvOptions): Config {
     .use("tslint")
       .loader("tslint-loader")
       .options({
-        // automaticall fix linting errors
+        // automatically fix linting errors
         fix: false,
         // you can search NPM and install custom formatters
         formatter: "stylish",

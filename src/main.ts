@@ -1,8 +1,7 @@
 import * as CreepManager from "./components/creeps/creepManager";
+import * as DefenseManager from "./components/defenseManager";
 import * as Config from "./config/config";
-
 import * as Profiler from "screeps-profiler";
-import { log } from "./lib/logger/log";
 
 // Any code written outside the `loop()` method is executed only when the
 // Screeps system reloads your script.
@@ -18,9 +17,7 @@ if (Config.USE_PROFILER) {
   Profiler.enable();
 }
 
-log.info(`loading revision: ${__REVISION__}`);
-
-function mloop() {
+function mainLoop() {
   // Check memory for null or out of bounds custom objects
   if (!Memory.uuid || Memory.uuid > 100) {
     Memory.uuid = 0;
@@ -30,18 +27,7 @@ function mloop() {
     const room: Room = Game.rooms[i];
 
     CreepManager.run(room);
-
-    // Clears any non-existing creep memory.
-    for (const name in Memory.creeps) {
-      const creep: any = Memory.creeps[name];
-
-      if (creep.room === room.name) {
-        if (!Game.creeps[name]) {
-          log.info("Clearing non-existing creep memory:", name);
-          delete Memory.creeps[name];
-        }
-      }
-    }
+    DefenseManager.run(room);
   }
 }
 
@@ -53,4 +39,4 @@ function mloop() {
  *
  * @export
  */
-export const loop = !Config.USE_PROFILER ? mloop : Profiler.wrap(mloop);
+export const loop = !Config.USE_PROFILER ? mainLoop : Profiler.wrap(mainLoop);

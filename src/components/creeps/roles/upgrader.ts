@@ -1,3 +1,8 @@
+/**
+ * Role: Upgrader
+ * Description: upgrades controller.
+ */
+
 import * as creepActions from "../creepActions";
 
 export function run(creep: Creep): void {
@@ -8,10 +13,7 @@ export function run(creep: Creep): void {
     creep.memory.working = true;
   }
 
-  if (creepActions.needsRenew(creep)) {
-    creepActions.moveToRenew(creep, creep.room.find<Spawn>(FIND_MY_SPAWNS)[0]);
-  }
-  else if (creep.memory.working) {
+  if (creep.memory.working) {
     upgrade(creep);
   }
   else if (!creep.memory.working) {

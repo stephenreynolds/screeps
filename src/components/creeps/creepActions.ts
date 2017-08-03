@@ -10,6 +10,7 @@ import * as Config from "../../config/config";
  */
 export function moveTo(creep: Creep, target: RoomPosition) {
   creep.memory.moveTarget = target;
+  creep.moveTo(creep.memory.moveTarget);
 }
 
 /**
@@ -94,9 +95,35 @@ export function canWork(creep: Creep): boolean {
 }
 
 export function harvest(creep: Creep) {
-  const source = Game.getObjectById(creep.memory.sourceId) as Source;
+  const storage = _.sample(creep.room.find<StructureStorage>(FIND_STRUCTURES, {
+    filter: (s: Storage) => {
+      return s.structureType === STRUCTURE_STORAGE && s.store[RESOURCE_ENERGY]! > 0;
+    }
+  }));
 
-  if (creep.harvest(source) === ERR_NOT_IN_RANGE) {
-    moveTo(creep, source.pos);
+  if (storage !== undefined) {
+    if (creep.withdraw(storage, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+      moveTo(creep, storage.pos);
+    }
+  }
+  else {
+    const container = _.sample(creep.room.find<Structure>(FIND_STRUCTURES, {
+      filter: (s: Structure) => {
+        return s.structureType === STRUCTURE_CONTAINER;
+      }
+    }));
+
+    if (container !== undefined) {
+      if (creep.withdraw(container, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+        moveTo(creep, container.pos);
+      }
+    }
+    else {
+      const source = creep.pos.findClosestByPath<Source>(FIND_SOURCES_ACTIVE);
+
+      if (creep.harvest(source) === ERR_NOT_IN_RANGE) {
+        moveTo(creep, source.pos);
+      }
+    }
   }
 }

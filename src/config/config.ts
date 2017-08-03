@@ -9,7 +9,7 @@ export const ENABLE_DEBUG_MODE: boolean = true;
 /**
  * Enable this to enable screeps profiler
  */
-export const USE_PROFILER: boolean = true;
+export const USE_PROFILER: boolean = false;
 
 /**
  * Minimum number of ticksToLive for a Creep before they go to renew.
@@ -30,7 +30,7 @@ export const LOG_PRINT_TICK: boolean = true;
 /**
  * Prepend log output with source line.
  */
-export const LOG_PRINT_LINES: boolean = true;
+export const LOG_PRINT_LINES: boolean = false;
 
 /**
  * Load source maps and resolve source lines back to typeascript.

@@ -4,15 +4,26 @@
  */
 
 import * as creepActions from "../creepActions";
-import * as roleHarvester from "./harvester";
+import * as roleUpgrader from "./upgrader";
 
 export function run(creep: Creep) {
-  const controller = Game.rooms[creep.memory.targetRoom].controller as StructureController;
+  const targetFlag = Game.flags[creep.memory.targetFlag + "-UF"] as Flag;
+  const controller = creep.room.controller as StructureController;
 
-  if (controller.my) {
-    roleHarvester.run(creep);
+  if (creep.room !== targetFlag.room) {
+    creepActions.moveTo(creep, targetFlag.pos);
   }
-  else if (creep.claimController(controller) === ERR_NOT_IN_RANGE) {
-    creepActions.moveTo(creep, controller.pos);
+  else if (controller.my) {
+    roleUpgrader.run(creep);
+  }
+  else {
+    switch (creep.claimController(controller)) {
+      case ERR_NOT_IN_RANGE:
+        creepActions.moveTo(creep, controller.pos);
+        break;
+      case ERR_GCL_NOT_ENOUGH:
+        creep.reserveController(controller);
+        break;
+    }
   }
 }

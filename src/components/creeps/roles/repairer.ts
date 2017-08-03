@@ -25,7 +25,8 @@ export function run(creep: Creep): void {
 function repair(creep: Creep) {
   const structure = creep.room.find<Structure>(FIND_STRUCTURES, {
       filter: (s: Structure) => {
-        return s.hits < s.hitsMax && s.structureType !== STRUCTURE_WALL;
+        return  s.structureType !== STRUCTURE_WALL
+          && s.structureType !== STRUCTURE_RAMPART && s.hits < s.hitsMax;
       }
     })[0];
 

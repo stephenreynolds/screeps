@@ -14,7 +14,14 @@ export function run(creep: Creep): void {
   }
 
   if (creep.memory.working) {
-    upgrade(creep);
+    const flag = Game.flags[creep.room.name + "-UF"] as Flag;
+
+    if (creep.pos.inRangeTo(flag, 2)) {
+      upgrade(creep);
+    }
+    else {
+      creepActions.moveTo(creep, flag.pos);
+    }
   }
   else if (!creep.memory.working) {
     creepActions.harvest(creep);

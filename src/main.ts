@@ -1,6 +1,8 @@
 import * as CreepManager from "./components/creeps/creepManager";
 import * as DefenseManager from "./components/defenseManager";
+
 import * as Config from "./config/config";
+
 import * as Profiler from "screeps-profiler";
 
 // Any code written outside the `loop()` method is executed only when the
@@ -26,8 +28,8 @@ function mainLoop() {
   for (const i in Game.rooms) {
     const room: Room = Game.rooms[i];
 
-    CreepManager.run(room);
     DefenseManager.run(room);
+    CreepManager.run(room);
   }
 }
 

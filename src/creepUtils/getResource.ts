@@ -88,7 +88,7 @@ export function getResourceFromStorage(creep: Creep, resource: string) {
  *
  * @export
  * @param {Creep} creep
- * @returns ERR_NOT_FOUND if no container exists.
+ * @returns ERR_NOT_FOUND if no container exists. ERR_NOT_ENOUGH_RESOURCES if container found but none have resource.
  */
 export function getResourceFromContainer(creep: Creep, resource: string) {
   if (creep.memory.targetSource === undefined) {
@@ -97,7 +97,12 @@ export function getResourceFromContainer(creep: Creep, resource: string) {
         return hasResource(c, RESOURCE_ENERGY);
       });
 
-      creep.memory.targetSource = _.sample(containers).id;
+      if (containers[0] !== undefined) {
+        creep.memory.targetSource = _.sample(containers).id;
+      }
+      else {
+        return ERR_NOT_ENOUGH_RESOURCES;
+      }
     }
     else {
       return ERR_NOT_FOUND;

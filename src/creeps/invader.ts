@@ -50,6 +50,9 @@ export function run(creep: Creep) {
               moveTo(creep, structures[0].pos);
             }
           }
+          else {
+            delete Game.rooms[creep.memory.home].memory.invadeRoom;
+          }
         }
       }
     }

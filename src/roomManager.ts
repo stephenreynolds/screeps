@@ -11,18 +11,14 @@ export function run(room: Room) {
   if (room.controller!.my) {
     DefenseManager.run();
 
-    // Check invasion status.
+    // Keep track of invaders.
     if (room.memory.invadeRoom !== undefined) {
-      // Stop invasion if controller is now inactive.
       const invaded = Game.rooms[room.memory.invadeRoom];
-      if (invaded.controller!.level === 0) {
-        delete room.memory.invadeRoom;
+      if (invaded !== undefined) {
+        RoomData.invaderCount = _.filter(invaded.find<Creep>(FIND_MY_CREEPS), (c: Creep) => {
+          return c.memory.role === "invader";
+        }).length;
       }
-
-      // Keep track of invaders.
-      RoomData.invaderCount = _.filter(invaded.find<Creep>(FIND_MY_CREEPS), (c: Creep) => {
-        return c.memory.role === "invader";
-      }).length;
     }
 
     // Run each spawn.

@@ -1,4 +1,13 @@
-import * as creepActions from "../creepActions";
+/**
+ * Role: Wall Repairer
+ * Description: Repairs walls
+ * Fallback: Repairer
+ */
+
+import { RoomData } from "roomData";
+import { notFullHealth } from "utils";
+import { moveTo } from "../creepUtils/creepUtils";
+import { getEnergy } from "../creepUtils/getResource";
 import * as roleRepairer from "./repairer";
 
 /**
@@ -14,20 +23,20 @@ export function run(creep: Creep): void {
   else if (!creep.memory.working && _.sum(creep.carry) === creep.carryCapacity) {
     creep.memory.working = true;
 
-    const structures = creep.room.find<Structure>(FIND_STRUCTURES, {
-      filter: (s: Structure) => {
-        return s.structureType === STRUCTURE_WALL && s.hits < s.hitsMax;
-      }
+    const walls = _.filter(RoomData.walls, (w: StructureWall) => {
+      return notFullHealth(w);
     });
 
-    creep.memory.targetId = _.sample(structures).id;
+    if (walls[0] !== undefined) {
+      creep.memory.targetId = _.sample(walls).id;
+    }
   }
 
   if (creep.memory.working) {
     repair(creep);
   }
   else if (!creep.memory.working) {
-    creepActions.harvest(creep);
+    getEnergy(creep);
   }
 }
 
@@ -38,9 +47,9 @@ export function run(creep: Creep): void {
 function repair(creep: Creep) {
   const wall = Game.getObjectById(creep.memory.targetId) as StructureWall;
 
-  if (wall !== undefined) {
+  if (wall !== null) {
     if (creep.repair(wall) === ERR_NOT_IN_RANGE) {
-      creepActions.moveTo(creep, wall.pos);
+      moveTo(creep, wall.pos);
     }
   }
   else {

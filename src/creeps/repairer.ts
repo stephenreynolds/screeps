@@ -1,9 +1,13 @@
 /**
  * Role: Repairer
- * Description: repairs structures, or builds structures, or upgrades controller.
+ * Description: Repairs structures.
+ * Fallback: Builder
  */
 
-import * as creepActions from "../creepActions";
+import { RoomData } from "roomData";
+import { notFullHealth } from "utils";
+import { moveTo } from "../creepUtils/creepUtils";
+import { getEnergy } from "../creepUtils/getResource";
 import * as roleBuilder from "./builder";
 
 export function run(creep: Creep): void {
@@ -18,21 +22,19 @@ export function run(creep: Creep): void {
     repair(creep);
   }
   else if (!creep.memory.working) {
-    creepActions.harvest(creep);
+    getEnergy(creep);
   }
 }
 
 function repair(creep: Creep) {
-  const structure = creep.room.find<Structure>(FIND_STRUCTURES, {
-      filter: (s: Structure) => {
-        return  s.structureType !== STRUCTURE_WALL
-          && s.structureType !== STRUCTURE_RAMPART && s.hits < s.hitsMax;
-      }
-    })[0];
+  const structure = _.find(RoomData.structures, (s: Structure) => {
+    return s.structureType !== STRUCTURE_WALL
+      && s.structureType !== STRUCTURE_RAMPART && notFullHealth(s);
+  });
 
   if (structure !== undefined) {
     if (creep.repair(structure) === ERR_NOT_IN_RANGE) {
-      creepActions.moveTo(creep, structure.pos);
+      moveTo(creep, structure.pos);
     }
   }
   else {

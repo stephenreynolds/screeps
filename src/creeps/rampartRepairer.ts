@@ -1,11 +1,15 @@
-import * as creepActions from "../creepActions";
+/**
+ * Role: Rampart Repairer
+ * Description: Melee creep attacks spawns and structures; creeps when close
+ * Fallback: Wall Repairer
+ */
+
+import { RoomData } from "roomData";
+import { notFullHealth } from "utils";
+import { moveTo } from "../creepUtils/creepUtils";
+import { getEnergy } from "../creepUtils/getResource";
 import * as roleWallRepairer from "./wallRepairer";
 
-/**
- * Repair ramparts when working, harvest when out of energy.
- * Fallback to wall repairer role when no ramparts need repairing.
- * @param creep
- */
 export function run(creep: Creep): void {
   if (creep.memory.working && _.sum(creep.carry) === 0) {
     creep.memory.working = false;
@@ -14,14 +18,12 @@ export function run(creep: Creep): void {
   else if (!creep.memory.working && _.sum(creep.carry) === creep.carryCapacity) {
     creep.memory.working = true;
 
-    const structures = creep.room.find<StructureRampart>(FIND_STRUCTURES, {
-      filter: (s: Structure) => {
-        return s.structureType === STRUCTURE_RAMPART && s.hits < s.hitsMax;
-      }
+    const ramparts = _.filter(RoomData.ramparts, (r: Rampart) => {
+      return notFullHealth(r);
     });
 
-    if (structures[0] !== undefined) {
-      creep.memory.targetId = _.sample(structures).id;
+    if (ramparts[0] !== undefined) {
+      creep.memory.targetId = _.sample(ramparts).id;
     }
   }
 
@@ -29,7 +31,7 @@ export function run(creep: Creep): void {
     repair(creep);
   }
   else if (!creep.memory.working) {
-    creepActions.harvest(creep);
+    getEnergy(creep);
   }
 }
 
@@ -45,7 +47,7 @@ function repair(creep: Creep) {
       creep.memory.working = false;
     }
     else if (creep.repair(rampart) === ERR_NOT_IN_RANGE) {
-      creepActions.moveTo(creep, rampart.pos);
+      moveTo(creep, rampart.pos);
     }
   }
   else {

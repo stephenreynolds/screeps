@@ -1,9 +1,11 @@
 /**
  * Role: Upgrader
- * Description: upgrades controller.
+ * Description: Upgrades controller
  */
 
-import * as creepActions from "../creepActions";
+import { log } from "boilerplate/lib/logger/log";
+import { moveTo } from "../creepUtils/creepUtils";
+import { getEnergy } from "../creepUtils/getResource";
 
 export function run(creep: Creep): void {
   if (creep.memory.working && _.sum(creep.carry) === 0) {
@@ -14,17 +16,22 @@ export function run(creep: Creep): void {
   }
 
   if (creep.memory.working) {
-    const flag = Game.flags[creep.room.name + "-UF"] as Flag;
+    const flag = Game.flags[creep.memory.home + "-UF"] as Flag;
 
-    if (creep.pos.inRangeTo(flag, 2)) {
-      upgrade(creep);
+    if (flag !== undefined) {
+      if (creep.pos.inRangeTo(flag, 2)) {
+        upgrade(creep);
+      }
+      else {
+        moveTo(creep, flag.pos);
+      }
     }
     else {
-      creepActions.moveTo(creep, flag.pos);
+      log.error("Upgrade flag not found!");
     }
   }
   else if (!creep.memory.working) {
-    creepActions.harvest(creep);
+    getEnergy(creep);
   }
 }
 
@@ -32,6 +39,6 @@ function upgrade(creep: Creep) {
   const controller = creep.room.controller as Controller;
 
   if (creep.upgradeController(controller) === ERR_NOT_IN_RANGE) {
-    creepActions.moveTo(creep, controller.pos);
+    moveTo(creep, controller.pos);
   }
 }

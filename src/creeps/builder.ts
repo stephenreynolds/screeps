@@ -1,9 +1,12 @@
 /**
  * Role: Builder
- * Description: builds structures, or otherwise upgrades controller.
+ * Description: Builds structures
+ * Fallback: Upgrader
  */
 
-import * as creepActions from "../creepActions";
+import { RoomData } from "roomData";
+import { moveTo } from "../creepUtils/creepUtils";
+import { getEnergy } from "../creepUtils/getResource";
 import * as roleUpgrader from "./upgrader";
 
 export function run(creep: Creep): void {
@@ -18,7 +21,7 @@ export function run(creep: Creep): void {
     construct(creep);
   }
   else if (!creep.memory.working) {
-    creepActions.harvest(creep);
+    getEnergy(creep);
   }
 }
 
@@ -30,12 +33,12 @@ function construct(creep: Creep) {
     site = target as ConstructionSite;
   }
   else {
-    site = creep.room.find<ConstructionSite>(FIND_CONSTRUCTION_SITES)[0];
+    site = RoomData.sites[0];
   }
 
   if (site !== undefined) {
     if (creep.build(site) === ERR_NOT_IN_RANGE) {
-      creepActions.moveTo(creep, site.pos);
+      moveTo(creep, site.pos);
     }
   }
   else {

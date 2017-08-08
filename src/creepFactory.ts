@@ -1,4 +1,5 @@
 import { RoomData } from "roomData";
+import { printSpawnInfo } from "utils";
 import * as Config from "./boilerplate/config/config";
 import { log } from "./boilerplate/lib/logger/log";
 
@@ -9,7 +10,7 @@ export function buildMissingCreep(s: Spawn) {
 
   const creepsOfRole = RoomData.creepsOfRole as any;
 
-  printSpawnInfo();
+  printSpawnInfo(spawn);
 
   // Harvester
   if (creepsOfRole["miner"] === 0 && creepsOfRole["transporter"] === 0) {
@@ -64,44 +65,13 @@ export function buildMissingCreep(s: Spawn) {
   else if (creepsOfRole["repairer"] < spawn.room.memory.minCreeps["repairer"]) {
     createBalancedCreep(
       spawn.room.energyAvailable, "repairer", [WORK, CARRY, MOVE]);
-  } // Invader
-  else if (spawn.room.memory.invadeRoom !== undefined) {
-    createInvader();
-  }
+  } // Scavenger
   else if (creepsOfRole["scavenger"] < spawn.room.memory.minCreeps["scavenger"]) {
     createCreep([WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE], "scavenger");
-  }
-}
-
-function printSpawnInfo() {
-  const upgradePercent = (spawn.room.controller!.progress / spawn.room.controller!.progressTotal) * 100;
-  const site = RoomData.sites[0];
-  let constructionPercent;
-
-  if (site !== undefined) {
-    constructionPercent = (site.progress / site.progressTotal) * 100;
-  }
-
-  if (Config.ENABLE_DEBUG_MODE) {
-    // Construction and upgrade.
-    if (constructionPercent !== undefined && !isNaN(upgradePercent)) {
-      log.info(spawn.room.name + "/" + spawn.name +
-        ", Upgrade Progress: " + upgradePercent.toFixed(2) +
-        "%, " + _.startCase(_.words(site.structureType).toString()) +
-        " Progress: " + constructionPercent.toFixed(2) + "%");
-    } // Upgrade
-    else if (constructionPercent === undefined && !isNaN(upgradePercent)) {
-      log.info(spawn.room.name + "/" + spawn.name +
-        ", Upgrade Progress: " + upgradePercent.toFixed(2) + "%");
-    } // Construction
-    else if (isNaN(upgradePercent) && constructionPercent !== undefined) {
-      log.info(spawn.room.name + "/" + spawn.name +
-        _.startCase(_.words(site.structureType).toString()) +
-        " Progress: " + constructionPercent.toFixed(2) + "%");
-    }
-    else {
-      log.info(spawn.room.name + "/" + spawn.name);
-    }
+  } // Invader
+  else if (spawn.room.memory.invadeRoom !== undefined &&
+    RoomData.invaderCount < spawn.room.memory.minCreeps["invader"]) {
+    createInvader();
   }
 }
 
@@ -111,9 +81,34 @@ function createBalancedCreep(energy: number, role: string, parts: string[], extr
     baseCost += BODYPART_COST[part];
   }
 
+  let maxCost = 300;
+  switch (spawn.room.controller!.level) {
+    case 2:
+      maxCost = 300;
+      break;
+    case 3:
+      maxCost = 400;
+      break;
+    case 4:
+      maxCost = 650;
+      break;
+    case 5:
+      maxCost = 900;
+      break;
+    case 6:
+      maxCost = 1000;
+      break;
+    case 7:
+      maxCost = 1500;
+      break;
+    case 8:
+      maxCost = 3000;
+      break;
+  }
+
   // Balanced creep may be made with at most 1000 energy.
-  if (baseCost > 1000) {
-    baseCost = 1000;
+  if (baseCost > maxCost) {
+    baseCost = maxCost;
   }
 
   if (energy < baseCost) {

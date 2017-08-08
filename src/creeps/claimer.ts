@@ -11,8 +11,9 @@ export function run(creep: Creep) {
   const targetRoom = Game.rooms[creep.memory.targetRoom];
   const controller = targetRoom.controller as Controller;
 
-  if (creep.room !== targetRoom) {
-    moveToRoom(creep, targetRoom);
+  if (creep.room.name !== creep.memory.targetRoom || creep.pos.x * creep.pos.y === 0 ||
+    Math.abs(creep.pos.x) === 49 || Math.abs(creep.pos.y) === 49) {
+    moveToRoom(creep, creep.memory.targetRoom);
   }
   else if (controller.my) {
     roleUpgrader.run(creep);

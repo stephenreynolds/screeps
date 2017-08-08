@@ -1,20 +1,41 @@
+import { log } from "boilerplate/lib/logger/log";
 import { RoomData } from "roomData";
+import { printSpawnInfo } from "utils";
 import * as CreepFactory from "./creepFactory";
 import * as DefenseManager from "./defenseManager";
 import "./prototypes/creep";
 
 export function run(room: Room) {
   compileRoomData(room);
-  DefenseManager.run();
 
-  // Run each spawn.
-  for (const spawn of RoomData.spawns) {
-    // Do nothing if spawn is busy.
-    if (spawn.spawning) {
-      continue;
+  if (room.controller!.my) {
+    DefenseManager.run();
+
+    // Check invasion status.
+    if (room.memory.invadeRoom !== undefined) {
+      // Stop invasion if controller is now inactive.
+      const invaded = Game.rooms[room.memory.invadeRoom];
+      if (invaded.controller!.level === 0) {
+        delete room.memory.invadeRoom;
+      }
+
+      // Keep track of invaders.
+      RoomData.invaderCount = _.filter(invaded.find<Creep>(FIND_MY_CREEPS), (c: Creep) => {
+        return c.memory.role === "invader";
+      }).length;
     }
 
-    CreepFactory.buildMissingCreep(spawn);
+    // Run each spawn.
+    for (const spawn of RoomData.spawns) {
+      // Do nothing if spawn is busy.
+      if (spawn.spawning) {
+        printSpawnInfo(spawn);
+        log.info("Spawning " + Game.creeps[spawn.spawning.name].memory.role);
+        continue;
+      }
+
+      CreepFactory.buildMissingCreep(spawn);
+    }
   }
 
   // Run creep roles.

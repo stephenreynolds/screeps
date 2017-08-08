@@ -20,6 +20,9 @@ export class RoomData
   public static creepsOfRole: {};
   public static colonyCreeps: Creep[];
 
+  // Invasion information.
+  public static invaderCount: number;
+
   /**
    * Reinitialize room object properties.
    * @static

@@ -19,7 +19,7 @@ export const W18S13 = {
   invader: 5,
   longHarvester: 3,
   rampartRepairer: 1,
-  repairer: 1,
+  repairer: 3,
   scavenger: 1,
   transporter: 2,
   upgrader: 6,

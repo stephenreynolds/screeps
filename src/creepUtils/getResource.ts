@@ -156,7 +156,7 @@ export function getEnergy(creep: Creep) {
       }
       else {
         // Get from energy source last.
-        targetSource = creep.pos.findClosestByPath(RoomData.sources);
+        targetSource = _.sample(RoomData.sources);
         creep.memory.targetType = RESOURCE_ENERGY;
       }
     }

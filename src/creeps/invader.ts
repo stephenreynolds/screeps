@@ -7,8 +7,6 @@ import { RoomData } from "roomData";
 import { moveTo, moveToRoom } from "../creepUtils/creepUtils";
 
 export function run(creep: Creep) {
-  const targetRoom = Game.rooms[creep.memory.targetRoom];
-
   let hostileNear;
 
   for (const h of RoomData.hostileCreeps) {
@@ -18,8 +16,9 @@ export function run(creep: Creep) {
     }
   }
 
-  if (creep.room !== targetRoom) {
-    moveToRoom(creep, targetRoom);
+  if (creep.room.name !== creep.memory.targetRoom || creep.pos.x * creep.pos.y === 0 ||
+      Math.abs(creep.pos.x) === 49 || Math.abs(creep.pos.y) === 49) {
+    moveToRoom(creep, creep.memory.targetRoom);
   }
   else {
     if (hostileNear !== undefined) {
@@ -27,40 +26,29 @@ export function run(creep: Creep) {
     }
     else {
       const spawn = creep.pos.findClosestByPath(creep.room.find<Spawn>(FIND_HOSTILE_SPAWNS));
-      const structures = targetRoom.find<Structure>(FIND_HOSTILE_STRUCTURES);
 
       if (spawn !== undefined && creep.attack(spawn) === ERR_NOT_IN_RANGE) {
         moveTo(creep, spawn.pos);
       }
+      else if (Game.rooms[creep.memory.home].memory.invadeRoom !== undefined) {
+        // Attack creeps if spawns are gone.
+        const hostileCreep = creep.pos.findClosestByPath(RoomData.hostileCreeps);
 
-      if (spawn === undefined && RoomData.hostileCreeps === undefined && structures === undefined
-        && targetRoom.controller!.level === 0) {
-        creep.room.memory.invadeRoom = undefined;
-      }
-      else {
-        const attackCreep = Math.random() >= 0.5;
-        const targetCreep = Game.getObjectById(creep.memory.targetCreep) as Creep;
-
-        if (RoomData.hostileCreeps.length > 0 && targetCreep === undefined && attackCreep) {
-          creep.memory.targetCreep = RoomData.hostileCreeps[0].id;
-        }
-        else if (targetCreep !== undefined) {
-          creep.memory.targetCreep = null;
-        }
-
-        if (targetCreep !== null) {
-          if (creep.attack(targetCreep) === ERR_NOT_IN_RANGE) {
-            moveTo(creep, targetCreep.pos);
+        if (hostileCreep !== null) {
+          if (creep.attack(hostileCreep) === ERR_NOT_IN_RANGE) {
+            moveTo(creep, hostileCreep.pos);
           }
         }
         else {
-          if (structures[1] !== undefined) {
-            if (creep.attack(structures[1]) === ERR_NOT_IN_RANGE) {
-              moveTo(creep, structures[1].pos);
+          // Attack structures if creeps are also gone.
+          const structures = _.filter(creep.room.find<Structure>(FIND_HOSTILE_STRUCTURES), (s: Structure) => {
+            return s.structureType !== STRUCTURE_CONTROLLER;
+          });
+
+          if (structures[0] !== undefined) {
+            if (creep.attack(structures[0]) === ERR_NOT_IN_RANGE) {
+              moveTo(creep, structures[0].pos);
             }
-          }
-          else {
-            moveTo(creep, Game.flags[targetRoom + "-UF"].pos);
           }
         }
       }

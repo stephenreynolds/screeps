@@ -3,6 +3,7 @@
     "module": "commonjs",
     "target": "es6",
     "removeComments": true,
+    "noEmitOnError": true,
     "noResolve": false,
     "experimentalDecorators": true,
     "strict": true,
@@ -17,6 +18,7 @@
   "include": [
     "webpack.config.ts",
     "config/*.ts",
+    "libs/*.ts",
     "typings/**/*.d.ts",
     "src/**/*.ts",
     "src/**/*.d.ts"
@@ -24,7 +26,6 @@
   "exclude": [
     "dist",
     "node_modules",
-    "libs",
     "src/snippets"
   ]
 }

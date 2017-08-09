@@ -1,9 +1,12 @@
 # yarn lock file
 /yarn.lock
 
+# npm lock file (v5.0.0+)
+/package-lock.json
+
 # Ignore basic folders
-/node_modules
 /dist
+/node_modules
 
 # Screeps config file
 /config.json

@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import * as webpack from "webpack";
 import * as Config from "webpack-chain";
-// import * as path from ';
+// import * as path from 'path';
 
 import { EnvOptions } from "./config";
 

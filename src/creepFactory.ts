@@ -81,29 +81,10 @@ function createBalancedCreep(energy: number, role: string, parts: string[], extr
     baseCost += BODYPART_COST[part];
   }
 
-  let maxCost = 300;
-  switch (spawn.room.controller!.level) {
-    case 2:
-      maxCost = 300;
-      break;
-    case 3:
-      maxCost = 400;
-      break;
-    case 4:
-      maxCost = 650;
-      break;
-    case 5:
-      maxCost = 900;
-      break;
-    case 6:
-      maxCost = 1000;
-      break;
-    case 7:
-      maxCost = 1500;
-      break;
-    case 8:
-      maxCost = 3000;
-      break;
+  // Set max cost.
+  let maxCost = spawn.room.energyCapacityAvailable / 2.5;
+  if (maxCost < 300) {
+    maxCost = 300;
   }
 
   // Balanced creep may be made with at most 1000 energy.

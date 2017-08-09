@@ -26,7 +26,8 @@ export function run(room: Room) {
       // Do nothing if spawn is busy.
       if (spawn.spawning) {
         printSpawnInfo(spawn);
-        log.info("Spawning " + Game.creeps[spawn.spawning.name].memory.role);
+        log.info("Spawning " + Game.creeps[spawn.spawning.name].memory.role +
+          "(" + Game.creeps[spawn.spawning.name].body + ")");
         continue;
       }
 

@@ -13,7 +13,8 @@ export function buildMissingCreep(s: Spawn) {
   printSpawnInfo(spawn);
 
   // Harvester
-  if (creepsOfRole["miner"] === 0 && creepsOfRole["transporter"] === 0) {
+  if (creepsOfRole["miner"] === 0 && creepsOfRole["transporter"] === 0 &&
+    creepsOfRole["harvester"] < spawn.room.memory.minCreeps["harvester"]) {
     createBalancedCreep(
       spawn.room.energyAvailable, "harvester", [WORK, CARRY, MOVE]);
   } // Transporter

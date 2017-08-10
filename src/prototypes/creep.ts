@@ -9,6 +9,7 @@ const roles = {
   mineralMiner: require("../creeps/mineralMiner"),
   rampartRepairer: require("../creeps/rampartRepairer"),
   repairer: require("../creeps/repairer"),
+  reserver: require("../creeps/reserver"),
   scavenger: require("../creeps/scavenger"),
   sentinel: require("../creeps/sentinel"),
   transporter: require("../creeps/transporter"),

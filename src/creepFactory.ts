@@ -17,7 +17,7 @@ export function buildMissingCreep(s: Spawn) {
     createBalancedCreep(
       spawn.room.energyAvailable, "harvester", [WORK, CARRY, MOVE]);
   } // Transporter
-  if (creepsOfRole["transporter"] < spawn.room.memory.minCreeps["transporter"] && creepsOfRole["miner"] > 0) {
+  else if (creepsOfRole["transporter"] < spawn.room.memory.minCreeps["transporter"] && creepsOfRole["miner"] > 0) {
     createBalancedCreep(spawn.room.energyAvailable, "transporter", [CARRY, MOVE, MOVE]);
   } // Courier
   else if (creepsOfRole["courier"] < spawn.room.memory.minCreeps["courier"]) {
@@ -33,7 +33,8 @@ export function buildMissingCreep(s: Spawn) {
     createCreep([HEAL, MOVE], "healer", {});
   } // Claimer
   else if (spawn.room.memory.claimRoom !== undefined) {
-    const name = createClaimer();
+    const name = createBalancedCreep(spawn.room.energyAvailable, "claimer", [CLAIM, WORK, CARRY, MOVE, MOVE],
+      { targetRoom: spawn.room.memory.claimRoom });
 
     if (!(name < 0)) {
       delete spawn.room.memory.claimRoom;
@@ -65,31 +66,32 @@ export function buildMissingCreep(s: Spawn) {
   else if (creepsOfRole["repairer"] < spawn.room.memory.minCreeps["repairer"]) {
     createBalancedCreep(
       spawn.room.energyAvailable, "repairer", [WORK, CARRY, MOVE]);
+  } // Reserver
+  else if (spawn.room.memory.reserveRoom !== undefined &&
+    creepsOfRole["reserver"] < spawn.room.memory.minCreeps["reserver"]) {
+    createBalancedCreep(spawn.room.energyAvailable, "reserver", [CLAIM, MOVE, MOVE],
+      { targetRoom: spawn.room.memory.reserveRoom, signText: spawn.room.memory.signText });
   } // Scavenger
   else if (creepsOfRole["scavenger"] < spawn.room.memory.minCreeps["scavenger"]) {
     createCreep([WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE], "scavenger");
   } // Invader
   else if (spawn.room.memory.invadeRoom !== undefined &&
     RoomData.invaderCount < spawn.room.memory.minCreeps["invader"]) {
-    createInvader();
+    createCreep([ATTACK, MOVE, TOUGH, TOUGH], "invader", { targetRoom: spawn.room.memory.invadeRoom });
   }
 }
 
-function createBalancedCreep(energy: number, role: string, parts: string[], extraMemory?: { [key: string]: any }) {
+function createBalancedCreep(energy: number, role: string, parts: string[],
+                             extraMemory?: { [key: string]: any }): string | number {
   let baseCost = 0;
   for (const part of parts) {
     baseCost += BODYPART_COST[part];
   }
 
   // Set max cost.
-  let maxCost = spawn.room.energyCapacityAvailable / 2.5;
+  let maxCost = spawn.room.energyCapacityAvailable / 3;
   if (maxCost < 300) {
     maxCost = 300;
-  }
-
-  // Balanced creep may be made with at most 1000 energy.
-  if (baseCost > maxCost) {
-    baseCost = maxCost;
   }
 
   if (energy < baseCost) {
@@ -113,6 +115,8 @@ function createBalancedCreep(energy: number, role: string, parts: string[], extr
       return createCreep(body, role, {});
     }
   }
+
+  return ERR_NOT_ENOUGH_ENERGY;
 }
 
 function createCreep(body: string[], role: string, extraMemory?: { [key: string]: any }): number | string {
@@ -120,8 +124,8 @@ function createCreep(body: string[], role: string, extraMemory?: { [key: string]
   const name: string = role + uuid;
 
   const memory: { [key: string]: any } = {
-    role,
     home: spawn.room.name,
+    role,
     targetId: null,
     working: false
   };
@@ -165,28 +169,6 @@ function createCreep(body: string[], role: string, extraMemory?: { [key: string]
 
     return status;
   }
-}
-
-function createClaimer(): string | number {
-  const body = [CLAIM, WORK, CARRY, MOVE, MOVE];
-
-  const properties: { [key: string]: any } = {
-    targetRoom: spawn.room.memory.claimRoom
-  };
-
-  return createCreep(body, "claimer", properties);
-}
-
-function createInvader(): string | number | undefined {
-  const body = [ATTACK, MOVE, TOUGH, TOUGH];
-
-  const properties: { [key: string]: any } = {
-    targetRoom: spawn.room.memory.invadeRoom
-  };
-
-  const maxEnergy = spawn.room.energyCapacityAvailable / 2;
-
-  return createBalancedCreep(maxEnergy, "invader", body, properties);
 }
 
 function createMiner(): string | number {

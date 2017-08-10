@@ -4,4 +4,4 @@
   - Depression: something is caused significant slow in progress; prioritize recovery
 - Write job manager
 - Write room level scripts (jobs and creeps different with controller level)
-- Set up a Grafana server
+- Allow rooms to reserve more than one room (maybe with array)

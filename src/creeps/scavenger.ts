@@ -1,6 +1,7 @@
 /**
  * Role: Scavenger
- * Description: Picks up dropped resources to upgrade controller.
+ * Description: Picks up dropped resources to upgrade controller
+ * Parts: WORK, CARRY, MOVE
  * Fallback: Harvester
  */
 

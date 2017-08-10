@@ -1,6 +1,7 @@
 /**
  * Role: Miner
- * Description: harvests energy from source and drops it into container.
+ * Description: Harvests energy from source and drops it into container
+ * Parts: MOVE, WORK
  */
 
 import { RoomData } from "roomData";

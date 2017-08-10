@@ -1,6 +1,7 @@
 /**
  * Role: Healer
- * Description: heals creeps.
+ * Description: Heals creeps
+ * Parts: HEAL, MOVE
  */
 
 import { RoomData } from "roomData";

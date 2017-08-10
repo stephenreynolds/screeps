@@ -2,6 +2,8 @@ import { log } from "boilerplate/lib/logger/log";
 import { RoomData } from "roomData";
 import * as Config from "./boilerplate/config/config";
 
+export const AVERAGE_TICK_TIME = 2.1;
+
 export function hasResource(structure: any, resource: string) {
   return structure.energy > 0 || structure.store[resource] > 0;
 }

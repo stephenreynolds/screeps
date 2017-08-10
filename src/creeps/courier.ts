@@ -1,6 +1,7 @@
 /**
  * Role: Courier
  * Description: withdraws energy from storage and transfers to structures.
+ * Parts: CARRY, MOVE
  * Fallback: Harvester
  */
 

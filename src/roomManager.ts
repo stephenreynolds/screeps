@@ -4,12 +4,42 @@ import { printSpawnInfo } from "utils";
 import * as CreepFactory from "./creepFactory";
 import * as DefenseManager from "./defenseManager";
 import "./prototypes/creep";
+import * as Stats from "./stats";
 
 export function run(room: Room) {
+  // Initialize room profile.
+  const profiler = {
+    builder: 0,
+    claimer: 0,
+    compile: 0,
+    courier: 0,
+    defense: 0,
+    harvester: 0,
+    healer: 0,
+    invader: 0,
+    invaders: 0,
+    miner: 0,
+    prepare: 0,
+    rampartRepairer: 0,
+    repairer: 0,
+    reserver: 0,
+    scavenger: 0,
+    sentinel: 0,
+    spawning: 0,
+    transporter: 0,
+    upgrader: 0,
+    wallRepairer: 0
+  } as any;
+  profiler.prepare = Game.cpu.getUsed();
+
+  // Compile room data.
   compileRoomData(room);
+  profiler.compile = Game.cpu.getUsed() - profiler.prepare;
 
   if (room.controller!.my) {
+    // Run room defense.
     DefenseManager.run();
+    profiler.defense = Game.cpu.getUsed() - _.sum(profiler);
 
     // Keep track of invaders.
     if (room.memory.invadeRoom !== undefined) {
@@ -20,6 +50,7 @@ export function run(room: Room) {
         }).length;
       }
     }
+    profiler.invaders = Game.cpu.getUsed() - _.sum(profiler);
 
     // Run each spawn.
     for (const spawn of RoomData.spawns) {
@@ -32,12 +63,18 @@ export function run(room: Room) {
 
       CreepFactory.buildMissingCreep(spawn);
     }
+    profiler.spawning = Game.cpu.getUsed() - _.sum(profiler);
   }
 
   // Run creep roles.
   for (const creep of RoomData.creeps) {
+    const role = creep.memory.role;
     creep.runRole();
+    profiler[role] += Game.cpu.getUsed() - _.sum(profiler);
   }
+
+  // Update room profile.
+  Stats.room(profiler);
 }
 
 function compileRoomData(room: Room) {
@@ -72,7 +109,11 @@ function compileRoomData(room: Room) {
       case STRUCTURE_TOWER:
         RoomData.towers.push(s as Tower);
         break;
-      default:
+      case STRUCTURE_LINK:
+        RoomData.links.push(s as Link);
+        break;
+      case STRUCTURE_POWER_SPAWN:
+        RoomData.powerSpawn = s as PowerSpawn;
         break;
     }
   }
@@ -103,6 +144,15 @@ function compileRoomData(room: Room) {
     }
     creepsOfRole[role] = sum;
   }
+  if (room.memory.reserveRoom !== undefined) {
+    const reserved = Game.rooms[room.memory.reserveRoom];
+    if (reserved !== undefined) {
+      const reservers = reserved.find<Creep>(FIND_MY_CREEPS);
+      creepsOfRole["reserver"] += _.filter(reservers, (c: Creep) => {
+          return c.memory.role === "reserver";
+      }).length;
+    }
+  }
   RoomData.creepsOfRole = creepsOfRole;
 }
 
@@ -117,6 +167,7 @@ const roles = [
   "mineralMiner",
   "rampartRepairer",
   "repairer",
+  "reserver",
   "scavenger",
   "sentinel",
   "transporter",

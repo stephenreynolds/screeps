@@ -1,9 +1,9 @@
 /**
  * Role: Upgrader
  * Description: Upgrades controller
+ * Parts: WORK, CARRY, MOVE
  */
 
-import { log } from "boilerplate/lib/logger/log";
 import { moveTo } from "../creepUtils/creepUtils";
 import { getEnergy } from "../creepUtils/getResource";
 
@@ -16,19 +16,7 @@ export function run(creep: Creep): void {
   }
 
   if (creep.memory.working) {
-    const flag = Game.flags[creep.memory.home + "-UF"] as Flag;
-
-    if (flag !== undefined) {
-      if (creep.pos.inRangeTo(flag, 2)) {
-        upgrade(creep);
-      }
-      else {
-        moveTo(creep, flag.pos);
-      }
-    }
-    else {
-      log.error("Upgrade flag not found!");
-    }
+    upgrade(creep);
   }
   else if (!creep.memory.working) {
     getEnergy(creep);

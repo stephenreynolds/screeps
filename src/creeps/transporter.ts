@@ -1,6 +1,7 @@
 /**
  * Role: Transporter
  * Description: Withdraws energy from mining containers and transfers to storage
+ * Parts: WORK, CARRY, MOVE
  * Fallback: Harvester
  */
 

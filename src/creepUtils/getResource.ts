@@ -110,21 +110,27 @@ export function getResourceFromContainer(creep: Creep, resource: string) {
   }
   else {
     const targetSource = Game.getObjectById(creep.memory.targetSource) as Container;
-    const action = creep.withdraw(targetSource, resource);
-    switch (action) {
-      case ERR_NOT_IN_RANGE:
-        moveTo(creep, targetSource.pos);
-        break;
-      case OK:
-        if (_.sum(creep.carry) === creep.carryCapacity) {
+    if (targetSource !== undefined) {
+      const action = creep.withdraw(targetSource, resource);
+      switch (action) {
+        case ERR_NOT_IN_RANGE:
+          moveTo(creep, targetSource.pos);
+          break;
+        case OK:
+          if (_.sum(creep.carry) === creep.carryCapacity) {
+            creep.memory.targetSource = undefined;
+            creep.memory.targetType = undefined;
+          }
+          break;
+        case ERR_NOT_ENOUGH_RESOURCES:
           creep.memory.targetSource = undefined;
           creep.memory.targetType = undefined;
-        }
-        break;
-      case ERR_NOT_ENOUGH_RESOURCES:
-        creep.memory.targetSource = undefined;
-        creep.memory.targetType = undefined;
-        break;
+          break;
+      }
+    }
+    else {
+      creep.memory.targetSource = undefined;
+      creep.memory.targetType = undefined;
     }
   }
 }
@@ -166,45 +172,51 @@ export function getEnergy(creep: Creep) {
   else {
     targetSource = Game.getObjectById(creep.memory.targetSource);
 
-    if (creep.memory.targetType === RESOURCE_ENERGY) {
-      targetSource = targetSource as Source;
+    if (targetSource !== undefined) {
+      if (creep.memory.targetType === RESOURCE_ENERGY) {
+        targetSource = targetSource as Source;
 
-      const action = creep.harvest(targetSource);
-      switch (action) {
-        case ERR_NOT_IN_RANGE:
-          moveTo(creep, targetSource.pos);
-          break;
-        case OK:
-          if (_.sum(creep.carry) === creep.carryCapacity) {
+        const action = creep.harvest(targetSource);
+        switch (action) {
+          case ERR_NOT_IN_RANGE:
+            moveTo(creep, targetSource.pos);
+            break;
+          case OK:
+            if (_.sum(creep.carry) === creep.carryCapacity) {
+              creep.memory.targetSource = undefined;
+              creep.memory.targetType = undefined;
+            }
+            break;
+          case ERR_NOT_ENOUGH_RESOURCES:
             creep.memory.targetSource = undefined;
             creep.memory.targetType = undefined;
-          }
-          break;
-        case ERR_NOT_ENOUGH_RESOURCES:
-          creep.memory.targetSource = undefined;
-          creep.memory.targetType = undefined;
-          break;
+            break;
+        }
+      }
+      else {
+        targetSource = targetSource as Storage | Container;
+
+        const action = creep.withdraw(targetSource, RESOURCE_ENERGY);
+        switch (action) {
+          case ERR_NOT_IN_RANGE:
+            moveTo(creep, targetSource.pos);
+            break;
+          case OK:
+            if (_.sum(creep.carry) === creep.carryCapacity) {
+              creep.memory.targetSource = undefined;
+              creep.memory.targetType = undefined;
+            }
+            break;
+          case ERR_NOT_ENOUGH_RESOURCES:
+            creep.memory.targetSource = undefined;
+            creep.memory.targetType = undefined;
+            break;
+        }
       }
     }
     else {
-      targetSource = targetSource as Storage | Container;
-
-      const action = creep.withdraw(targetSource, RESOURCE_ENERGY);
-      switch (action) {
-        case ERR_NOT_IN_RANGE:
-          moveTo(creep, targetSource.pos);
-          break;
-        case OK:
-          if (_.sum(creep.carry) === creep.carryCapacity) {
-            creep.memory.targetSource = undefined;
-            creep.memory.targetType = undefined;
-          }
-          break;
-        case ERR_NOT_ENOUGH_RESOURCES:
-          creep.memory.targetSource = undefined;
-          creep.memory.targetType = undefined;
-          break;
-      }
+      creep.memory.targetSource = undefined;
+      creep.memory.targetType = undefined;
     }
   }
 }

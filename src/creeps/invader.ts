@@ -1,6 +1,7 @@
 /**
  * Role: Invader
- * Description: melee creep attacks spawns and structures; creeps when close.
+ * Description: Melee creep attacks spawns and structures; creeps when close
+ * Parts: ATTACK, MOVE, TOUGH
  */
 
 import { RoomData } from "roomData";

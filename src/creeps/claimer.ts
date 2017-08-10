@@ -1,6 +1,7 @@
 /**
  * Role: Claimer
  * Description: claims a room then upgrades its controller.
+ * Parts: WORK, CARRY, MOVE, CLAIM
  * Fallback: Upgrader
  */
 

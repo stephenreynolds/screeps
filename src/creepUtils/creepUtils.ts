@@ -12,5 +12,5 @@ export function moveTo(creep: Creep, target: RoomPosition) {
 }
 
 export function moveToRoom(creep: Creep, roomName: string) {
-  moveTo(creep, Game.flags[roomName + "-UF"].pos);
+  moveTo(creep, Game.flags[roomName + "-NAV"].pos);
 }

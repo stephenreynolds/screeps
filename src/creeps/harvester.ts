@@ -1,6 +1,7 @@
 /**
  * Role: Harvester
  * Description: Transfers energy to structures which need it
+ * Parts: WORK, CARRY, MOVE
  * Fallback: Upgrader
  */
 

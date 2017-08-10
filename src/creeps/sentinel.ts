@@ -1,6 +1,7 @@
 /**
  * Role: Sentinel
- * Description: melee creep attacks hostile creeps when in owned room.
+ * Description: Melee creep attacks hostile creeps when in owned room
+ * Parts: ATTACK, MOVE
  */
 
 import { RoomData } from "roomData";

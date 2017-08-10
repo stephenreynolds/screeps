@@ -1,6 +1,7 @@
 /**
  * Role: Builder
  * Description: Builds structures
+ * Parts: WORK, CARRY, MOVE
  * Fallback: Upgrader
  */
 

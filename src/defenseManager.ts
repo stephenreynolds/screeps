@@ -3,7 +3,8 @@ import { RoomData } from "roomData";
 
 export function run() {
   const hostileCreeps = _.filter(RoomData.hostileCreeps, (c: Creep) => {
-    return c.getActiveBodyparts(ATTACK) > 0 || c.getActiveBodyparts(RANGED_ATTACK) > 0;
+    return (c.getActiveBodyparts(ATTACK) > 0 || c.getActiveBodyparts(RANGED_ATTACK) > 0) ||
+      (c.pos.x > 2 && c.pos.x < 47) || (c.pos.y > 2 && c.pos.y < 47);
   });
   RoomData.room.memory.DEFCONTime++;
 

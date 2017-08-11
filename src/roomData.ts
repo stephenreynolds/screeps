@@ -1,5 +1,4 @@
-export class RoomData
-{
+export class RoomData {
   // Room metadata.
   public static room: Room;
 
@@ -30,8 +29,7 @@ export class RoomData
    * @static
    * @memberof RoomData
    */
-  public static reset()
-  {
+  public static reset() {
     this.spawns = [];
     this.powerSpawn = undefined;
     this.structures = [];

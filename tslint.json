@@ -4,6 +4,7 @@
   ],
   "rules": {
     "forin": false,
+    "interface-name": [false],
     "no-console": [false],
     "trailing-comma": [
       true,
@@ -16,7 +17,9 @@
       "allow-pascal-case",
       "allow-leading-underscore"
     ],
-    "one-line": false,
+    "one-line": [
+      false
+    ],
     "no-string-literal": false,
     "no-var-keyword": true,
     "no-namespace": false,

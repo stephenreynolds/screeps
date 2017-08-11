@@ -3,25 +3,18 @@ import * as Profiler from "screeps-profiler";
 import * as Config from "./boilerplate/config/config";
 import * as MinCreeps from "./minCreeps";
 import * as RoomManager from "./roomManager";
-import * as Stats from "./stats";
 
-if (Config.USE_PROFILER)
-{
+if (Config.USE_PROFILER) {
   Profiler.enable();
 }
 
-function mainLoop()
-{
-  Stats.init();
-
+function main() {
   clearMemory();
   setMinCreeps();
 
   for (const room in Game.rooms) {
     RoomManager.run(Game.rooms[room]);
   }
-
-  Stats.global();
 }
 
 function clearMemory() {
@@ -54,4 +47,4 @@ function setMinCreeps() {
   Game.rooms["W18S13"].memory.minCreeps = MinCreeps.W18S13;
 }
 
-export const loop = !Config.USE_PROFILER ? mainLoop : Profiler.wrap(mainLoop);
+export const loop = !Config.USE_PROFILER ? main : () => { Profiler.wrap(main); };

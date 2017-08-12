@@ -43,10 +43,12 @@ function makeVSCLink(pos: SourcePos): string {
   return link(vscUrl(pos.path, `L${pos.line.toString()}`), pos.original);
 }
 
+// tslint:disable-next-line:no-shadowed-variable
 function color(str: string, color: string): string {
   return `<font color='${color}'>${str}</font>`;
 }
 
+// tslint:disable-next-line:no-shadowed-variable
 function tooltip(str: string, tooltip: string): string {
   return `<abbr title='${tooltip}'>${str}</abbr>`;
 }

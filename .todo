@@ -1,7 +1,0 @@
-- Write scripts to handle various scenarios (defend, invade, depression, etc.)
-  - Defend: enemy creep appears in owned room; response dictated by DEFCON level
-  - Invade: take over a room
-  - Depression: something is caused significant slow in progress; prioritize recovery
-- Write job manager
-- Write room level scripts (jobs and creeps different with controller level)
-- Allow rooms to reserve more than one room (maybe with array)

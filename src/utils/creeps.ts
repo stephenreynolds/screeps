@@ -21,7 +21,19 @@ export function moveTo(creep: Creep, target: RoomPosition) {
 }
 
 export function moveToRoom(creep: Creep, roomName: string) {
-  moveTo(creep, Game.flags[roomName + "-NAV"].pos);
+  if (creep.room.name === roomName && (creep.pos.x * creep.pos.y === 0 ||
+    Math.abs(creep.pos.x) === 49 || Math.abs(creep.pos.y) === 49)) {
+    const pos = new RoomPosition(25, 25, roomName);
+    moveTo(creep, pos);
+  }
+  else if (creep.room.name === roomName) {
+    return false;
+  }
+  else if (creep.room.name !== roomName) {
+    moveTo(creep, Game.flags[roomName + "-NAV"].pos);
+  }
+
+  return true;
 }
 
 export function harvest(creep: Creep, source: Source | Mineral) {

@@ -47,6 +47,7 @@ const rcl4Roles = {
   repairer: require("rclScripts/rcl4/creeps/repairer"),
   scavenger: require("rclScripts/rcl4/creeps/scavenger"),
   sentinel: require("rclScripts/rcl4/creeps/sentinel"),
+  transporter: require("rclScripts/rcl4/creeps/transporter"),
   upgradeCourier: require("rclScripts/rcl4/creeps/upgradeCourier"),
   upgrader: require("rclScripts/rcl4/creeps/upgrader"),
   wallRepairer: require("rclScripts/rcl4/creeps/wallRepairer")
@@ -63,6 +64,7 @@ const rcl5Roles = {
   repairer: require("rclScripts/rcl5/creeps/repairer"),
   scavenger: require("rclScripts/rcl5/creeps/scavenger"),
   sentinel: require("rclScripts/rcl5/creeps/sentinel"),
+  transporter: require("rclScripts/rcl5/creeps/transporter"),
   upgradeCourier: require("rclScripts/rcl5/creeps/upgradeCourier"),
   upgrader: require("rclScripts/rcl5/creeps/upgrader"),
   wallRepairer: require("rclScripts/rcl5/creeps/wallRepairer")
@@ -79,6 +81,7 @@ const rcl6Roles = {
   repairer: require("rclScripts/rcl6/creeps/repairer"),
   scavenger: require("rclScripts/rcl6/creeps/scavenger"),
   sentinel: require("rclScripts/rcl6/creeps/sentinel"),
+  transporter: require("rclScripts/rcl6/creeps/transporter"),
   upgradeCourier: require("rclScripts/rcl6/creeps/upgradeCourier"),
   upgrader: require("rclScripts/rcl6/creeps/upgrader"),
   wallRepairer: require("rclScripts/rcl6/creeps/wallRepairer")
@@ -95,6 +98,7 @@ const rcl7Roles = {
   repairer: require("rclScripts/rcl7/creeps/repairer"),
   scavenger: require("rclScripts/rcl7/creeps/scavenger"),
   sentinel: require("rclScripts/rcl7/creeps/sentinel"),
+  transporter: require("rclScripts/rcl7/creeps/transporter"),
   upgradeCourier: require("rclScripts/rcl7/creeps/upgradeCourier"),
   upgrader: require("rclScripts/rcl7/creeps/upgrader"),
   wallRepairer: require("rclScripts/rcl7/creeps/wallRepairer")
@@ -111,6 +115,7 @@ const rcl8Roles = {
   repairer: require("rclScripts/rcl8/creeps/repairer"),
   scavenger: require("rclScripts/rcl8/creeps/scavenger"),
   sentinel: require("rclScripts/rcl8/creeps/sentinel"),
+  transporter: require("rclScripts/rcl8/creeps/transporter"),
   upgradeCourier: require("rclScripts/rcl8/creeps/upgradeCourier"),
   upgrader: require("rclScripts/rcl8/creeps/upgrader"),
   wallRepairer: require("rclScripts/rcl8/creeps/wallRepairer")

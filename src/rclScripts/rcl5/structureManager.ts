@@ -7,7 +7,7 @@ export function run() {
     if (RoomData.extensions.length >= Object.keys(roomPlan.room["buildings"]["extension"]["pos"]).length) {
       if (RoomData.containers.length + 1 >= Object.keys(roomPlan.room["buildings"]["container"]["pos"]).length) {
         if (RoomData.storage !== undefined) {
-          if (RoomData.tower !== undefined) {
+          if (RoomData.towers.length >= Object.keys(roomPlan.room["buildings"]["tower"]["pos"]).length) {
             if (RoomData.walls.length >= Object.keys(roomPlan.room["buildings"]["constructedWall"]["pos"]).length) {
               if (RoomData.ramparts.length >= Object.keys(roomPlan.room["buildings"]["rampart"]["pos"]).length) {
                 if (RoomData.roads.length >= Object.keys(roomPlan.room["buildings"]["road"]["pos"]).length) {

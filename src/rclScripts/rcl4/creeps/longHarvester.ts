@@ -1,4 +1,4 @@
-import { getResourceFromSource, moveTo, moveToRoom, withdraw, workingToggle } from "utils/creeps";
+import { harvest, moveTo, moveToRoom, transfer, workingToggle } from "utils/creeps";
 import { notFull } from "utils/structures";
 import { RoomData } from "../roomData";
 
@@ -6,21 +6,17 @@ export function run(creep: Creep) {
   workingToggle(creep);
 
   if (creep.memory.working) {
-    transfer(creep);
+    supply(creep);
   }
   else if (!creep.memory.working) {
     getEnergy(creep);
   }
 }
 
-function transfer(creep: Creep) {
-  if (creep.room.name !== creep.memory.home || creep.pos.x * creep.pos.y === 0 ||
-    Math.abs(creep.pos.x) === 49 || Math.abs(creep.pos.y) === 49) {
-    moveToRoom(creep, creep.memory.home);
-  }
-  else {
-    if (RoomData.storage !== undefined && RoomData.storage.store[RESOURCE_ENERGY]! > 0) {
-      withdraw(creep, RoomData.storage, RESOURCE_ENERGY);
+function supply(creep: Creep) {
+  if (!moveToRoom(creep, creep.memory.home)) {
+    if (RoomData.storage !== undefined && _.sum(RoomData.storage.store) < RoomData.storage.storeCapacity) {
+      transfer(creep, RoomData.storage, RESOURCE_ENERGY);
     }
     else {
       const structure = _.find(RoomData.structures, (s: Structure) => {
@@ -38,11 +34,8 @@ function transfer(creep: Creep) {
 }
 
 function getEnergy(creep: Creep) {
-  if (creep.room.name !== creep.memory.targetRoom || creep.pos.x * creep.pos.y === 0 ||
-    Math.abs(creep.pos.x) === 49 || Math.abs(creep.pos.y) === 49) {
-    moveToRoom(creep, creep.memory.targetRoom);
-  }
-  else {
-    getResourceFromSource(creep, RoomData.sources);
+  if (!moveToRoom(creep, creep.memory.targetRoom)) {
+    const source = creep.pos.findClosestByPath<Source>(FIND_SOURCES_ACTIVE);
+    harvest(creep, source);
   }
 }

@@ -1,3 +1,4 @@
+import * as rcl0 from "rclScripts/rcl0/roomManager";
 import * as rcl1 from "rclScripts/rcl1/roomManager";
 import * as rcl2 from "rclScripts/rcl2/roomManager";
 import * as rcl3 from "rclScripts/rcl3/roomManager";
@@ -22,6 +23,9 @@ function main() {
   for (const r in Game.rooms) {
     const room = Game.rooms[r];
     switch (room.controller!.level) {
+      case 0:
+        rcl0.run(room);
+        break;
       case 1:
         rcl1.run(room);
         break;

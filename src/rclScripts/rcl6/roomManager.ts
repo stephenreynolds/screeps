@@ -30,7 +30,10 @@ export function run(room: Room) {
       if (colony !== undefined) {
         RoomData.longHarvesterCount = _.filter(colony.find<Creep>(FIND_MY_CREEPS), (c: Creep) => {
           return c.memory.role === "longHarvester";
-        }).length;
+        }).length + (RoomData.creepsOfRole as any)["longHarvester"];
+      }
+      else {
+        RoomData.longHarvesterCount = (RoomData.creepsOfRole as any)["longHarvester"];
       }
     }
 
@@ -74,12 +77,6 @@ function compileRoomData(room: Room) {
   // Get energy sources.
   RoomData.sources = room.find<Source>(FIND_SOURCES_ACTIVE);
 
-  // Get upgrade container.
-  const upgradeContainer = room.controller!.pos.findInRange(RoomData.containers, 3)[0];
-  if (upgradeContainer !== undefined) {
-    RoomData.upgradeContainer = upgradeContainer;
-  }
-
   // Get structures.
   RoomData.structures = room.find<Structure>(FIND_STRUCTURES);
   for (const s of RoomData.structures) {
@@ -102,15 +99,24 @@ function compileRoomData(room: Room) {
         }
         break;
       case STRUCTURE_TOWER:
-        RoomData.tower = s as Tower;
-        break;
-      case STRUCTURE_STORAGE:
-        RoomData.storage = s as Storage;
+        RoomData.towers.push(s as Tower);
         break;
       case STRUCTURE_SPAWN:
         RoomData.spawn = s as Spawn;
         break;
+      case STRUCTURE_STORAGE:
+        RoomData.storage = s as Storage;
+        break;
+      case STRUCTURE_EXTRACTOR:
+        RoomData.extractor = s as StructureExtractor;
+        break;
     }
+  }
+
+  // Get upgrade container.
+  const upgradeContainer = room.controller!.pos.findInRange(RoomData.containers, 3)[0];
+  if (upgradeContainer !== undefined) {
+    RoomData.upgradeContainer = upgradeContainer;
   }
 
   // Get construction sites.
@@ -121,6 +127,9 @@ function compileRoomData(room: Room) {
 
   // Get hostile creeps.
   RoomData.hostileCreeps = room.find<Creep>(FIND_HOSTILE_CREEPS);
+
+  // Get mineral.
+  RoomData.minerals = room.find<Mineral>(FIND_MINERALS);
 
   // Get number of creeps with each role.
   const creepsOfRole = {} as any;
@@ -148,6 +157,7 @@ const roles = [
   "repairer",
   "scavenger",
   "sentinel",
+  "transporter",
   "upgradeCourier",
   "upgrader",
   "wallRepairer"

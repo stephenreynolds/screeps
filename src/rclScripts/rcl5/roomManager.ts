@@ -30,7 +30,10 @@ export function run(room: Room) {
       if (colony !== undefined) {
         RoomData.longHarvesterCount = _.filter(colony.find<Creep>(FIND_MY_CREEPS), (c: Creep) => {
           return c.memory.role === "longHarvester";
-        }).length;
+        }).length + (RoomData.creepsOfRole as any)["longHarvester"];
+      }
+      else {
+        RoomData.longHarvesterCount = (RoomData.creepsOfRole as any)["longHarvester"];
       }
     }
 
@@ -74,12 +77,6 @@ function compileRoomData(room: Room) {
   // Get energy sources.
   RoomData.sources = room.find<Source>(FIND_SOURCES_ACTIVE);
 
-  // Get upgrade container.
-  const upgradeContainer = room.controller!.pos.findInRange(RoomData.containers, 3)[0];
-  if (upgradeContainer !== undefined) {
-    RoomData.upgradeContainer = upgradeContainer;
-  }
-
   // Get structures.
   RoomData.structures = room.find<Structure>(FIND_STRUCTURES);
   for (const s of RoomData.structures) {
@@ -102,7 +99,7 @@ function compileRoomData(room: Room) {
         }
         break;
       case STRUCTURE_TOWER:
-        RoomData.tower = s as Tower;
+        RoomData.towers.push(s as Tower);
         break;
       case STRUCTURE_STORAGE:
         RoomData.storage = s as Storage;
@@ -111,6 +108,12 @@ function compileRoomData(room: Room) {
         RoomData.spawn = s as Spawn;
         break;
     }
+  }
+
+  // Get upgrade container.
+  const upgradeContainer = room.controller!.pos.findInRange(RoomData.containers, 3)[0];
+  if (upgradeContainer !== undefined) {
+    RoomData.upgradeContainer = upgradeContainer;
   }
 
   // Get construction sites.

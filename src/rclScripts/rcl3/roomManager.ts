@@ -30,7 +30,10 @@ export function run(room: Room) {
       if (colony !== undefined) {
         RoomData.longHarvesterCount = _.filter(colony.find<Creep>(FIND_MY_CREEPS), (c: Creep) => {
           return c.memory.role === "longHarvester";
-        }).length;
+        }).length + (RoomData.creepsOfRole as any)["longHarvester"];
+      }
+      else {
+        RoomData.longHarvesterCount = (RoomData.creepsOfRole as any)["longHarvester"];
       }
     }
 

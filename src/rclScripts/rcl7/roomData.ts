@@ -12,13 +12,15 @@ export class RoomData {
   public static walls: StructureWall[];
   public static ramparts: Rampart[];
   public static roads: StructureRoad[];
-  public static tower: Tower | undefined;
+  public static towers: Tower[];
+  public static extractor: StructureExtractor | undefined;
   public static sources: Source[];
   public static sites: ConstructionSite[];
   public static creeps: Creep[];
   public static hostileCreeps: Creep[];
   public static creepsOfRole: {};
   public static dropped: Resource[];
+  public static minerals: Mineral[];
 
   // Other rooms.
   public static invaderCount = 0;
@@ -38,12 +40,14 @@ export class RoomData {
     this.walls = [];
     this.ramparts = [];
     this.roads = [];
-    this.tower = undefined;
+    this.towers = [];
+    this.extractor = undefined;
     this.sources = [];
     this.sites = [];
     this.creeps = [];
     this.hostileCreeps = [];
     this.dropped = [];
+    this.minerals = [];
     this.invaderCount = 0;
     this.longHarvesterCount = 0;
   }

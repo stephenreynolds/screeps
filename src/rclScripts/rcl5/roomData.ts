@@ -12,7 +12,7 @@ export class RoomData {
   public static walls: StructureWall[];
   public static ramparts: Rampart[];
   public static roads: StructureRoad[];
-  public static tower: Tower | undefined;
+  public static towers: Tower[];
   public static sources: Source[];
   public static sites: ConstructionSite[];
   public static creeps: Creep[];
@@ -38,7 +38,7 @@ export class RoomData {
     this.walls = [];
     this.ramparts = [];
     this.roads = [];
-    this.tower = undefined;
+    this.towers = [];
     this.sources = [];
     this.sites = [];
     this.creeps = [];

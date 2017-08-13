@@ -21,7 +21,7 @@ export function run(creep: Creep): void {
 }
 
 function construct(creep: Creep) {
-  let site: ConstructionSite;
+  let site: ConstructionSite | undefined;
   const target = Game.getObjectById(creep.memory.targetId);
 
   if (target !== null) {
@@ -36,8 +36,11 @@ function construct(creep: Creep) {
     if (nonRoads[0] !== undefined) {
       site = nonRoads[0];
     }
-    else {
+    else if (RoomData.sites !== undefined) {
       site = RoomData.sites[0];
+    }
+    else {
+      site = undefined;
     }
   }
 

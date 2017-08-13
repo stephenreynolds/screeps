@@ -21,8 +21,8 @@ export class RoomData {
   public static dropped: Resource[];
 
   // Other rooms.
-  public static invaderCount = 0;
-  public static longHarvesterCount = 0;
+  public static invaderCount: number;
+  public static longHarvesterCount: number;
 
   /**
    * Reinitialize room object properties.

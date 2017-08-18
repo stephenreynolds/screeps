@@ -13,7 +13,8 @@ export function run() {
     DEFCON0();
   }
   else if (hostileCreeps.length > 0 && hostileCreeps.length <= 4) {
-    if (RoomData.room.memory.DEFCONTime > 50) {
+    if ((RoomData.room.memory.DEFCON === 1 && RoomData.room.memory.DEFCONTime > 50)
+        || RoomData.room.memory.DEFCON === 2) {
       const time = RoomData.room.memory.DEFCONTime;
       updateDEFCON(2);
       RoomData.room.memory.DEFCONTime = time;
@@ -39,10 +40,10 @@ function updateDEFCON(level: number) {
     RoomData.room.memory.DEFCONTime = 0;
 
     if (level > RoomData.room.memory.DEFCON) {
-      log.warning("DEFCON level escalated to " + level);
+      log.warning("DEFCON level escalated to " + level + " in " + RoomData.room.name);
     }
     else {
-      log.warning("DEFCON level degraded to " + level);
+      log.warning("DEFCON level degraded to " + level + " in " + RoomData.room.name);
     }
   }
 

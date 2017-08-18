@@ -1,4 +1,3 @@
-import { log } from "lib/logger/log";
 import { RoomData } from "roomData";
 
 export function run() {
@@ -39,12 +38,12 @@ function updateDEFCON(level: number) {
   if (level !== RoomData.room.memory.DEFCON) {
     RoomData.room.memory.DEFCONTime = 0;
 
-    if (level > RoomData.room.memory.DEFCON) {
-      log.warning("DEFCON level escalated to " + level + " in " + RoomData.room.name);
-    }
-    else {
-      log.warning("DEFCON level degraded to " + level + " in " + RoomData.room.name);
-    }
+    // if (level > RoomData.room.memory.DEFCON) {
+    //   log.warning("DEFCON level escalated to " + level + " in " + RoomData.room.name);
+    // }
+    // else {
+    //   log.warning("DEFCON level degraded to " + level + " in " + RoomData.room.name);
+    // }
   }
 
   RoomData.room.memory.DEFCON = level;

@@ -27,6 +27,8 @@ export function run(r: Room[]) {
     const rclProgress = room.controller!.progress / room.controller!.progressTotal * 100;
     console.log(`Room Control Level: ${room.controller!.level} (${rclProgress.toFixed(2)}%)`);
 
+    console.log(`Defense Level: ${room.memory.DEFCON}`);
+
     if (room.memory.buildTarget !== undefined) {
       const buildTarget = Game.getObjectById(room.memory.buildTarget) as ConstructionSite;
       const buildProgress = buildTarget.progress / buildTarget.progressTotal * 100;

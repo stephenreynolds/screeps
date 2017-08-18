@@ -1,11 +1,13 @@
 export function run(rooms: Room[]) {
-  console.log("---------------------------------------------");
-  console.log("<span style='color:rgba(52, 152, 219, 1.0)'> _                       _               _   </span>");
-  console.log("<span style='color:rgba(52, 152, 219, 1.0)'>| |                     (_)             | |  </span>");
-  console.log("<span style='color:rgba(52, 152, 219, 1.0)'>| | __ _   _  _ __ ___   _  _ __    ___ | |_ </span>");
-  console.log("<span style='color:rgba(52, 152, 219, 1.0)'>| |/ /| | | || '_ ` _ \\ | || '_ \\  / _ \\| __|</span>");
-  console.log("<span style='color:rgba(52, 152, 219, 1.0)'>|   < | |_| || | | | | || || | | ||  __/| |_ </span>");
-  console.log("<span style='color:rgba(52, 152, 219, 1.0)'>|_|\\_\\ \\__,_||_| |_| |_||_||_| |_| \\___| \\__|</span>");
+  for (let i = 0; i < 80; i++) {
+    console.log();
+  }
+  console.log("<span style='color:rgba(179, 0, 39, 1.0)'> _                       _               _   </span>");
+  console.log("<span style='color:rgba(179, 0, 39, 1.0)'>| |                     (_)             | |  </span>");
+  console.log("<span style='color:rgba(179, 0, 39, 1.0)'>| | __ _   _  _ __ ___   _  _ __    ___ | |_ </span>");
+  console.log("<span style='color:rgba(179, 0, 39, 1.0)'>| |/ /| | | || '_ ` _ \\ | || '_ \\  / _ \\| __|</span>");
+  console.log("<span style='color:rgba(179, 0, 39, 1.0)'>|   < | |_| || | | | | || || | | ||  __/| |_ </span>");
+  console.log("<span style='color:rgba(179, 0, 39, 1.0)'>|_|\\_\\ \\__,_||_| |_| |_||_||_| |_| \\___| \\__|</span>");
 
   const gclProgress = Game.gcl.progress / Game.gcl.progressTotal * 100;
   console.log(`Global Control Level: ${Game.gcl.level} (${gclProgress.toFixed(2)}%)`);

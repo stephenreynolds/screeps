@@ -5,11 +5,11 @@
   "files.encoding": "utf8",
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
+  "typescriptHero.resolver.stringQuoteStyle": "\"",
   "search.exclude": {
     "dist/**": true,
     "node_modules/**": true,
     "typings/**": true
   },
-  "typescript.tsdk": "./node_modules/typescript/lib",
-  "standard.enable": false
+  "typescript.tsdk": "./node_modules/typescript/lib"
 }

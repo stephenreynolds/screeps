@@ -11,7 +11,8 @@
     "noUnusedLocals": true,
     "sourceMap": true,
     "baseUrl": "./src/",
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "pretty": true
   },
   "compileOnSave": false,
   "include": [

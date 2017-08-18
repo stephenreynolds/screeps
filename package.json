@@ -1,9 +1,17 @@
 {
-  "name": "screeps-typescript-starter",
+  "name": "kuminet",
   "version": "2.0.0",
-  "description": "",
+  "description": "kumikill's Screeps script",
+  "keywords": [
+    "screeps",
+    "ai",
+    "typescript"
+  ],
+  "license": "MIT",
+  "author": "Stephen Reynolds (kumikill)",
+  "email": "mail@stephenreynolds.me",
+  "repository": "github:kumikill/kuminet",
   "main": "./dist/main.js",
-  "repository": "screepers/screeps-typescript-starter",
   "scripts": {
     "postinstall": "typings install",
     "deploy": "webpack --colors --env.ENV=dev",
@@ -13,8 +21,6 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "typings": "typings"
   },
-  "author": "",
-  "license": "MIT",
   "devDependencies": {
     "@types/chai": "^3.5.2",
     "@types/mocha": "^2.2.41",
@@ -24,7 +30,7 @@
     "git-rev-sync": "^1.9.1",
     "lodash": "^3.10.1",
     "mocha": "^3.3.0",
-    "screeps-webpack-plugin": "git://github.com/langri-sha/screeps-webpack-plugin.git",
+    "screeps-webpack-plugin": "^1.3.0",
     "source-map-loader": "^0.2.1",
     "ts-node": "^3.0.4",
     "tslint": "^5.2.0",

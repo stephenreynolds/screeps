@@ -66,6 +66,16 @@ export function transfer(creep: Creep, target: Structure, resource: string, amou
   return action;
 }
 
+export function repair(creep: Creep, target: Structure) {
+  const action = creep.repair(target);
+
+  if (action === ERR_NOT_IN_RANGE) {
+    moveTo(creep, target.pos);
+  }
+
+  return action;
+}
+
 export function getResourceFromSource(creep: Creep, sources: Source[] | Mineral[]) {
   if (creep.memory.targetSourceId !== undefined) {
     const source = Game.getObjectById<Source>(creep.memory.targetSourceId);

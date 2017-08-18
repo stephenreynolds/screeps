@@ -1,55 +1,39 @@
-import * as rcl0 from "rclScripts/rcl0/roomManager";
-import * as rcl1 from "rclScripts/rcl1/roomManager";
-import * as rcl2 from "rclScripts/rcl2/roomManager";
-import * as rcl3 from "rclScripts/rcl3/roomManager";
-import * as rcl4 from "rclScripts/rcl4/roomManager";
-import * as rcl5 from "rclScripts/rcl5/roomManager";
-// import * as rcl6 from "rclScripts/rcl6/roomManager";
-// import * as rcl7 from "rclScripts/rcl7/roomManager";
-// import * as rcl8 from "rclScripts/rcl8/roomManager";
+import * as Config from "config/config";
+import * as Report from "report";
+import * as RoomManager from "roomManager";
 import * as Profiler from "screeps-profiler";
-import * as Config from "./boilerplate/config/config";
 
 if (Config.USE_PROFILER) {
   Profiler.enable();
 }
 
 function main() {
+  // Only run the script when the bucket is half full.
+  if (Game.cpu.tickLimit < 250) {
+    return;
+  }
+
   // Check memory for null or out of bounds custom objects.
   if (!Memory.uuid || Memory.uuid > 100) {
     Memory.uuid = 0;
   }
 
-  for (const r in Game.rooms) {
-    const room = Game.rooms[r];
-    switch (room.controller!.level) {
-      case 0:
-        rcl0.run(room);
-        break;
-      case 1:
-        rcl1.run(room);
-        break;
-      case 2:
-        rcl2.run(room);
-        break;
-      case 3:
-        rcl3.run(room);
-        break;
-      case 4:
-        rcl4.run(room);
-        break;
-      case 5:
-        rcl5.run(room);
-        break;
-      // case 6:
-      //   rcl6.run(room);
-      //   break;
-      // case 7:
-      //   rcl7.run(room);
-      //   break;
-      // case 8:
-      //   rcl8.run(room);
-      //   break;
+  // Run each room.
+  const rooms = [];
+  for (const roomName in Game.rooms) {
+    rooms.push(Game.rooms[roomName]);
+    RoomManager.run(Game.rooms[roomName]);
+  }
+
+  // Print report.
+  if (Game.time % 20 === 0) {
+    Report.run(rooms);
+  }
+
+ // Start profiler.
+  if (Config.USE_PROFILER) {
+    if (Game.time % Config.PROFILE_TICKS) {
+      Game.profiler.email(Config.PROFILE_TICKS);
     }
   }
 }

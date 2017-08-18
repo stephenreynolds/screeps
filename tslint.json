@@ -23,6 +23,13 @@
     "no-string-literal": false,
     "no-var-keyword": true,
     "no-namespace": false,
-    "prefer-for-of": true
+    "prefer-for-of": true,
+    "only-arrow-functions": [
+      false
+    ],
+    "quotemark": [
+      true,
+      "double"
+    ]
   }
 }

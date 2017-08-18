@@ -13,7 +13,7 @@ export function run(room: Room) {
 
   if (room.controller!.my) {
     DefenseManager.run();
-    if (Game.time % 25 === 0 && room.name !== "W18S14") {
+    if (Game.time % 30 === 0 && room.name !== "W18S14") {
       StructureManager.run();
     }
     JobManager.run(room, RoomData.structures, RoomData.sites, RoomData.extensions,
@@ -115,8 +115,20 @@ function compileRoomData(room: Room) {
         if (s.pos.inRangeTo(RoomData.storage!.pos, 3)) {
           RoomData.storageToLink = s as Link;
         }
+        else if (s.pos.inRangeTo(RoomData.room.controller!.pos, 3)) {
+          RoomData.upgradeToLink = s as Link;
+        }
         else {
-          RoomData.storageFromLink = s as Link;
+          for (const source of RoomData.sources) {
+            if (s.pos.inRangeTo(source, 3)) {
+              if (RoomData.storageFromLink === undefined) {
+                RoomData.storageFromLink = s as Link;
+              }
+              else {
+                RoomData.upgradeFromLink = s as Link;
+              }
+            }
+          }
         }
         break;
       case STRUCTURE_TOWER:
@@ -140,6 +152,9 @@ function compileRoomData(room: Room) {
   // Get hostile creeps.
   RoomData.hostileCreeps = room.find<Creep>(FIND_HOSTILE_CREEPS);
 
+  // Get dropped resources.
+  RoomData.dropped = room.find<Resource>(FIND_DROPPED_RESOURCES);
+
   // Get number of creeps with each role.
   const creepsOfRole = {} as any;
   for (const role of roles) {
@@ -155,6 +170,7 @@ function compileRoomData(room: Room) {
 }
 
 const roles = [
+  "accountant",
   "builder",
   "courier",
   "harvester",
@@ -166,7 +182,6 @@ const roles = [
   "repairer",
   "scavenger",
   "sentinel",
-  "storageKeeper",
   "transporter",
   "upgrader",
   "wallRepairer"

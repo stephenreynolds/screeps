@@ -20,6 +20,8 @@ export class RoomData {
   public static dropped: Resource[];
   public static storageFromLink: Link | undefined;
   public static storageToLink: Link | undefined;
+  public static upgradeFromLink: Link | undefined;
+  public static upgradeToLink: Link | undefined;
 
   // Other rooms.
   public static invaderCount = 0;
@@ -47,6 +49,8 @@ export class RoomData {
     this.dropped = [];
     this.storageFromLink = undefined;
     this.storageToLink = undefined;
+    this.upgradeFromLink = undefined;
+    this.upgradeToLink = undefined;
     this.invaderCount = 0;
     this.longHarvesterCount = 0;
   }

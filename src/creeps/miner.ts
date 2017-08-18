@@ -21,6 +21,34 @@ export function run(creep: Creep) {
           creep.harvest(source!);
         }
       }
+      else if (RoomData.upgradeFromLink !== undefined && creep.pos.isNearTo(RoomData.upgradeFromLink.pos)) {
+        if (RoomData.upgradeToLink !== undefined) {
+          if ((RoomData.upgradeFromLink.energy === RoomData.upgradeFromLink.energyCapacity &&
+            RoomData.upgradeToLink.energy < RoomData.upgradeToLink.energyCapacity) ||
+            (RoomData.upgradeToLink.energy === 0 && RoomData.upgradeFromLink.energy > 0)) {
+            RoomData.upgradeFromLink.transferEnergy(RoomData.upgradeToLink);
+          }
+          if (creep.carry.energy === creep.carryCapacity) {
+            creep.transfer(RoomData.upgradeFromLink, RESOURCE_ENERGY);
+          }
+          else {
+            creep.harvest(source!);
+          }
+        }
+        else if (RoomData.storageToLink !== undefined) {
+          if ((RoomData.upgradeFromLink.energy === RoomData.upgradeFromLink.energyCapacity &&
+            RoomData.storageToLink.energy < RoomData.storageToLink.energyCapacity) ||
+            (RoomData.storageToLink.energy === 0 && RoomData.upgradeFromLink.energy > 0)) {
+            RoomData.upgradeFromLink.transferEnergy(RoomData.storageToLink);
+          }
+          if (creep.carry.energy === creep.carryCapacity) {
+            creep.transfer(RoomData.upgradeFromLink, RESOURCE_ENERGY);
+          }
+          else {
+            creep.harvest(source!);
+          }
+        }
+      }
       else {
         creep.harvest(source!);
       }

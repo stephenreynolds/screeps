@@ -26,9 +26,7 @@ function main() {
   }
 
   // Print report.
-  if (Game.time % 20 === 0) {
-    Report.run(rooms);
-  }
+  Report.run(rooms);
 
  // Start profiler.
   if (Config.USE_PROFILER) {

@@ -1,4 +1,8 @@
-export function run(rooms: Room[]) {
+export function run(r: Room[]) {
+  const rooms = _.filter(r, (t: Room) => {
+    return t.controller !== undefined && t.controller.my;
+  });
+
   for (let i = 0; i < 80; i++) {
     console.log();
   }

@@ -1,4 +1,5 @@
 const roles = {
+  accountant: require("creeps/accountant"),
   builder: require("creeps/builder"),
   courier: require("creeps/courier"),
   healer: require("creeps/healer"),
@@ -9,7 +10,6 @@ const roles = {
   repairer: require("creeps/repairer"),
   scavenger: require("creeps/scavenger"),
   sentinel: require("creeps/sentinel"),
-  storageKeeper: require("creeps/storageKeeper"),
   transporter: require("creeps/transporter"),
   upgrader: require("creeps/upgrader"),
   wallRepairer: require("creeps/wallRepairer")

@@ -26,15 +26,17 @@ export function run() {
   else if (creepsOfRole["upgrader"] < 2) {
     createBalancedCreep(spawn, RoomData.room.energyAvailable, "upgrader", [WORK, WORK, CARRY, MOVE], [4, 4, 2, 2]);
   }
-  else if (creepsOfRole["storageKeeper"] < 1 && RoomData.storage !== undefined &&
+  else if (creepsOfRole["accountant"] < 1 && RoomData.storage !== undefined &&
     RoomData.storageToLink !== undefined && RoomData.storageFromLink !== undefined) {
-    createBalancedCreep(spawn, RoomData.room.energyAvailable, "storageKeeper", [WORK, WORK, CARRY, MOVE], [2, 2, 1, 1]);
+    createBalancedCreep(spawn, RoomData.room.energyAvailable, "accountant", [WORK, WORK, CARRY, MOVE], [2, 2, 1, 1]);
   }
-  else if ((RoomData.storageFromLink !== undefined && RoomData.storageToLink !== undefined
-    && creepsOfRole["transporter"] < RoomData.containers.length - 1) ||
-    (RoomData.storageFromLink === undefined || RoomData.storageToLink === undefined
-      && creepsOfRole["transporter"] < RoomData.containers.length) && RoomData.storage !== undefined) {
-    createBalancedCreep(spawn, RoomData.room.energyAvailable, "transporter", [CARRY, CARRY, MOVE, MOVE], [3, 3, 2, 2]);
+  else if (RoomData.storage !== undefined &&
+          ((RoomData.storageFromLink !== undefined && RoomData.storageToLink !== undefined
+            && creepsOfRole["transporter"] < 1) ||
+          ((RoomData.storageFromLink === undefined || RoomData.storageToLink === undefined)
+            && creepsOfRole["transporter"] < RoomData.containers.length - 1))) {
+    createBalancedCreep(spawn, RoomData.room.energyAvailable, "transporter",
+                        [CARRY, CARRY, MOVE, MOVE], [3, 3, 2, 2]);
   }
   else if (creepsOfRole["builder"] < 3 && RoomData.sites.length > 0) {
     if (Game.getObjectById(RoomData.room.memory.construct) !== undefined) {

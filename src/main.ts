@@ -1,39 +1,31 @@
-import * as Config from "config/config";
-import * as Report from "report";
-import * as RoomManager from "roomManager";
+import * as Config from "config";
+import * as ConsoleCommands from "consoleCommands";
 import * as Profiler from "screeps-profiler";
+import { Kernel } from "./Kernel";
 
-if (Config.USE_PROFILER) {
-  Profiler.enable();
+if (Config.USE_PROFILER)
+{
+    Profiler.enable();
 }
 
-function main() {
-  // Only run the script when the bucket is half full.
-  if (Game.cpu.tickLimit < 250) {
-    return;
-  }
+function main()
+{
+    // Add custom commands to console.
+    global.cc = ConsoleCommands;
 
-  // Check memory for null or out of bounds custom objects.
-  if (!Memory.uuid || Memory.uuid > 100) {
-    Memory.uuid = 0;
-  }
-
-  // Run each room.
-  const rooms = [];
-  for (const roomName in Game.rooms) {
-    rooms.push(Game.rooms[roomName]);
-    RoomManager.run(Game.rooms[roomName]);
-  }
-
-  // Print report.
-  Report.run(rooms);
-
- // Start profiler.
-  if (Config.USE_PROFILER) {
-    if (Game.time % Config.PROFILE_TICKS) {
-      Game.profiler.email(Config.PROFILE_TICKS);
+    // Check memory for null or out of bounds custom objects.
+    if (!Memory.uuid || Memory.uuid > 100)
+    {
+        Memory.uuid = 0;
     }
-  }
+
+    // Run kernel.
+    const kernel = new Kernel();
+    while (kernel.underLimit() && kernel.needsToRun())
+    {
+        kernel.runProcess();
+    }
+    kernel.deconstruct();
 }
 
 export const loop = !Config.USE_PROFILER ? main : () => { Profiler.wrap(main); };

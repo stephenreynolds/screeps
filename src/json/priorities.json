@@ -1,27 +1,32 @@
 {
-  "buildPriorities": [
-    "spawn",
-    "container",
-    "link",
-    "extension",
-    "storage",
-    "tower",
-    "constructedWall",
-    "rampart",
-    "road"
-  ],
-  "repairPriorities": [
-    "spawn",
-    "tower",
-    "extension",
-    "container",
-    "link",
-    "storage",
-    "road"
-  ],
-  "energyPriorities": [
-    "spawn",
-    "tower",
-    "extension"
-  ]
+    "buildPriorities": [
+        "spawn",
+        "container",
+        "storage",
+        "link",
+        "extractor",
+        "terminal",
+        "extension",
+        "tower",
+        "lab",
+        "powerSpawn",
+        "nuker",
+        "constructedWall",
+        "rampart",
+        "road"
+    ],
+    "repairPriorities": [
+        "spawn",
+        "tower",
+        "extension",
+        "container",
+        "link",
+        "storage",
+        "road"
+    ],
+    "energyPriorities": [
+        "spawn",
+        "tower",
+        "extension"
+    ]
 }

@@ -3,6 +3,13 @@
     "tslint:recommended"
   ],
   "rules": {
+    "brace-style": [
+      true,
+      "allman",
+      {
+        "allowSingleLine": true
+      }
+    ],
     "forin": false,
     "interface-name": [false],
     "no-console": [false],
@@ -30,6 +37,8 @@
     "quotemark": [
       true,
       "double"
-    ]
+    ],
+    "object-literal-shorthand": false,
+    "object-literal-sort-keys": false
   }
 }

@@ -12,7 +12,7 @@ export function run() {
   }
 
   if (creepsOfRole["courier"] < RoomData.sources.length) {
-    createBalancedCreep(spawn, RoomData.room.energyAvailable, "courier", [WORK, CARRY, MOVE], [2, 3, 3]);
+    createBalancedCreep(spawn, RoomData.room.energyAvailable, "courier", [WORK, CARRY, MOVE], [2, 5, 5]);
   }
   else if (creepsOfRole["sentinel"] < RoomData.room.memory.sentinels) {
     createCreep(spawn, "sentinel", [ATTACK, ATTACK, MOVE, MOVE]);
@@ -23,12 +23,12 @@ export function run() {
   else if (creepsOfRole["miner"] < RoomData.containers.length) {
     createMiner(spawn, RoomData.sources, RoomData.creeps, RoomData.containers);
   }
-  else if (creepsOfRole["upgrader"] < 2) {
-    createBalancedCreep(spawn, RoomData.room.energyAvailable, "upgrader", [WORK, WORK, CARRY, MOVE], [4, 4, 2, 2]);
+  else if (creepsOfRole["upgrader"] < RoomData.room.controller!.level) {
+    createBalancedCreep(spawn, RoomData.room.energyAvailable, "upgrader", [WORK, WORK, CARRY, MOVE], [10, 10, 10, 2]);
   }
   else if (creepsOfRole["accountant"] < 1 && RoomData.storage !== undefined &&
     RoomData.storageToLink !== undefined && RoomData.storageFromLink !== undefined) {
-    createBalancedCreep(spawn, RoomData.room.energyAvailable, "accountant", [WORK, WORK, CARRY, MOVE], [2, 2, 1, 1]);
+    createBalancedCreep(spawn, RoomData.room.energyAvailable, "accountant", [WORK, CARRY, CARRY, MOVE], [1, 3, 3, 1]);
   }
   else if (RoomData.storage !== undefined &&
           ((RoomData.storageFromLink !== undefined && RoomData.storageToLink !== undefined
@@ -36,37 +36,57 @@ export function run() {
           ((RoomData.storageFromLink === undefined || RoomData.storageToLink === undefined)
             && creepsOfRole["transporter"] < RoomData.containers.length - 1))) {
     createBalancedCreep(spawn, RoomData.room.energyAvailable, "transporter",
-                        [CARRY, CARRY, MOVE, MOVE], [3, 3, 2, 2]);
+                        [CARRY, CARRY, MOVE, MOVE], [7, 7, 3, 3]);
   }
-  else if (creepsOfRole["builder"] < 3 && RoomData.sites.length > 0) {
+  else if (RoomData.room.memory.claimRoom) {
+    if (createClaimer(spawn, RoomData.room.memory.claimRoom) > 0) {
+      delete RoomData.room.memory.claimRoom;
+    }
+  }
+  else if (creepsOfRole["builder"] < 3 && RoomData.sites.length > 0 ||
+          RoomData.room.memory.construct !== undefined && Game.time % 10 === 0) {
     if (Game.getObjectById(RoomData.room.memory.construct) !== undefined) {
       createBalancedCreep(spawn, RoomData.room.energyAvailable, "builder",
-        [WORK, CARRY, MOVE], [3, 3, 3], { targetId: RoomData.room.memory.construct });
+        [WORK, CARRY, MOVE], [5, 5, 5], { targetId: RoomData.room.memory.construct });
     }
     else {
       RoomData.room.memory.construct = undefined;
-      createBalancedCreep(spawn, RoomData.room.energyAvailable, "builder", [WORK, CARRY, MOVE], [3, 3, 3]);
+      createBalancedCreep(spawn, RoomData.room.energyAvailable, "builder", [WORK, CARRY, MOVE], [5, 5, 5]);
     }
   }
   else if (creepsOfRole["repairer"] < 1) {
-    createBalancedCreep(spawn, RoomData.room.energyAvailable, "repairer", [WORK, CARRY, MOVE], [2, 2, 3]);
+    createBalancedCreep(spawn, RoomData.room.energyAvailable, "repairer", [WORK, CARRY, MOVE], [3, 3, 5]);
   }
-  else if (creepsOfRole["rampartRepairer"] < 1) {
+  else if (creepsOfRole["rampartRepairer"] < 1 && RoomData.ramparts.length > 0) {
     createBalancedCreep(spawn, RoomData.room.energyAvailable, "rampartRepairer", [WORK, CARRY, MOVE], [3, 3, 3]);
   }
-  else if (creepsOfRole["wallRepairer"] < 1) {
+  else if (creepsOfRole["wallRepairer"] < 1 && RoomData.walls.length > 0) {
     createBalancedCreep(spawn, RoomData.room.energyAvailable, "wallRepairer", [WORK, CARRY, MOVE], [3, 3, 3]);
-  }
-  else if (RoomData.room.memory.colony !== undefined && RoomData.longHarvesterCount < 2) {
-    createBalancedCreep(spawn, RoomData.room.energyAvailable,
-      "longHarvester", [WORK, CARRY, CARRY, MOVE, MOVE], [2, 4, 4, 3, 3], { targetRoom: RoomData.room.memory.colony });
-  }
-  else if (creepsOfRole["scavenger"] < 1) {
-    createCreep(spawn, "scavenger", [WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]);
   }
   else if (RoomData.room.memory.invadeRoom !== undefined && RoomData.invaderCount < 10) {
     createBalancedCreep(spawn, RoomData.room.energyAvailable, "invader",
       [ATTACK, MOVE, TOUGH, TOUGH], [3, 3, 3, 3], { targetRoom: RoomData.room.memory.invadeRoom });
+  }
+  else if (creepsOfRole["mineralMiner"] < 1 && RoomData.mineralContainer && RoomData.extractor) {
+    createBalancedCreep(spawn, RoomData.room.energyAvailable, "mineralMiner", [WORK, WORK, MOVE], [5, 5, 1],
+      { mineralId: RoomData.minerals[0].id });
+  }
+  else if (RoomData.room.memory.colonies !== undefined) {
+    for (const colonyName of RoomData.room.memory.colonies) {
+      const i = RoomData.room.memory.colonies.indexOf(colonyName);
+      if (creepsOfRole["longHarvester"] < 1 &&
+            (RoomData.longHarvesterCount[i] === undefined || RoomData.longHarvesterCount[i] < 2)) {
+        createBalancedCreep(spawn, RoomData.room.energyAvailable,
+          "longHarvester", [WORK, CARRY, CARRY, MOVE, MOVE], [5, 10, 10, 10, 10],
+          { targetRoom: RoomData.room.memory.colonies[i] });
+      }
+      else if (creepsOfRole["reserver"] < 1 &&
+                (RoomData.reserverCount[i] === undefined || RoomData.reserverCount[i] < 2)) {
+        createBalancedCreep(spawn, RoomData.room.energyAvailable,
+          "reserver", [CLAIM, CLAIM, MOVE, MOVE], [4, 4, 3, 3],
+          { targetRoom: RoomData.room.memory.colonies[i] });
+      }
+    }
   }
 }
 
@@ -77,10 +97,8 @@ function createBalancedCreep(spawn: Spawn, energy: number, role: string, parts: 
     baseCost += BODYPART_COST[part];
   }
 
-  if (energy < baseCost) {
-    if (Config.ENABLE_DEBUG_MODE) {
-      log.info(`Not enough energy to create ${role}.`);
-    }
+  if (energy < baseCost && Config.ENABLE_DEBUG_MODE) {
+    log.info(`Not enough energy to create ${role}.`);
   }
   else {
     const numberOfParts =
@@ -114,26 +132,23 @@ function createCreep(spawn: Spawn, role: string, body: string[],
   const uuid: number = Memory.uuid;
   const name: string = role + uuid;
 
-  const memory: { [key: string]: any } = {
+  const mem: { [key: string]: any } = {
     home: spawn.room.name,
     role,
     targetId: null,
     working: false
   };
 
-  Object.assign(memory, extraMemory);
+  Object.assign(mem, extraMemory);
 
-  let status: number | string = spawn.canCreateCreep(body, name);
+  let status: number | string = spawn.spawnCreep(body, name, {dryRun: true});
   status = _.isString(status) ? OK : status;
   if (status === OK) {
     Memory.uuid = uuid + 1;
 
-    if (Config.ENABLE_DEBUG_MODE) {
-      log.info("Started creating new creep: " + name);
-      log.info("Body: " + body);
-    }
+    status = spawn.spawnCreep(body, name, {memory: mem});
 
-    status = spawn.createCreep(body, name, memory);
+    log.info(`Spawning ${role} in ${spawn.room.name}`);
 
     return _.isString(status) ? OK : status;
   }
@@ -141,7 +156,7 @@ function createCreep(spawn: Spawn, role: string, body: string[],
     if (Config.ENABLE_DEBUG_MODE) {
       switch (status) {
         case ERR_NOT_ENOUGH_ENERGY:
-          log.info(`Not enough energy to create ${role}.`);
+          log.info(`Not enough energy to create ${role} in ${RoomData.room.name}`);
           break;
         case ERR_RCL_NOT_ENOUGH:
           log.info(`Room Controller level insufficient to use spawn ${spawn}`);
@@ -188,6 +203,10 @@ function createMiner(spawn: Spawn, sources: Source[], creeps: Creep[],
   }
 
   return miner;
+}
+
+function createClaimer(spawn: Spawn, room: string) {
+  return createCreep(spawn, "claimer", [CLAIM, MOVE], {targetRoom: room});
 }
 
 function getSpawn() {

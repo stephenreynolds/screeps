@@ -1,5 +1,5 @@
 import * as Config from "config/config";
-import * as Report from "report";
+import {consoleCommands} from "consoleCommands";
 import * as RoomManager from "roomManager";
 import * as Profiler from "screeps-profiler";
 
@@ -8,6 +8,9 @@ if (Config.USE_PROFILER) {
 }
 
 function main() {
+  // Add custom commands to console.
+  global.cc = consoleCommands;
+
   // Only run the script when the bucket is half full.
   if (Game.cpu.tickLimit < 250) {
     return;
@@ -23,16 +26,6 @@ function main() {
   for (const roomName in Game.rooms) {
     rooms.push(Game.rooms[roomName]);
     RoomManager.run(Game.rooms[roomName]);
-  }
-
-  // Print report.
-  Report.run(rooms);
-
- // Start profiler.
-  if (Config.USE_PROFILER) {
-    if (Game.time % Config.PROFILE_TICKS) {
-      Game.profiler.email(Config.PROFILE_TICKS);
-    }
   }
 }
 

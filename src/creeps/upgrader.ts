@@ -1,8 +1,8 @@
-import { getResourceFromSource, moveTo, withdraw, workingToggle } from "utils/creeps";
+import { withdraw } from "utils/creeps";
 import { RoomData } from "../roomData";
 
 export function run(creep: Creep) {
-  workingToggle(creep);
+  creep.workingToggle();
 
   if (creep.memory.working) {
     upgrade(creep);
@@ -16,7 +16,7 @@ function upgrade(creep: Creep) {
   const controller = creep.room.controller!;
 
   if (creep.upgradeController(controller) === ERR_NOT_IN_RANGE) {
-    moveTo(creep, controller.pos);
+    creep.moveToTarget(controller.pos);
   }
 }
 
@@ -31,7 +31,7 @@ function getEnergy(creep: Creep) {
       withdraw(creep, container, RESOURCE_ENERGY);
     }
     else if (!reassignContainer(creep)) {
-      getResourceFromSource(creep, RoomData.sources);
+      creep.getResourceFromSource(RoomData.sources);
     }
   }
 }

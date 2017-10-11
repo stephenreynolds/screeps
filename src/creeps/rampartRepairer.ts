@@ -1,14 +1,9 @@
-import { getResourceFromSource, moveTo, withdraw } from "utils/creeps";
+import { withdraw } from "utils/creeps";
 import { RoomData } from "../roomData";
 import * as RoleWallRepairer from "./wallRepairer";
 
 export function run(creep: Creep): void {
-  if (creep.memory.working && _.sum(creep.carry) === 0) {
-    creep.memory.working = false;
-  }
-  else if (!creep.memory.working && _.sum(creep.carry) === creep.carryCapacity) {
-    creep.memory.working = true;
-  }
+  creep.workingToggle();
 
   if (creep.memory.working) {
     repair(creep);
@@ -29,7 +24,7 @@ function repair(creep: Creep) {
   if (rampart !== null) {
     const action = creep.repair(rampart);
     if (action === ERR_NOT_IN_RANGE) {
-      moveTo(creep, rampart.pos);
+      creep.moveToTarget(rampart.pos);
     }
     else if (action !== OK) {
       RoleWallRepairer.run(creep);
@@ -53,7 +48,7 @@ function getEnergy(creep: Creep) {
       withdraw(creep, container, RESOURCE_ENERGY);
     }
     else if (!reassignContainer(creep)) {
-      getResourceFromSource(creep, RoomData.sources);
+      creep.getResourceFromSource(RoomData.sources);
     }
   }
 }

@@ -1,9 +1,9 @@
-import { harvest, moveToRoom, transfer, workingToggle } from "utils/creeps";
+import { harvest, transfer } from "utils/creeps";
 import { RoomData } from "../roomData";
 import * as RoleCourier from "./courier";
 
 export function run(creep: Creep) {
-  workingToggle(creep);
+  creep.workingToggle();
 
   if (creep.memory.working) {
     supply(creep);
@@ -14,7 +14,7 @@ export function run(creep: Creep) {
 }
 
 function supply(creep: Creep) {
-  if (!moveToRoom(creep, creep.memory.home)) {
+  if (!creep.moveToRoom(creep.memory.home)) {
     if (RoomData.storage !== undefined && _.sum(RoomData.storage.store) < RoomData.storage.storeCapacity) {
       transfer(creep, RoomData.storage, RESOURCE_ENERGY);
     }
@@ -25,7 +25,7 @@ function supply(creep: Creep) {
 }
 
 function getEnergy(creep: Creep) {
-  if (!moveToRoom(creep, creep.memory.targetRoom)) {
+  if (!creep.moveToRoom(creep.memory.targetRoom)) {
     const source = creep.pos.findClosestByPath<Source>(FIND_SOURCES_ACTIVE);
     harvest(creep, source);
   }

@@ -1,4 +1,3 @@
-import { moveTo } from "utils/creeps";
 import { RoomData } from "../roomData";
 
 export function run(creep: Creep) {
@@ -9,6 +8,6 @@ export function run(creep: Creep) {
   });
 
   if (creep.heal(target) === ERR_NOT_IN_RANGE) {
-    moveTo(creep, target.pos);
+    creep.moveToTarget(target.pos);
   }
 }

@@ -2,10 +2,15 @@
   "buildPriorities": [
     "spawn",
     "container",
-    "link",
-    "extension",
     "storage",
+    "link",
+    "extractor",
+    "terminal",
+    "extension",
     "tower",
+    "lab",
+    "powerSpawn",
+    "nuker",
     "constructedWall",
     "rampart",
     "road"

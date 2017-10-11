@@ -1,9 +1,9 @@
-import { getResourceFromSource, moveTo, withdraw, workingToggle } from "utils/creeps";
+import { withdraw } from "utils/creeps";
 import { RoomData } from "../roomData";
 import * as RoleRepairer from "./repairer";
 
 export function run(creep: Creep): void {
-  workingToggle(creep);
+  creep.workingToggle();
 
   if (creep.memory.working) {
     construct(creep);
@@ -16,13 +16,14 @@ export function run(creep: Creep): void {
 function construct(creep: Creep) {
   let site: ConstructionSite | undefined;
 
-  if (creep.room.memory.construct !== undefined) {
-    const target = Game.getObjectById<ConstructionSite>(creep.room.memory.construct);
+  if (creep.memory.targetId !== undefined) {
+    const target = Game.getObjectById<ConstructionSite>(creep.memory.targetId);
     if (target !== null) {
       site = target;
     }
     else {
-      creep.room.memory.construct = undefined;
+      creep.memory.targetId = undefined;
+      Game.rooms[creep.memory.home].memory.construct = undefined;
     }
   }
   else {
@@ -33,7 +34,7 @@ function construct(creep: Creep) {
 
   if (site !== undefined) {
     if (creep.build(site) === ERR_NOT_IN_RANGE) {
-      moveTo(creep, site.pos);
+      creep.moveToTarget(site.pos);
     }
   }
   else {
@@ -52,7 +53,7 @@ function getEnergy(creep: Creep) {
       withdraw(creep, container, RESOURCE_ENERGY);
     }
     else if (!reassignContainer(creep)) {
-      getResourceFromSource(creep, RoomData.sources);
+      creep.getResourceFromSource(RoomData.sources);
     }
   }
 }

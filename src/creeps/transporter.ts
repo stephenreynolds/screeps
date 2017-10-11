@@ -1,9 +1,9 @@
-import { getResourceFromSource, moveTo, withdraw, workingToggle } from "utils/creeps";
+import { withdraw } from "utils/creeps";
 import { RoomData } from "../roomData";
 import * as roleCourier from "./courier";
 
 export function run(creep: Creep): void {
-  workingToggle(creep);
+  creep.workingToggle();
 
   if (creep.memory.working) {
     transfer(creep);
@@ -18,7 +18,7 @@ function transfer(creep: Creep) {
 
   if (structure !== undefined) {
     if (creep.transfer(structure, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-      moveTo(creep, structure.pos);
+      creep.moveToTarget(structure.pos);
     }
   }
   else {
@@ -33,7 +33,7 @@ function getEnergy(creep: Creep) {
     withdraw(creep, container, RESOURCE_ENERGY);
   }
   else if (!reassignContainer(creep)) {
-    getResourceFromSource(creep, RoomData.sources);
+    creep.getResourceFromSource(RoomData.sources);
   }
 }
 

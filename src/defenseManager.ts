@@ -1,36 +1,33 @@
+import { log } from "lib/logger/log";
 import { RoomData } from "roomData";
 
 export function run() {
-  const hostileCreeps = _.filter(RoomData.hostileCreeps, (c: Creep) => {
-    return (c.getActiveBodyparts(ATTACK) > 0 || c.getActiveBodyparts(RANGED_ATTACK) > 0) ||
-      c.pos.inRangeTo(RoomData.spawns[0].pos, 10) || c.pos.inRangeTo(RoomData.room.controller!.pos, 10);
-  });
   RoomData.room.memory.DEFCONTime++;
 
-  if (hostileCreeps.length === 0) {
+  if (RoomData.hostileCreeps.length === 0) {
     updateDEFCON(0);
     DEFCON0();
   }
-  else if (hostileCreeps.length > 0 && hostileCreeps.length <= 4) {
+  else if (RoomData.hostileCreeps.length > 0 && RoomData.hostileCreeps.length <= 4) {
     if ((RoomData.room.memory.DEFCON === 1 && RoomData.room.memory.DEFCONTime > 50)
         || RoomData.room.memory.DEFCON === 2) {
       const time = RoomData.room.memory.DEFCONTime;
       updateDEFCON(2);
       RoomData.room.memory.DEFCONTime = time;
-      DEFCON2(hostileCreeps);
+      DEFCON2(RoomData.hostileCreeps);
     }
     else {
       updateDEFCON(1);
-      DEFCON1(hostileCreeps);
+      DEFCON1(RoomData.hostileCreeps);
     }
   }
-  else if (hostileCreeps.length > 4 && hostileCreeps.length < 10) {
+  else if (RoomData.hostileCreeps.length > 4 && RoomData.hostileCreeps.length < 10) {
     updateDEFCON(3);
-    DEFCON3(hostileCreeps);
+    DEFCON3(RoomData.hostileCreeps);
   }
-  else if (hostileCreeps.length >= 10) {
+  else if (RoomData.hostileCreeps.length >= 10) {
     updateDEFCON(4);
-    DEFCON4(hostileCreeps);
+    DEFCON4(RoomData.hostileCreeps);
   }
 }
 
@@ -38,12 +35,12 @@ function updateDEFCON(level: number) {
   if (level !== RoomData.room.memory.DEFCON) {
     RoomData.room.memory.DEFCONTime = 0;
 
-    // if (level > RoomData.room.memory.DEFCON) {
-    //   log.warning("DEFCON level escalated to " + level + " in " + RoomData.room.name);
-    // }
-    // else {
-    //   log.warning("DEFCON level degraded to " + level + " in " + RoomData.room.name);
-    // }
+    if (level > RoomData.room.memory.DEFCON) {
+      log.warning("DEFCON level escalated to " + level + " in " + RoomData.room.name);
+    }
+    else {
+      log.warning("DEFCON level degraded to " + level + " in " + RoomData.room.name);
+    }
   }
 
   RoomData.room.memory.DEFCON = level;

@@ -12,11 +12,6 @@ export const ENABLE_DEBUG_MODE: boolean = false;
 export const USE_PROFILER: boolean = false;
 
 /**
- * Number of ticks the profiler will run for before emailing and restarting.
- */
-export const PROFILE_TICKS: number = 20;
-
-/**
  * Minimum number of ticksToLive for a Creep before they go to renew.
  * @type {number}
  */

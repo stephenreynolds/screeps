@@ -1,33 +1,53 @@
-import { getResourceFromSource, moveTo, withdraw, workingToggle } from "utils/creeps";
+import { log } from "lib/logger/log";
+import { withdraw } from "utils/creeps";
 import { RoomData } from "../roomData";
 import * as RoleUpgrader from "./upgrader";
 
 export function run(creep: Creep) {
-  workingToggle(creep);
+  creep.workingToggle();
 
   if (creep.memory.working) {
     transfer(creep);
   }
   else {
+    delete creep.memory.structureId;
     getEnergy(creep);
   }
 }
 
 function transfer(creep: Creep) {
-  if (creep.room.memory.energyTarget !== undefined) {
-    const structure = Game.getObjectById<Structure>(creep.room.memory.energyTarget)!;
-    if (creep.transfer(structure, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-      moveTo(creep, structure.pos);
+  const structure = Game.getObjectById<Structure>(creep.memory.structureId);
+
+  if (structure !== null) {
+    const action = creep.transfer(structure, RESOURCE_ENERGY);
+    switch (action) {
+      case ERR_NOT_IN_RANGE:
+        creep.moveToTarget(structure.pos);
+        break;
+      case ERR_FULL:
+        delete creep.memory.structureId;
+        break;
+      case OK:
+        break;
+      default:
+        log.error(`Creep ${creep.name} cannot transfer energy to ${structure}: error ${action}`);
+        break;
     }
   }
   else {
-    RoleUpgrader.run(creep);
+    if (!reassignStructure(creep)) {
+      RoleUpgrader.run(creep);
+    }
   }
 }
 
 function getEnergy(creep: Creep) {
-  if (RoomData.storage !== undefined && RoomData.storage.store[RESOURCE_ENERGY]! > 0) {
+  if (RoomData.storage && RoomData.storage.store[RESOURCE_ENERGY]! > 0) {
     withdraw(creep, RoomData.storage, RESOURCE_ENERGY);
+  }
+  else if ((RoomData.creepsOfRole as any)["accountant"] === 0 && RoomData.storageToLink
+    && RoomData.storageToLink.energy > 0) {
+    withdraw(creep, RoomData.storageToLink, RESOURCE_ENERGY);
   }
   else {
     const container = Game.getObjectById<Container>(creep.memory.containerId);
@@ -36,7 +56,7 @@ function getEnergy(creep: Creep) {
       withdraw(creep, container, RESOURCE_ENERGY);
     }
     else if (!reassignContainer(creep)) {
-      getResourceFromSource(creep, RoomData.sources);
+      creep.getResourceFromSource(RoomData.sources);
     }
   }
 }
@@ -68,6 +88,41 @@ function reassignContainer(creep: Creep) {
 
     if (container !== null) {
       creep.memory.containerId = container.id;
+    }
+    else {
+      return false;
+    }
+  }
+  else {
+    return false;
+  }
+}
+
+function reassignStructure(creep: Creep) {
+  if (creep.room.memory.DEFCON > 0) {
+    const towers = _.filter(RoomData.towers, (t: Tower) => t.energy < t.energyCapacity / 2);
+
+    if (towers[0]) {
+      const tower = creep.pos.findClosestByPath(towers);
+
+      if (tower) {
+        creep.memory.structureId = tower.id;
+        return true;
+      }
+    }
+  }
+
+  if (RoomData.structures[0]) {
+    const structures = _.filter(RoomData.structures, (s: StructureSpawn | StructureExtension | StructureTower) => {
+      return s.energy < s.energyCapacity && s.structureType !== STRUCTURE_CONTAINER
+        && s.structureType !== STRUCTURE_LINK && s.structureType !== STRUCTURE_STORAGE;
+    });
+
+    const structure = creep.pos.findClosestByPath(structures);
+
+    if (structure) {
+      creep.memory.structureId = structure.id;
+      return true;
     }
     else {
       return false;

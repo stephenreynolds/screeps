@@ -1,9 +1,9 @@
-import { getResourceFromSource, repair, withdraw, workingToggle } from "utils/creeps";
+import { repair, withdraw } from "utils/creeps";
 import { RoomData } from "../roomData";
 import * as RoleUpgrader from "./upgrader";
 
 export function run(creep: Creep): void {
-  workingToggle(creep);
+  creep.workingToggle();
 
   if (creep.memory.working) {
     repairStructure(creep);
@@ -34,7 +34,7 @@ function getEnergy(creep: Creep) {
       withdraw(creep, container, RESOURCE_ENERGY);
     }
     else if (!reassignContainer(creep)) {
-      getResourceFromSource(creep, RoomData.sources);
+      creep.getResourceFromSource(RoomData.sources);
     }
   }
 }

@@ -38,8 +38,8 @@ export function run() {
     createBalancedCreep(spawn, RoomData.room.energyAvailable, "transporter",
                         [CARRY, CARRY, MOVE, MOVE], [7, 7, 3, 3]);
   }
-  else if (RoomData.room.memory.claimRoom) {
-    if (createClaimer(spawn, RoomData.room.memory.claimRoom) > 0) {
+  else if (RoomData.room.memory.claimRoom && RoomData.room.energyCapacityAvailable >= 650) {
+    if (createClaimer(spawn, RoomData.room.memory.claimRoom) === 0) {
       delete RoomData.room.memory.claimRoom;
     }
   }
@@ -180,7 +180,6 @@ function createCreep(spawn: Spawn, role: string, body: string[],
 function createMiner(spawn: Spawn, sources: Source[], creeps: Creep[],
                      containers: Container[]): string | number {
   let miner: string | number = -99;
-
   for (const source of sources) {
     if (!_.some(creeps, (c) => c.memory.role === "miner" && c.memory.sourceId === source.id)) {
       const miningContainers = source.pos.findInRange<Structure>(containers, 1);
@@ -188,7 +187,7 @@ function createMiner(spawn: Spawn, sources: Source[], creeps: Creep[],
       if (miningContainers.length > 0) {
         const body: string[] = [MOVE, CARRY, WORK, WORK];
 
-        for (let i = 1; i <= (spawn.room.energyAvailable - 250) / 100 && i <= 3; i++) {
+        for (let i = 1; i <= (spawn.room.energyAvailable - 300) / 100 && i <= 3; i++) {
           body.push(WORK);
         }
 

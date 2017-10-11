@@ -1,6 +1,7 @@
 const roles = {
   accountant: require("creeps/accountant"),
   builder: require("creeps/builder"),
+  claimer: require("creeps/claimer"),
   courier: require("creeps/courier"),
   healer: require("creeps/healer"),
   invader: require("creeps/invader"),

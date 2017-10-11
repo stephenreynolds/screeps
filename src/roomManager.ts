@@ -170,15 +170,21 @@ function compileRoomData(room: Room) {
           RoomData.upgradeToLink = s as Link;
         }
         else {
-          for (const source of RoomData.sources) {
-            if (s.pos.inRangeTo(source, 3)) {
-              if (RoomData.storageFromLink === undefined) {
-                RoomData.storageFromLink = s as Link;
-              }
-              else {
-                RoomData.upgradeFromLink = s as Link;
+          if (RoomData.sources.length > 1) {
+            for (const source of RoomData.sources) {
+              if (s.pos.inRangeTo(source, 3)) {
+                if (RoomData.storageFromLink === undefined) {
+                  RoomData.storageFromLink = s as Link;
+                }
+                else {
+                  RoomData.upgradeFromLink = s as Link;
+                }
               }
             }
+          }
+          else {
+            RoomData.storageFromLink = s as Link;
+            RoomData.upgradeFromLink = s as Link;
           }
         }
         break;

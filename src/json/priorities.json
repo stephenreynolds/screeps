@@ -1,0 +1,32 @@
+{
+    "buildPriorities": [
+        "spawn",
+        "container",
+        "storage",
+        "link",
+        "extractor",
+        "terminal",
+        "extension",
+        "tower",
+        "lab",
+        "powerSpawn",
+        "nuker",
+        "constructedWall",
+        "rampart",
+        "road"
+    ],
+    "repairPriorities": [
+        "spawn",
+        "tower",
+        "extension",
+        "container",
+        "link",
+        "storage",
+        "road"
+    ],
+    "energyPriorities": [
+        "spawn",
+        "tower",
+        "extension"
+    ]
+}

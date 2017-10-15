@@ -12,7 +12,7 @@ function webpackConfig(options: EnvOptions = {}): Config {
 
   // make "dev" specific changes here
   const credentials: Credentials = require("./credentials.json");
-  credentials.branch = "$activeWorld";
+  credentials.branch = "sim";
 
   config.plugin("screeps")
     .use(ScreepsWebpackPlugin, [credentials]);

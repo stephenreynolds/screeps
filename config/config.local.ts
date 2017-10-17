@@ -2,6 +2,8 @@ import * as Config from "webpack-chain";
 
 import * as CommonConfig from "./config.common";
 import { EnvOptions } from "./types";
+// tslint:disable-next-line:no-var-requires
+const path = require("path");
 
 function webpackConfig(options: EnvOptions = {}): Config {
   // get the common configuration to start with
@@ -11,8 +13,8 @@ function webpackConfig(options: EnvOptions = {}): Config {
   // it makes for much easier debugging:
   // (make sure you symlink the dir, not the files)
   // `# ln -s /path/to/local/deploy/dir ./dist/local`
-  const localPath = "/home/USER_NAME/.config/Screeps/scripts/127_0_0_1___21025/default/";
-  config.output.path(localPath);
+  const localPath = "127_0_0_1___21025/default/";
+  config.output.path(path.resolve("C:\\Users\\Stephen\\AppData\\Local\\Screeps\\scripts", localPath));
 
   // modify the args of "define" plugin
   config.plugin("define").tap((args: any[]) => {

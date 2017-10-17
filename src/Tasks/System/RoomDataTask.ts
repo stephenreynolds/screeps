@@ -2,6 +2,7 @@ import { AbstractTask } from "../AbstractTask";
 
 export class RoomDataTask extends AbstractTask
 {
+    private room: Room;
     private fields = [
         "constructionSites",
         "containers",
@@ -23,7 +24,8 @@ export class RoomDataTask extends AbstractTask
 
     public constructor(room: Room)
     {
-        super(room);
+        super();
+        this.room = room;
     }
 
     public Initialize(): void

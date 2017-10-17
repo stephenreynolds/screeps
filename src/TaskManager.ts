@@ -1,4 +1,5 @@
 import { AbstractTask } from "Tasks/AbstractTask";
+import { PreTask } from "./Tasks/System/PreTask";
 import { RoomDataTask } from "./Tasks/System/RoomDataTask";
 import { RoomLayoutTask } from "./Tasks/System/RoomLayoutTask";
 
@@ -8,6 +9,8 @@ export class TaskManager
 
     public constructor()
     {
+        this.tasks.push(new PreTask());
+
         for (const roomName in Game.rooms)
         {
             const room = Game.rooms[roomName];

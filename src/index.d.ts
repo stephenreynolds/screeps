@@ -1,3 +1,8 @@
+interface Memory
+{
+    log: any;
+}
+
 interface RoomData
 {
     [name: string]: any
@@ -17,3 +22,5 @@ interface RoomData
     terminal: StructureTerminal | undefined
     towers: StructureTower[]
 }
+
+declare const __REVISION__: string;

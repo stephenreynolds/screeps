@@ -27,7 +27,7 @@ export class LinkProcess extends Process
 
         // Find full link
         const fullLink = _.find(links, (l) => {
-            return l.energy === l.energyCapacity;
+            return l.energy === l.energyCapacity || l.energy > 0 && needingEnergy.energy === 0;
         });
 
         if (!fullLink)

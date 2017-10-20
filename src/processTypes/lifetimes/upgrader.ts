@@ -18,28 +18,45 @@ export class UpgraderLifetimeProcess extends LifetimeProcess
 
     if (_.sum(creep.carry) === 0)
     {
-      let targets = [].concat(
-        this.kernel.data.roomData[creep.room.name].generalContainers as never[]
-      ) as DeliveryTarget[];
-
-      const capacity = creep.carryCapacity;
-
-      targets = _.filter(targets, function(target)
-      {
-        return (target.store.energy > capacity);
+      const link = _.find(this.kernel.data.roomData[creep.room.name].links, (l: StructureLink) => {
+        return l.energy > 0 && l.pos.inRangeTo(creep.room.controller!.pos, 3);
       });
 
-      if (targets.length > 0)
+      if (link)
       {
-        const target = creep.pos.findClosestByPath(targets);
-
         this.fork(CollectProcess, "collect-" + creep.name, this.priority - 1, {
-          target: target.id,
+          target: link.id,
           creep: creep.name,
           resource: RESOURCE_ENERGY
         });
 
         return;
+      }
+      else
+      {
+        let targets = [].concat(
+          this.kernel.data.roomData[creep.room.name].generalContainers as never[]
+        ) as DeliveryTarget[];
+
+        const capacity = creep.carryCapacity;
+
+        targets = _.filter(targets, (t) =>
+        {
+          return (t.store.energy > capacity);
+        });
+
+        if (targets.length > 0)
+        {
+          const target = creep.pos.findClosestByPath(targets);
+
+          this.fork(CollectProcess, "collect-" + creep.name, this.priority - 1, {
+            target: target.id,
+            creep: creep.name,
+            resource: RESOURCE_ENERGY
+          });
+
+          return;
+        }
       }
     }
 

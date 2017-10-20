@@ -81,7 +81,7 @@ export class RoomDataProcess extends Process
       });
     }
 
-    if (this.kernel.data.roomData[this.metaData.roomName].links.length > 0)
+    if (this.kernel.data.roomData[this.metaData.roomName].links.length >= 2)
     {
       this.kernel.addProcessIfNotExist(LinkProcess, `link-${room.name}`, 30, {
         roomName: room.name
@@ -150,26 +150,9 @@ export class RoomDataProcess extends Process
       return (structure.structureType === STRUCTURE_LINK);
     }) as StructureLink[];
 
-    let coreLink;
-    _.forEach(links, function(link)
-    {
-      const storages = link.pos.findInRange(FIND_STRUCTURES, 2, {
-        filter: function(structure: Structure)
-        {
-          return (structure.structureType === STRUCTURE_STORAGE);
-        }
-      });
-
-      if (storages.length === 1)
-      {
-        coreLink = link;
-      }
-    });
-
     const roomData: RoomData = {
       constructionSites: room.find(FIND_CONSTRUCTION_SITES) as ConstructionSite[],
       containers: containers,
-      coreLink: coreLink,
       extensions: _.filter(myStructures, function(structure)
       {
         return (structure.structureType === STRUCTURE_EXTENSION);
@@ -241,7 +224,6 @@ export class RoomDataProcess extends Process
     const roomData: RoomData = {
       constructionSites: [],
       containers: [],
-      coreLink: undefined,
       extensions: [],
       extractor: undefined,
       generalContainers: [],

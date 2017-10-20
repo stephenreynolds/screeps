@@ -27,11 +27,6 @@ export class EnergyManagementProcess extends Process
     {
       this.metaData.upgradeCreeps = [];
     }
-
-    if (!this.metaData.linkRequests)
-    {
-      this.metaData.linkRequests = [];
-    }
   }
 
   public run()
@@ -59,6 +54,7 @@ export class EnergyManagementProcess extends Process
       safe = false;
     }
 
+    // Harvester creeps
     _.forEach(sources, function(source)
     {
       if (!proc.metaData.harvestCreeps[source.id])
@@ -115,6 +111,7 @@ export class EnergyManagementProcess extends Process
       });
     });
 
+    // Distro creeps
     _.forEach(this.kernel.data.roomData[this.metaData.roomName].sourceContainers, function(container)
     {
       if (proc.metaData.distroCreeps[container.id])
@@ -160,6 +157,7 @@ export class EnergyManagementProcess extends Process
       }
     });
 
+    // Mover creeps
     if (this.room().storage)
     {
       const container = this.room().storage!;
@@ -195,6 +193,7 @@ export class EnergyManagementProcess extends Process
       }
     }
 
+    // Upgrade creeps
     this.metaData.upgradeCreeps = Utils.clearDeadCreeps(this.metaData.upgradeCreeps);
 
     if (this.metaData.upgradeCreeps.length < 2 &&

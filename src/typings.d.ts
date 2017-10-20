@@ -78,16 +78,11 @@ interface DeliverProcessMetaData extends CreepMetaData
 interface EnergyManagementMetaData
 {
   roomName: string
+  miningCreeps: { [source: string]: string[] }
   harvestCreeps: { [source: string]: string[] }
   distroCreeps: { [container: string]: string }
   upgradeCreeps: string[]
   linker: string
-  linkRequests:
-  {
-    link: string
-    send: boolean
-    stage: number
-  }[]
 }
 
 declare module "*.json"

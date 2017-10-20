@@ -50,10 +50,7 @@ export class HoldProcess extends Process
     else
     {
       creep.reserveController(creep.room.controller!);
-      if (creep.room.controller!.sign && creep.room.controller!.sign.username !== "kumikill")
-      {
-        creep.signController(creep.room.controller!, "Colony of kumikill. Attempt no spawning here.");
-      }
+      creep.signController(creep.room.controller!, "Colony of kumikill. Attempt no spawning here.");
     }
   }
 }

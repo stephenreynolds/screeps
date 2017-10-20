@@ -1,6 +1,7 @@
 import { Process } from "../os/process";
 import { ClaimProcess } from "./empireActions/claim";
 import { HoldRoomProcess } from "./empireActions/hold";
+import { InvasionManagementProcess } from "./management/InvasionManagementProcess";
 import { RangerManagementProcess } from "./management/rangers";
 import { RemoteMiningManagementProcess } from "./management/remoteMining";
 
@@ -55,6 +56,14 @@ export class FlagWatcherProcess extends Process
     });
   }
 
+  public invasionFlag(flag: Flag)
+  {
+    this.kernel.addProcessIfNotExist(InvasionManagementProcess, `${flag.name}-invasion`, 70, {
+      flag: flag.name,
+      invaders: []
+    });
+  }
+
   public run()
   {
     this.completed = true;
@@ -81,6 +90,9 @@ export class FlagWatcherProcess extends Process
           break;
         case COLOR_BLUE:
           proc.rangerFlag(flag);
+          break;
+        case COLOR_RED:
+          proc.invasionFlag(flag);
           break;
       }
     });

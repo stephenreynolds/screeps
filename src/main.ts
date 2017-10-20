@@ -1,3 +1,4 @@
+import { ConsoleCommands } from "./ConsoleCommands";
 import { Kernel } from "./os/kernel";
 
 module.exports.loop = function()
@@ -15,6 +16,8 @@ module.exports.loop = function()
     global.roomData = {};
   }
   global.lastTick = Game.time;
+
+  global.cc = ConsoleCommands;
 
   // Create a new Kernel
   const kernel = new Kernel();

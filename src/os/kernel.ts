@@ -34,7 +34,7 @@ import { InitProcess } from "../processTypes/system/init";
 import { SpawnRemoteBuilderProcess } from "../processTypes/system/spawnRemoteBuilder";
 import { SuspensionProcess } from "../processTypes/system/suspension";
 
-import { Stats } from "../lib/stats";
+import { log } from "../lib/logger/log";
 
 const processTypes = {
   build: BuildProcess,
@@ -158,12 +158,6 @@ export class Kernel
       }
     });
 
-    // if(this.data.usedSpawns.length != 0){
-    //  console.log(this.execOrder.length)
-    // }
-
-    Stats.build(this);
-
     Memory.kumiOS.processTable = list;
   }
 
@@ -190,7 +184,7 @@ export class Kernel
       process.run(this);
     } catch (e)
     {
-      console.log("process " + process.name + " failed with error " + e);
+      log.error(`Process ${process.name} failed with error ${e}`);
       faulted = true;
     }
 
@@ -278,7 +272,7 @@ export class Kernel
   /** output a message to console */
   public log(proc: Process, message: any)
   {
-    console.log("{" + Game.time + "}[" + proc.name + "] " + message);
+    log.info(`{${Game.time}}[${proc.name}] ${message}`);
   }
 
   /** Remove the process if it exists */

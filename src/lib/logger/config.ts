@@ -7,17 +7,6 @@ import { LogLevels } from "./logLevels";
 export const ENABLE_DEBUG_MODE: boolean = false;
 
 /**
- * Enable this to enable screeps profiler.
- */
-export const USE_PROFILER: boolean = false;
-
-/**
- * Minimum number of ticksToLive for a Creep before they go to renew.
- * @type {number}
- */
-export const DEFAULT_MIN_LIFE_BEFORE_NEEDS_REFILL: number = 700;
-
-/**
  * Debug level for log output
  */
 export const LOG_LEVEL: number = LogLevels.DEBUG;
@@ -30,7 +19,7 @@ export const LOG_PRINT_TICK: boolean = true;
 /**
  * Prepend log output with source line.
  */
-export const LOG_PRINT_LINES: boolean = false;
+export const LOG_PRINT_LINES: boolean = true;
 
 /**
  * Load source maps and resolve source lines back to typeascript.

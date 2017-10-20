@@ -1,12 +1,30 @@
-import { TaskManager } from "TaskManager";
+import { Kernel } from "./os/kernel";
 
-function main()
+module.exports.loop = function()
 {
-    const taskManager = new TaskManager();
-    taskManager.Initialize();
-    taskManager.CheckCreeps();
-    taskManager.Run();
-    taskManager.Finalize();
-}
+  // Load Memory from the global object if it is there and up to date.
+  if (global.lastTick && global.LastMemory && Game.time === (global.lastTick + 1))
+  {
+    delete global.Memory;
+    global.Memory = global.LastMemory;
+    RawMemory._parsed = global.LastMemory;
+  }
+  else
+  {
+    global.LastMemory = RawMemory._parsed;
+    global.roomData = {};
+  }
+  global.lastTick = Game.time;
 
-export const loop = main;
+  // Create a new Kernel
+  const kernel = new Kernel();
+
+  // While the kernel is under the CPU limit
+  while (kernel.underLimit() && kernel.needsToRun())
+  {
+    kernel.runProcess();
+  }
+
+  // Tear down the OS
+  kernel.teardown();
+};

@@ -1,16 +1,17 @@
-declare namespace NodeJS{
-  interface Global {
+declare namespace NodeJS
+{
+  interface Global
+  {
     SCRIPT_VERSION: number
     lastTick: number
     LastMemory: Memory
     Memory: Memory
-    roomData: {
-      [key: string]: RoomData
-    }
+    roomData: { [key: string]: RoomData }
   }
 }
 
-interface RawMemory{
+interface RawMemory
+{
   _parsed: Memory
 }
 
@@ -19,7 +20,8 @@ interface Memory
   log: any;
 }
 
-interface SerializedProcess{
+interface SerializedProcess
+{
   name: string
   priority: number
   metaData: object
@@ -27,10 +29,10 @@ interface SerializedProcess{
   parent: string | undefined
 }
 
-interface RoomData{
+interface RoomData
+{
   [name: string]: any
   constructionSites: ConstructionSite[]
-  coreLink: StructureLink | undefined
   containers: StructureContainer[]
   extensions: StructureExtension[]
   extractor: StructureExtractor | undefined
@@ -43,45 +45,45 @@ interface RoomData{
   spawns: StructureSpawn[]
   sources: Source[]
   sourceContainers: StructureContainer[]
-  sourceContainerMaps: {[id: string]: StructureContainer}
+  sourceContainerMaps: { [id: string]: StructureContainer }
   towers: StructureTower[]
 }
 
-interface IPCMessage{
+interface IPCMessage
+{
   from: string
   to: string
   message: object
 }
 
-interface DeliveryTarget extends Structure{
+interface DeliveryTarget extends Structure
+{
   energy: number
   energyCapacity: number
-  store: {
-    [resource: string]: number
-  }
+  store: { [resource: string]: number }
   storeCapacity: number
 }
 
-interface CreepMetaData{
+interface CreepMetaData
+{
   creep: string
 }
 
-interface DeliverProcessMetaData extends CreepMetaData{
+interface DeliverProcessMetaData extends CreepMetaData
+{
   target: string
   resource: string
 }
 
-interface EnergyManagementMetaData{
+interface EnergyManagementMetaData
+{
   roomName: string
-  harvestCreeps: {
-    [source: string]: string[]
-  }
-  distroCreeps: {
-    [container: string]: string
-  }
+  harvestCreeps: { [source: string]: string[] }
+  distroCreeps: { [container: string]: string }
   upgradeCreeps: string[]
   linker: string
-  linkRequests: {
+  linkRequests:
+  {
     link: string
     send: boolean
     stage: number

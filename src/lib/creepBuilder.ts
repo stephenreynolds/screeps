@@ -12,22 +12,7 @@ export const CreepBuilder = {
   design: function(creepType: string, room: Room)
   {
     const body = [].concat(CreepBuilder.typeStarts[creepType] as never[]) as string[];
-    let spendCap;
-
-    const creepCount = _.filter(Game.creeps, function(creep)
-    {
-      return creep.room.name === room.name;
-    }).length;
-    const emergancy = (creepType === "harvester" && creepCount < 2);
-
-    if (emergancy)
-    {
-      spendCap = 300;
-    }
-    else
-    {
-      spendCap = room.energyCapacityAvailable;
-    }
+    const spendCap = room.energyAvailable;
 
     let add = true;
     let extendIndex = 0;
@@ -93,7 +78,8 @@ export const CreepBuilder = {
     mover: [CARRY, MOVE],
     bunkerMover: [MOVE, CARRY],
     ranger: [RANGED_ATTACK, TOUGH, MOVE, MOVE],
-    worker: [WORK, CARRY, MOVE, MOVE]
+    worker: [WORK, CARRY, MOVE, MOVE],
+    miner: [WORK, WORK, CARRY, MOVE]
   } as PartList,
 
   typeExtends: {
@@ -103,7 +89,8 @@ export const CreepBuilder = {
     mover: [CARRY, MOVE],
     bunkerMover: [CARRY],
     ranger: [RANGED_ATTACK, TOUGH, MOVE, MOVE],
-    worker: [WORK, CARRY, MOVE, MOVE]
+    worker: [WORK, CARRY, MOVE, MOVE],
+    miner: [WORK]
   } as PartList,
 
   typeLengths: {
@@ -113,6 +100,7 @@ export const CreepBuilder = {
     mover: 14,
     bunkerMover: 17,
     ranger: 20,
-    worker: 16
+    worker: 16,
+    miner: 7
   } as { [name: string]: number }
 };

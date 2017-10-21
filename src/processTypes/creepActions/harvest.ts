@@ -25,25 +25,16 @@ export class HarvestProcess extends Process
 
     const source = Game.getObjectById(this.metaData.source) as Source;
 
-    let targetPos = source.pos;
-    let targetRange = 1;
-
-    if (this.kernel.data.roomData[source.room.name].sourceContainerMaps[source.id])
-    {
-      targetPos = this.kernel.data.roomData[source.room.name].sourceContainerMaps[source.id].pos;
-      targetRange = 0;
-    }
-
-    if (!creep.pos.inRangeTo(targetPos, targetRange))
+    if (!creep.pos.inRangeTo(source.pos, 1))
     {
       this.kernel.addProcess(MoveProcess, creep.name + "-harvest-move", this.priority + 1, {
         creep: creep.name,
         pos: {
-          x: targetPos.x,
-          y: targetPos.y,
-          roomName: targetPos.roomName
+          x: source.pos.x,
+          y: source.pos.y,
+          roomName: source.pos.roomName
         },
-        range: targetRange
+        range: 1
       });
       this.suspend = creep.name + "-harvest-move";
     }

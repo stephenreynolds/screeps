@@ -1,3 +1,4 @@
+import { log } from "lib/logger/log";
 import { Kernel } from "../os/kernel";
 import { Process } from "../os/process";
 import { CreepBuilder } from "./creepBuilder";
@@ -8,7 +9,14 @@ export const Utils = {
   {
     return _.filter(list, function(entry)
     {
-      return !!Game.creeps[entry];
+      if (!Game.creeps[entry])
+      {
+        return false;
+      }
+      else
+      {
+        return true;
+      }
     });
   },
 
@@ -48,6 +56,7 @@ export const Utils = {
     {
       if (!_.includes(kernel.data.usedSpawns, spawn.id) && !spawn.spawning && spawn.canCreateCreep(body) === OK)
       {
+        log.info(`Spawning creep ${name} in ${roomName}.`);
         spawn.createCreep(body, name, memory);
         outcome = true;
         kernel.data.usedSpawns.push(spawn.id);
@@ -79,6 +88,10 @@ export const Utils = {
         return (spawn.energy > 250 && spawn.room.energyAvailable > (spawn.room.energyCapacityAvailable - 50));
       }) as never[];
     }
+
+    withdraws = _.filter(withdraws, (w: StructureStorage | StructureContainer) => {
+      return _.sum(w.store) > 0;
+    }) as never[];
 
     return creep.pos.findClosestByRange(withdraws) as Structure;
   },

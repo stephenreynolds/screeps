@@ -1,5 +1,7 @@
 import { LifetimeProcess } from "../../os/LifetimeProcess";
 
+import { Utils } from "lib/utils";
+import { CollectProcess } from "processTypes/creepActions/collect";
 import { BuildProcess } from "../creepActions/build";
 import { DeliverProcess } from "../creepActions/deliver";
 import { HarvestProcess } from "../creepActions/harvest";
@@ -20,10 +22,23 @@ export class HarvesterLifetimeProcess extends LifetimeProcess
 
     if (_.sum(creep.carry) === 0)
     {
-      this.fork(HarvestProcess, "harvest-" + creep.name, this.priority - 1, {
-        source: this.metaData.source,
-        creep: creep.name
-      });
+      const withdrawTarget = Utils.withdrawTarget(creep, this);
+
+      if (withdrawTarget)
+      {
+        this.fork(CollectProcess, "collect-" + creep.name, this.priority - 1, {
+          creep: creep.name,
+          target: withdrawTarget.id,
+          resource: RESOURCE_ENERGY
+        });
+      }
+      else
+      {
+        this.fork(HarvestProcess, "harvest-" + creep.name, this.priority - 1, {
+          source: this.metaData.source,
+          creep: creep.name
+        });
+      }
 
       return;
     }
@@ -41,23 +56,6 @@ export class HarvesterLifetimeProcess extends LifetimeProcess
       return;
     }
 
-    if (this.kernel.data.roomData[creep.room.name].sourceContainerMaps[this.metaData.source])
-    {
-      const container = this.kernel.data.roomData[creep.room.name].sourceContainerMaps[this.metaData.source];
-
-      if (_.sum(container.store) < container.storeCapacity)
-      {
-        this.fork(DeliverProcess, "deliver-" + creep.name, this.priority - 1, {
-          target: container.id,
-          creep: creep.name,
-          resource: RESOURCE_ENERGY
-        });
-
-        return;
-      }
-    }
-
-    // Source Container does not exist OR source container is full
     let deliverTargets;
 
     const targets = [].concat(
@@ -69,6 +67,18 @@ export class HarvesterLifetimeProcess extends LifetimeProcess
     {
       return (t.energy < t.energyCapacity);
     });
+
+    if (deliverTargets.length === 0)
+    {
+        const targs = [].concat(
+            this.kernel.data.roomData[creep.room.name].towers as never[]
+        );
+
+        deliverTargets = _.filter(targs, (t: DeliveryTarget) =>
+        {
+            return t.energy < t.energyCapacity;
+        });
+    }
 
     if (creep.room.storage && deliverTargets.length === 0)
     {
@@ -92,7 +102,7 @@ export class HarvesterLifetimeProcess extends LifetimeProcess
         &&
         this.kernel.data.roomData[creep.room.name].sourceContainerMaps[this.metaData.source]
         &&
-        this.kernel.getProcessByName("em-" + creep.room.name).metaData.distroCreeps[
+        this.kernel.getProcessByName("em-" + creep.room.name).metaData.courierCreeps[
           this.kernel.data.roomData[creep.room.name].sourceContainerMaps[this.metaData.source].id]
       )
     )

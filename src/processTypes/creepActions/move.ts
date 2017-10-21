@@ -31,14 +31,22 @@ export class MoveProcess extends Process
 
     if (creep.fatigue === 0)
     {
-      if (creep.pos.inRangeTo(target, this.metaData.range))
+      if (creep.pos.inRangeTo(target, this.metaData.range) || creep.pos.isEqualTo(target))
       {
         this.completed = true;
         this.resumeParent();
       }
       else
       {
-        creep.moveTo(target);
+        creep.moveTo(target, {
+          visualizePathStyle: {
+            fill: "transparent",
+            lineStyle: "dashed",
+            opacity: .1,
+            stroke: "#fff",
+            strokeWidth: .15
+          }
+        });
       }
     }
     else

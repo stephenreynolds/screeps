@@ -46,7 +46,8 @@ interface RoomData
   sources: Source[]
   sourceContainers: StructureContainer[]
   sourceContainerMaps: { [id: string]: StructureContainer }
-  towers: StructureTower[]
+  towers: StructureTower[],
+  walls: StructureWall[]
 }
 
 interface IPCMessage
@@ -78,16 +79,11 @@ interface DeliverProcessMetaData extends CreepMetaData
 interface EnergyManagementMetaData
 {
   roomName: string
+  miningCreeps: { [source: string]: string[] }
   harvestCreeps: { [source: string]: string[] }
-  distroCreeps: { [container: string]: string }
+  courierCreeps: string[]
   upgradeCreeps: string[]
-  linker: string
-  linkRequests:
-  {
-    link: string
-    send: boolean
-    stage: number
-  }[]
+  transportCreeps: { [container: string]: string }
 }
 
 declare module "*.json"

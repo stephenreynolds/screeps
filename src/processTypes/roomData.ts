@@ -177,7 +177,10 @@ export class RoomDataProcess extends Process
       towers: _.filter(myStructures, function(structure)
       {
         return (structure.structureType === STRUCTURE_TOWER);
-      }) as StructureTower[]
+      }) as StructureTower[],
+      walls: _.filter(structures, (s: Structure) => {
+        return s.structureType === STRUCTURE_WALL;
+      }) as StructureWall[]
     };
 
     this.kernel.data.roomData[this.metaData.roomName] = roomData;
@@ -236,7 +239,8 @@ export class RoomDataProcess extends Process
       sources: [],
       sourceContainers: [],
       sourceContainerMaps: {} as { [id: string]: StructureContainer },
-      towers: []
+      towers: [],
+      walls: []
     };
     let run = true;
     let i = 0;

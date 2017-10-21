@@ -17,7 +17,8 @@ export class LinkProcess extends Process
         // Find link needing energy
         const needingEnergy = _.find(links, (l) =>
         {
-            return l.energy < l.energyCapacity;
+            const sources = this.kernel.data.roomData[this.metaData.roomName].sources;
+            return l.energy < l.energyCapacity && !!l.pos.findInRange(sources, 3);
         });
 
         if (!needingEnergy)
@@ -25,17 +26,32 @@ export class LinkProcess extends Process
             return;
         }
 
-        // Find full link
-        const fullLink = _.find(links, (l) => {
-            return l.energy === l.energyCapacity || l.energy > 0 && needingEnergy.energy === 0;
+        // Find source link
+        const sourceLink = _.find(links, (l) => {
+            if (l.room.terminal && l.pos.inRangeTo(l.room.terminal, 3))
+            {
+                return false;
+            }
+            else if (l.room.controller && l.pos.inRangeTo(l.room.controller, 3))
+            {
+                return false;
+            }
+            else if (l.energy === l.energyCapacity)
+            {
+                return true;
+            }
+            else if (l.energy > 0 && needingEnergy.energy === 0)
+            {
+                return true;
+            }
         });
 
-        if (!fullLink)
+        if (!sourceLink)
         {
             return;
         }
 
         // Transfer energy between links
-        fullLink.transferEnergy(needingEnergy);
+        sourceLink.transferEnergy(needingEnergy);
     }
 }

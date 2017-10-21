@@ -1,6 +1,6 @@
-import { LinkProcess } from "../processTypes/buildingProcesses/LinkProcess";
 import { Process } from "./process";
 
+import { LinkProcess } from "../processTypes/buildingProcesses/LinkProcess";
 import { TowerDefenseProcess } from "../processTypes/buildingProcesses/towerDefense";
 import { TowerRepairProcess } from "../processTypes/buildingProcesses/towerRepair";
 import { BuildProcess } from "../processTypes/creepActions/build";
@@ -15,13 +15,15 @@ import { UpgradeProcess } from "../processTypes/creepActions/upgrade";
 import { ClaimProcess } from "../processTypes/empireActions/claim";
 import { HoldRoomProcess } from "../processTypes/empireActions/hold";
 import { BuilderLifetimeProcess } from "../processTypes/lifetimes/builder";
-import { DistroLifetimeProcess } from "../processTypes/lifetimes/distro";
+import { CourierLifetimeProcess } from "../processTypes/lifetimes/courier";
 import { HarvesterLifetimeProcess } from "../processTypes/lifetimes/harvester";
+import { MinerLifetimeProcess } from "../processTypes/lifetimes/miner";
 import { MineralharvesterLifetimeProcess } from "../processTypes/lifetimes/mineralHarvester";
 import { RangerLifetimeProcess } from "../processTypes/lifetimes/ranger";
 import { RemoteBuilderLifetimeProcess } from "../processTypes/lifetimes/remoteBuilder";
 import { RemoteMinerLifetimeProcess } from "../processTypes/lifetimes/remoteMiner";
 import { RepairerLifetimeProcess } from "../processTypes/lifetimes/repairer";
+import { TransporterLifetimeProcess } from "../processTypes/lifetimes/transporter";
 import { UpgraderLifetimeProcess } from "../processTypes/lifetimes/upgrader";
 import { EnergyManagementProcess } from "../processTypes/management/energy";
 import { MineralManagementProcess } from "../processTypes/management/mineral";
@@ -41,8 +43,8 @@ const processTypes = {
   blf: BuilderLifetimeProcess,
   claim: ClaimProcess,
   collect: CollectProcess,
+  clf: CourierLifetimeProcess,
   deliver: DeliverProcess,
-  dlf: DistroLifetimeProcess,
   em: EnergyManagementProcess,
   harvest: HarvestProcess,
   hlf: HarvesterLifetimeProcess,
@@ -51,6 +53,7 @@ const processTypes = {
   lp: LinkProcess,
   mh: MineralHarvestProcess,
   mhlf: MineralharvesterLifetimeProcess,
+  mlf: MinerLifetimeProcess,
   mineralManagement: MineralManagementProcess,
   move: MoveProcess,
   rangerLifetime: RangerLifetimeProcess,
@@ -66,6 +69,7 @@ const processTypes = {
   spawnRemoteBuilder: SpawnRemoteBuilderProcess,
   suspend: SuspensionProcess,
   td: TowerDefenseProcess,
+  trlf: TransporterLifetimeProcess,
   towerRepair: TowerRepairProcess,
   upgrade: UpgradeProcess,
   ulf: UpgraderLifetimeProcess

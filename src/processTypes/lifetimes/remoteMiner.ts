@@ -60,6 +60,8 @@ export class RemoteMinerLifetimeProcess extends LifetimeProcess
           },
           range: 1
         });
+
+        return;
       }
 
       this.fork(HarvestProcess, "harvest-" + creep.name, this.priority - 1, {
@@ -70,6 +72,7 @@ export class RemoteMinerLifetimeProcess extends LifetimeProcess
       return;
     }
 
+    // Deliver energy to room.
     if (Game.rooms[this.metaData.deliverRoom].storage)
     {
       this.fork(DeliverProcess, "deliver-" + creep.name, this.priority - 1, {

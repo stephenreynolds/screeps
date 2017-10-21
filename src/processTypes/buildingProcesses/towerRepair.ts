@@ -37,11 +37,16 @@ export class TowerRepairProcess extends Process
       return (road.hits < road.hitsMax);
     });
 
+    const walls = _.filter(this.roomData().walls, (w: StructureWall) => {
+        return w.hits < w.hitsMax;
+    });
+
     const sortedRamparts = _.sortBy([].concat(
       ramparts as never[],
       containers as never[],
       sourceContainers as never[],
-      roads as never[]
+      roads as never[],
+      walls as never[]
     ) as Structure[], "hits");
     const usedTowers = {} as { [towerId: string]: boolean };
 

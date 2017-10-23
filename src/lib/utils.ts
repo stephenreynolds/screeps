@@ -69,7 +69,7 @@ export const Utils = {
   withdrawTarget(creep: Creep, proc: Process)
   {
     let withdraws = [].concat(
-      proc.kernel.data.roomData[creep.room.name].generalContainers as never[]
+      proc.kernel.data.roomData[creep.room.name].containers as never[]
     );
 
     if (creep.room.storage)

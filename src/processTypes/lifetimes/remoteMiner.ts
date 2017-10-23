@@ -1,5 +1,6 @@
 import { LifetimeProcess } from "../../os/LifetimeProcess";
 
+import { BuildProcess } from "../creepActions/build";
 import { DeliverProcess } from "../creepActions/deliver";
 import { HarvestProcess } from "../creepActions/harvest";
 import { MoveProcess } from "../creepActions/move";
@@ -73,7 +74,16 @@ export class RemoteMinerLifetimeProcess extends LifetimeProcess
     }
 
     // Deliver energy to room.
-    if (Game.rooms[this.metaData.deliverRoom].storage)
+    const constructionSites =  creep.room.find<ConstructionSite>(FIND_MY_CONSTRUCTION_SITES);
+    if (constructionSites[0])
+    {
+        const site = creep.pos.findClosestByPath(constructionSites);
+        this.fork(BuildProcess, "build-" + creep.name, this.priority - 1, {
+            creep: creep.name,
+            site: site.id
+        });
+    }
+    else if (Game.rooms[this.metaData.deliverRoom].storage)
     {
       this.fork(DeliverProcess, "deliver-" + creep.name, this.priority - 1, {
         creep: creep.name,

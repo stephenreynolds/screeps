@@ -24,8 +24,14 @@ export class RemoteMiningManagementProcess extends Process
       flag.memory.source = sources[0].id;
     }
 
-    const miningCreep = Game.creeps[this.metaData.miningCreep];
     const deliverRoom = flag.name.split("-")[0];
+
+    if (Game.rooms[deliverRoom].energyAvailable < 600)
+    {
+        return;
+    }
+
+    const miningCreep = Game.creeps[this.metaData.miningCreep];
 
     if (!miningCreep)
     {

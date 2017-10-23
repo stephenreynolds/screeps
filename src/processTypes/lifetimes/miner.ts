@@ -64,7 +64,7 @@ export class MinerLifetimeProcess extends LifetimeProcess
             if (link && link.energy < link.energyCapacity && creep.memory.linked === false)
             {
                 // Transfer amount equal to 2.5% of what's in container.
-                creep.transfer(link, RESOURCE_ENERGY, _.sum(container.store) * 0.025);
+                creep.transfer(link, RESOURCE_ENERGY, Math.max(_.sum(container.store) * 0.025, 10));
                 creep.memory.linked = true;
             }
             else if (_.sum(container.store) < container.storeCapacity)

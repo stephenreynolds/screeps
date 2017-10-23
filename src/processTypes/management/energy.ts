@@ -5,6 +5,7 @@ import { HarvesterLifetimeProcess } from "processTypes/lifetimes/harvester";
 import { MinerLifetimeProcess } from "processTypes/lifetimes/miner";
 import { TransporterLifetimeProcess } from "processTypes/lifetimes/transporter";
 import { CourierLifetimeProcess } from "../lifetimes/courier";
+import { StorageManagerLifetime } from "../lifetimes/storageManager";
 import { UpgraderLifetimeProcess } from "../lifetimes/upgrader";
 
 export class EnergyManagementProcess extends Process
@@ -39,6 +40,11 @@ export class EnergyManagementProcess extends Process
         {
             this.metaData.upgradeCreeps = [];
         }
+
+        if (!this.metaData.storageCreep)
+        {
+            this.metaData.storageCreep = undefined;
+        }
     }
 
     public run()
@@ -46,12 +52,6 @@ export class EnergyManagementProcess extends Process
         this.ensureMetaData();
 
         if (!this.kernel.data.roomData[this.metaData.roomName])
-        {
-            this.completed = true;
-            return;
-        }
-
-        if (!this.room().controller!.my)
         {
             this.completed = true;
             return;
@@ -95,6 +95,8 @@ export class EnergyManagementProcess extends Process
                         source: source.id
                     });
                 }
+
+                return;
             }
         });
 
@@ -127,6 +129,8 @@ export class EnergyManagementProcess extends Process
                         container: container.id
                     });
                 }
+
+                return;
             }
         });
 
@@ -170,6 +174,8 @@ export class EnergyManagementProcess extends Process
                             roomName: proc.metaData.roomName
                         });
                     }
+
+                    return;
                 }
             });
         }
@@ -203,6 +209,43 @@ export class EnergyManagementProcess extends Process
                         roomName: proc.metaData.roomName
                     });
                 }
+
+                return;
+            }
+        }
+
+        /**
+         * Storage Manager: moves energy from storage link into storage.
+         */
+        this.metaData.storageCreep = Utils.clearDeadCreeps([this.metaData.storageCreep as string])[0];
+        if (!this.metaData.storageCreep && this.room().storage)
+        {
+            const links = this.kernel.data.roomData[this.room().name].links;
+            const storageLink = _.find(links, (l: StructureLink) => {
+                return l.pos.inRangeTo(this.room().storage!, 2);
+            });
+
+            if (storageLink)
+            {
+                const creepName = "em-sm-" + proc.metaData.roomName + "-" + Game.time;
+                const spawned = Utils.spawn(
+                    proc.kernel,
+                    proc.metaData.roomName,
+                    "mover",
+                    creepName,
+                    {}
+                );
+
+                if (spawned)
+                {
+                    this.metaData.storageCreep = creepName;
+                    this.kernel.addProcess(StorageManagerLifetime, "smlf-" + creepName, 30, {
+                        creep: creepName,
+                        link: storageLink.id
+                    });
+                }
+
+                return;
             }
         }
 

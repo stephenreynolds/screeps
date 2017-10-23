@@ -83,6 +83,7 @@ interface EnergyManagementMetaData
   harvestCreeps: { [source: string]: string[] }
   courierCreeps: string[]
   upgradeCreeps: string[]
+  storageCreep: string | undefined
   transportCreeps: { [container: string]: string }
 }
 

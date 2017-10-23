@@ -23,6 +23,7 @@ import { RangerLifetimeProcess } from "../processTypes/lifetimes/ranger";
 import { RemoteBuilderLifetimeProcess } from "../processTypes/lifetimes/remoteBuilder";
 import { RemoteMinerLifetimeProcess } from "../processTypes/lifetimes/remoteMiner";
 import { RepairerLifetimeProcess } from "../processTypes/lifetimes/repairer";
+import { StorageManagerLifetime } from "../processTypes/lifetimes/storageManager";
 import { TransporterLifetimeProcess } from "../processTypes/lifetimes/transporter";
 import { UpgraderLifetimeProcess } from "../processTypes/lifetimes/upgrader";
 import { EnergyManagementProcess } from "../processTypes/management/energy";
@@ -66,6 +67,7 @@ const processTypes = {
   roomData: RoomDataProcess,
   roomLayout: RoomLayoutProcess,
   sm: StructureManagementProcess,
+  smlf: StorageManagerLifetime,
   spawnRemoteBuilder: SpawnRemoteBuilderProcess,
   suspend: SuspensionProcess,
   td: TowerDefenseProcess,

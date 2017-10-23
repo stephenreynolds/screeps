@@ -1,8 +1,8 @@
 import { LifetimeProcess } from "../../os/LifetimeProcess";
 
 import { Utils } from "lib/utils";
+import { BuildProcess } from "processTypes/creepActions/build";
 import { CollectProcess } from "processTypes/creepActions/collect";
-import { BuildProcess } from "../creepActions/build";
 import { DeliverProcess } from "../creepActions/deliver";
 import { HarvestProcess } from "../creepActions/harvest";
 import { UpgradeProcess } from "../creepActions/upgrade";
@@ -48,12 +48,12 @@ export class HarvesterLifetimeProcess extends LifetimeProcess
     const constructionSites = source.pos.findInRange(FIND_CONSTRUCTION_SITES, 1) as ConstructionSite[];
     if (constructionSites.length > 0)
     {
-      this.fork(BuildProcess, "build-" + creep.name, this.priority - 1, {
-        creep: creep.name,
-        site: constructionSites[0].id
-      });
+        this.fork(BuildProcess, "build-" + creep.name, this.priority - 1, {
+            creep: creep.name,
+            site: constructionSites[0].id
+        });
 
-      return;
+        return;
     }
 
     let deliverTargets;

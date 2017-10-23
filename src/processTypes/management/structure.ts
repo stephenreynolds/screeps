@@ -45,6 +45,11 @@ export class StructureManagementProcess extends Process
       return;
     }
 
+    if (this.room().energyAvailable < 300)
+    {
+        return;
+    }
+
     const numBuilders = _.min([
       Math.ceil(this.kernel.data.roomData[this.metaData.roomName].constructionSites.length / 10),
       3,

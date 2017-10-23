@@ -198,7 +198,7 @@ export class EnergyManagementProcess extends Process
 
         // Courier creeps: collect energy from storage or general containers and transfer to structures.
         this.metaData.courierCreeps = Utils.clearDeadCreeps(this.metaData.courierCreeps);
-        if (this.metaData.courierCreeps.length < 2)
+        if (this.metaData.courierCreeps.length < 1)
         {
             const storedEnergy = (this.room().storage && _.sum(this.room().storage!.store) > 0) ||
                 _.filter(generalContainers, (c: Container) =>

@@ -58,6 +58,7 @@ export class EnergyManagementProcess extends Process
         }
 
         const proc = this;
+        let ret = false;
 
         const sources = this.kernel.data.roomData[this.metaData.roomName].sources;
         const sourceContainers = this.kernel.data.roomData[proc.metaData.roomName].sourceContainers;
@@ -96,9 +97,14 @@ export class EnergyManagementProcess extends Process
                     });
                 }
 
-                return;
+                ret = true;
             }
         });
+
+        if (ret)
+        {
+            return;
+        }
 
         // Mining creeps: harvest energy at a single source and transfer to nearby link or drop into container.
         _.forEach(this.kernel.data.roomData[this.metaData.roomName].sourceContainers, (container) =>
@@ -130,9 +136,14 @@ export class EnergyManagementProcess extends Process
                     });
                 }
 
-                return;
+                ret = true;
             }
         });
+
+        if (ret)
+        {
+            return;
+        }
 
         /**
          * Transport creeps: collect energy from source containers and transfer to storage or general containers.
@@ -175,9 +186,14 @@ export class EnergyManagementProcess extends Process
                         });
                     }
 
-                    return;
+                    ret = true;
                 }
             });
+        }
+
+        if (ret)
+        {
+            return;
         }
 
         // Courier creeps: collect energy from storage or general containers and transfer to structures.
@@ -210,8 +226,13 @@ export class EnergyManagementProcess extends Process
                     });
                 }
 
-                return;
+                ret = true;
             }
+        }
+
+        if (ret)
+        {
+            return;
         }
 
         /**
@@ -245,8 +266,13 @@ export class EnergyManagementProcess extends Process
                     });
                 }
 
-                return;
+                ret = true;
             }
+        }
+
+        if (ret)
+        {
+            return;
         }
 
         // Upgrade creeps: collect energy and upgrade controller

@@ -1,7 +1,7 @@
-import { Utils } from "../../lib/utils";
-import { Process } from "../../os/process";
+import { Utils } from "../../lib/Utils";
+import { Process } from "../../OS/Process";
 
-import { RemoteBuilderLifetimeProcess } from "../lifetimes/remoteBuilder";
+import { RemoteBuilderLifetimeProcess } from "../Lifetimes/RemoteBuilder";
 
 export class SpawnRemoteBuilderProcess extends Process
 {

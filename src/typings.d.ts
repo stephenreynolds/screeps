@@ -40,13 +40,14 @@ interface RoomData
   mineral: Mineral | undefined
   labs: StructureLab[]
   links: StructureLink[]
+  myStructures: Structure[]
   ramparts: StructureRampart[]
   roads: StructureRoad[]
   spawns: StructureSpawn[]
   sources: Source[]
   sourceContainers: StructureContainer[]
   sourceContainerMaps: { [id: string]: StructureContainer }
-  towers: StructureTower[],
+  towers: StructureTower[]
   walls: StructureWall[]
 }
 
@@ -83,6 +84,7 @@ interface EnergyManagementMetaData
   harvestCreeps: { [source: string]: string[] }
   courierCreeps: string[]
   upgradeCreeps: string[]
+  storageCreep: string | undefined
   transportCreeps: { [container: string]: string }
 }
 

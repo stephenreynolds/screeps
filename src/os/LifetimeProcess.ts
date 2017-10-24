@@ -1,4 +1,4 @@
-import { Process } from "os/process";
+import { Process } from "OS/Process";
 
 export class LifetimeProcess extends Process
 {

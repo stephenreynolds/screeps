@@ -1,6 +1,6 @@
-import { Utils } from "../../lib/utils";
-import { Process } from "../../os/process";
-import { RangerLifetimeProcess } from "../lifetimes/ranger";
+import { Utils } from "../../lib/Utils";
+import { Process } from "../../OS/Process";
+import { RangerLifetimeProcess } from "../Lifetimes/Ranger";
 
 export class RangerManagementProcess extends Process
 {

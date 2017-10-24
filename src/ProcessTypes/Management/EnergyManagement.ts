@@ -1,11 +1,12 @@
-import { Utils } from "../../lib/utils";
-import { Process } from "../../os/process";
+import { Utils } from "../../lib/Utils";
+import { Process } from "../../OS/Process";
 
-import { HarvesterLifetimeProcess } from "processTypes/lifetimes/harvester";
-import { MinerLifetimeProcess } from "processTypes/lifetimes/miner";
-import { TransporterLifetimeProcess } from "processTypes/lifetimes/transporter";
-import { CourierLifetimeProcess } from "../lifetimes/courier";
-import { UpgraderLifetimeProcess } from "../lifetimes/upgrader";
+import { HarvesterLifetimeProcess } from "ProcessTypes/Lifetimes/Harvester";
+import { MinerLifetimeProcess } from "ProcessTypes/Lifetimes/Miner";
+import { TransporterLifetimeProcess } from "ProcessTypes/Lifetimes/Transporter";
+import { CourierLifetimeProcess } from "../Lifetimes/Courier";
+import { StorageManagerLifetime } from "../Lifetimes/StorageManager";
+import { UpgraderLifetimeProcess } from "../Lifetimes/Upgrader";
 
 export class EnergyManagementProcess extends Process
 {
@@ -39,6 +40,11 @@ export class EnergyManagementProcess extends Process
         {
             this.metaData.upgradeCreeps = [];
         }
+
+        if (!this.metaData.storageCreep)
+        {
+            this.metaData.storageCreep = undefined;
+        }
     }
 
     public run()
@@ -51,13 +57,8 @@ export class EnergyManagementProcess extends Process
             return;
         }
 
-        if (!this.room().controller!.my)
-        {
-            this.completed = true;
-            return;
-        }
-
         const proc = this;
+        let ret = false;
 
         const sources = this.kernel.data.roomData[this.metaData.roomName].sources;
         const sourceContainers = this.kernel.data.roomData[proc.metaData.roomName].sourceContainers;
@@ -75,7 +76,7 @@ export class EnergyManagementProcess extends Process
             const creeps = Utils.inflateCreeps(creepNames);
             const workRate = Utils.workRate(creeps, 2);
 
-            if (creeps.length < 1 || workRate < (source.energyCapacity / 300))
+            if (creeps.length < 1 || workRate < (source.energyCapacity / 600))
             {
                 const creepName = `em-h-${proc.metaData.roomName}-${Game.time}`;
                 const spawnRoom = proc.metaData.roomName;
@@ -95,8 +96,15 @@ export class EnergyManagementProcess extends Process
                         source: source.id
                     });
                 }
+
+                ret = true;
             }
         });
+
+        if (ret)
+        {
+            return;
+        }
 
         // Mining creeps: harvest energy at a single source and transfer to nearby link or drop into container.
         _.forEach(this.kernel.data.roomData[this.metaData.roomName].sourceContainers, (container) =>
@@ -127,8 +135,15 @@ export class EnergyManagementProcess extends Process
                         container: container.id
                     });
                 }
+
+                ret = true;
             }
         });
+
+        if (ret)
+        {
+            return;
+        }
 
         /**
          * Transport creeps: collect energy from source containers and transfer to storage or general containers.
@@ -170,13 +185,20 @@ export class EnergyManagementProcess extends Process
                             roomName: proc.metaData.roomName
                         });
                     }
+
+                    ret = true;
                 }
             });
         }
 
+        if (ret)
+        {
+            return;
+        }
+
         // Courier creeps: collect energy from storage or general containers and transfer to structures.
         this.metaData.courierCreeps = Utils.clearDeadCreeps(this.metaData.courierCreeps);
-        if (this.metaData.courierCreeps.length < 2)
+        if (this.metaData.courierCreeps.length < 1)
         {
             const storedEnergy = (this.room().storage && _.sum(this.room().storage!.store) > 0) ||
                 _.filter(generalContainers, (c: Container) =>
@@ -203,7 +225,54 @@ export class EnergyManagementProcess extends Process
                         roomName: proc.metaData.roomName
                     });
                 }
+
+                ret = true;
             }
+        }
+
+        if (ret)
+        {
+            return;
+        }
+
+        /**
+         * Storage Manager: moves energy from storage link into storage.
+         */
+        this.metaData.storageCreep = Utils.clearDeadCreeps([this.metaData.storageCreep as string])[0];
+        if (!this.metaData.storageCreep && this.room().storage)
+        {
+            const links = this.kernel.data.roomData[this.room().name].links;
+            const storageLink = _.find(links, (l: StructureLink) => {
+                return l.pos.inRangeTo(this.room().storage!, 2);
+            });
+
+            if (storageLink)
+            {
+                const creepName = "em-sm-" + proc.metaData.roomName + "-" + Game.time;
+                const spawned = Utils.spawn(
+                    proc.kernel,
+                    proc.metaData.roomName,
+                    "mover",
+                    creepName,
+                    {}
+                );
+
+                if (spawned)
+                {
+                    this.metaData.storageCreep = creepName;
+                    this.kernel.addProcess(StorageManagerLifetime, "smlf-" + creepName, 30, {
+                        creep: creepName,
+                        link: storageLink.id
+                    });
+                }
+
+                ret = true;
+            }
+        }
+
+        if (ret)
+        {
+            return;
         }
 
         // Upgrade creeps: collect energy and upgrade controller

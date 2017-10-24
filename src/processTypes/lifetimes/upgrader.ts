@@ -1,8 +1,8 @@
-import { LifetimeProcess } from "../../os/LifetimeProcess";
+import { LifetimeProcess } from "../../OS/LifetimeProcess";
 
-import { HarvestProcess } from "processTypes/creepActions/harvest";
-import { CollectProcess } from "../creepActions/collect";
-import { UpgradeProcess } from "../creepActions/upgrade";
+import { HarvestProcess } from "ProcessTypes/CreepActions/Harvest";
+import { CollectProcess } from "../CreepActions/Collect";
+import { UpgradeProcess } from "../CreepActions/Upgrade";
 
 export class UpgraderLifetimeProcess extends LifetimeProcess
 {

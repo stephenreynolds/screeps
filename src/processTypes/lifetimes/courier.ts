@@ -1,7 +1,7 @@
-import { LifetimeProcess } from "../../os/LifetimeProcess";
+import { LifetimeProcess } from "../../OS/LifetimeProcess";
 
-import { CollectProcess } from "../creepActions/collect";
-import { DeliverProcess } from "../creepActions/deliver";
+import { CollectProcess } from "../CreepActions/Collect";
+import { DeliverProcess } from "../CreepActions/Deliver";
 
 export class CourierLifetimeProcess extends LifetimeProcess
 {

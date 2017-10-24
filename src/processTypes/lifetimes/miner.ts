@@ -1,8 +1,8 @@
-import { DeliverProcess } from "processTypes/creepActions/deliver";
-import { UpgradeProcess } from "processTypes/creepActions/upgrade";
-import { LifetimeProcess } from "../../os/LifetimeProcess";
-import { HarvestProcess } from "../creepActions/harvest";
-import { MoveProcess } from "../creepActions/move";
+import { DeliverProcess } from "ProcessTypes/CreepActions/Deliver";
+import { UpgradeProcess } from "ProcessTypes/CreepActions/Upgrade";
+import { LifetimeProcess } from "../../OS/LifetimeProcess";
+import { HarvestProcess } from "../CreepActions/Harvest";
+import { MoveProcess } from "../CreepActions/Move";
 
 export class MinerLifetimeProcess extends LifetimeProcess
 {
@@ -64,7 +64,7 @@ export class MinerLifetimeProcess extends LifetimeProcess
             if (link && link.energy < link.energyCapacity && creep.memory.linked === false)
             {
                 // Transfer amount equal to 2.5% of what's in container.
-                creep.transfer(link, RESOURCE_ENERGY, _.sum(container.store) * 0.025);
+                creep.transfer(link, RESOURCE_ENERGY, Math.max(_.sum(container.store) * 0.025, 10));
                 creep.memory.linked = true;
             }
             else if (_.sum(container.store) < container.storeCapacity)

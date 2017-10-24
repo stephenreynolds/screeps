@@ -1,8 +1,8 @@
-import { Utils } from "../../lib/utils";
-import { LifetimeProcess } from "../../os/LifetimeProcess";
+import { Utils } from "../../lib/Utils";
+import { LifetimeProcess } from "../../OS/LifetimeProcess";
 
-import { CollectProcess } from "../creepActions/collect";
-import { RepairProcess } from "../creepActions/repair";
+import { CollectProcess } from "../CreepActions/Collect";
+import { RepairProcess } from "../CreepActions/Repair";
 
 export class RepairerLifetimeProcess extends LifetimeProcess
 {

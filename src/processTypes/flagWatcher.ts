@@ -1,9 +1,9 @@
-import { Process } from "../os/process";
-import { ClaimProcess } from "./empireActions/claim";
-import { HoldRoomProcess } from "./empireActions/hold";
-import { InvasionManagementProcess } from "./management/InvasionManagementProcess";
-import { RangerManagementProcess } from "./management/rangers";
-import { RemoteMiningManagementProcess } from "./management/remoteMining";
+import { Process } from "../OS/Process";
+import { ClaimProcess } from "./EmpireActions/Claim";
+import { HoldRoomProcess } from "./EmpireActions/HoldRoom";
+import { InvasionManagementProcess } from "./Management/InvasionManagement";
+import { RangerManagementProcess } from "./Management/RangerManagement";
+import { RemoteMiningManagementProcess } from "./Management/RemoteMiningManagement";
 
 export class FlagWatcherProcess extends Process
 {
@@ -59,8 +59,7 @@ export class FlagWatcherProcess extends Process
   public invasionFlag(flag: Flag)
   {
     this.kernel.addProcessIfNotExist(InvasionManagementProcess, `${flag.name}-invasion`, 70, {
-      flag: flag.name,
-      invaders: []
+      flag: flag.name
     });
   }
 

@@ -1,4 +1,4 @@
-import { Process } from "../../os/process";
+import { Process } from "../../OS/Process";
 
 export class LinkProcess extends Process
 {
@@ -17,8 +17,8 @@ export class LinkProcess extends Process
         // Find link needing energy
         const needingEnergy = _.find(links, (l) =>
         {
-            const sources = this.kernel.data.roomData[this.metaData.roomName].sources;
-            return l.energy < l.energyCapacity && !!l.pos.findInRange(sources, 3);
+            return l.energy < l.energyCapacity &&
+                (l.pos.inRangeTo(l.room.controller!.pos, 3) || l.pos.inRangeTo(l.room.storage!, 2));
         });
 
         if (!needingEnergy)

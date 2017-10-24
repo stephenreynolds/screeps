@@ -1,8 +1,8 @@
-import { Process } from "../../os/process";
+import { Process } from "../../OS/Process";
 
-import { Utils } from "../../lib/utils";
+import { Utils } from "../../lib/Utils";
 
-import { RemoteMinerLifetimeProcess } from "../lifetimes/remoteMiner";
+import { RemoteMinerLifetimeProcess } from "../Lifetimes/RemoteMiner";
 
 export class RemoteMiningManagementProcess extends Process
 {
@@ -24,8 +24,14 @@ export class RemoteMiningManagementProcess extends Process
       flag.memory.source = sources[0].id;
     }
 
-    const miningCreep = Game.creeps[this.metaData.miningCreep];
     const deliverRoom = flag.name.split("-")[0];
+
+    if (Game.rooms[deliverRoom].energyAvailable < 600)
+    {
+        return;
+    }
+
+    const miningCreep = Game.creeps[this.metaData.miningCreep];
 
     if (!miningCreep)
     {

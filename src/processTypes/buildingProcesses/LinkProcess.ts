@@ -40,7 +40,7 @@ export class LinkProcess extends Process
             {
                 return true;
             }
-            else if (l.energy > 0 && needingEnergy.energy === 0)
+            else if (l.energy > 0 && needingEnergy.energy < needingEnergy.energyCapacity)
             {
                 return true;
             }

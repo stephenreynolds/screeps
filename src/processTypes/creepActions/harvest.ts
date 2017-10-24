@@ -1,5 +1,5 @@
-import { Process } from "../../os/process";
-import { MoveProcess } from "./move";
+import { Process } from "../../OS/Process";
+import { MoveProcess } from "./Move";
 
 interface HarvestMetaData
 {

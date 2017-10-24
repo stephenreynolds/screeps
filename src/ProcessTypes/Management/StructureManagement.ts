@@ -1,8 +1,8 @@
-import { Utils } from "../../lib/utils";
-import { Process } from "../../os/process";
+import { Utils } from "../../lib/Utils";
+import { Process } from "../../OS/Process";
 
-import { BuilderLifetimeProcess } from "../lifetimes/builder";
-import { RepairerLifetimeProcess } from "../lifetimes/repairer";
+import { BuilderLifetimeProcess } from "../Lifetimes/Builder";
+import { RepairerLifetimeProcess } from "../Lifetimes/Repairer";
 
 interface StructureManagementProcessMetaData
 {

@@ -1,4 +1,4 @@
-import { Process } from "../../os/process";
+import { Process } from "../../OS/Process";
 
 export class TowerDefenseProcess extends Process
 {

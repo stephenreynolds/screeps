@@ -1,10 +1,10 @@
-import { Process } from "../../os/process";
+import { Process } from "../../OS/Process";
 
-import { FlagWatcherProcess } from "../flagWatcher";
-import { EnergyManagementProcess } from "../management/energy";
-import { StructureManagementProcess } from "../management/structure";
-import { RoomDataProcess } from "../roomData";
-import { SuspensionProcess } from "./suspension";
+import { FlagWatcherProcess } from "../FlagWatcher";
+import { EnergyManagementProcess } from "../Management/EnergyManagement";
+import { StructureManagementProcess } from "../Management/StructureManagement";
+import { RoomDataProcess } from "../RoomData";
+import { SuspensionProcess } from "./Suspension";
 
 export class InitProcess extends Process
 {

@@ -1,5 +1,5 @@
 import { ConsoleCommands } from "./ConsoleCommands";
-import { Kernel } from "./os/kernel";
+import { Kernel } from "./OS/Kernel";
 
 module.exports.loop = function()
 {

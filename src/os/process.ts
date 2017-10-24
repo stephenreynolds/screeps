@@ -1,4 +1,4 @@
-import { Kernel } from "./kernel";
+import { Kernel } from "./Kernel";
 
 export class Process
 {

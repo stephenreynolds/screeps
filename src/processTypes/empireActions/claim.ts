@@ -1,6 +1,6 @@
-import { Utils } from "../../lib/utils";
-import { Process } from "../../os/process";
-import { MoveProcess } from "../creepActions/move";
+import { Utils } from "../../lib/Utils";
+import { Process } from "../../OS/Process";
+import { MoveProcess } from "../CreepActions/Move";
 
 interface ClaimProcessMetaData
 {

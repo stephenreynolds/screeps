@@ -1,7 +1,7 @@
-import { LifetimeProcess } from "../../os/LifetimeProcess";
+import { LifetimeProcess } from "../../OS/LifetimeProcess";
 
-import { DeliverProcess } from "../creepActions/deliver";
-import { MineralHarvestProcess } from "../creepActions/mineralHarvest";
+import { DeliverProcess } from "../CreepActions/Deliver";
+import { MineralHarvestProcess } from "../CreepActions/MineralHarvest";
 
 export class MineralharvesterLifetimeProcess extends LifetimeProcess
 {

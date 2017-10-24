@@ -1,6 +1,6 @@
-import { Process } from "../../os/process";
+import { Process } from "../../OS/Process";
 
-import { MoveProcess } from "./move";
+import { MoveProcess } from "./Move";
 
 export class MineralHarvestProcess extends Process
 {

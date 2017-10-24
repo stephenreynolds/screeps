@@ -1,8 +1,8 @@
-import { Process } from "../../os/process";
+import { Process } from "../../OS/Process";
 
-import { Utils } from "../../lib/utils";
+import { Utils } from "../../lib/Utils";
 
-import { RemoteMinerLifetimeProcess } from "../lifetimes/remoteMiner";
+import { RemoteMinerLifetimeProcess } from "../Lifetimes/RemoteMiner";
 
 export class RemoteMiningManagementProcess extends Process
 {

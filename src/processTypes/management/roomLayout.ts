@@ -1,5 +1,5 @@
 import { log } from "lib/logger/log";
-import { Process } from "../../os/process";
+import { Process } from "../../OS/Process";
 
 export class RoomLayoutProcess extends Process
 {

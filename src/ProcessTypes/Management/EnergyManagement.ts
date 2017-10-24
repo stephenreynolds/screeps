@@ -1,12 +1,12 @@
-import { Utils } from "../../lib/utils";
-import { Process } from "../../os/process";
+import { Utils } from "../../lib/Utils";
+import { Process } from "../../OS/Process";
 
-import { HarvesterLifetimeProcess } from "processTypes/lifetimes/harvester";
-import { MinerLifetimeProcess } from "processTypes/lifetimes/miner";
-import { TransporterLifetimeProcess } from "processTypes/lifetimes/transporter";
-import { CourierLifetimeProcess } from "../lifetimes/courier";
-import { StorageManagerLifetime } from "../lifetimes/storageManager";
-import { UpgraderLifetimeProcess } from "../lifetimes/upgrader";
+import { HarvesterLifetimeProcess } from "ProcessTypes/Lifetimes/Harvester";
+import { MinerLifetimeProcess } from "ProcessTypes/Lifetimes/Miner";
+import { TransporterLifetimeProcess } from "ProcessTypes/Lifetimes/Transporter";
+import { CourierLifetimeProcess } from "../Lifetimes/Courier";
+import { StorageManagerLifetime } from "../Lifetimes/StorageManager";
+import { UpgraderLifetimeProcess } from "../Lifetimes/Upgrader";
 
 export class EnergyManagementProcess extends Process
 {
@@ -76,7 +76,7 @@ export class EnergyManagementProcess extends Process
             const creeps = Utils.inflateCreeps(creepNames);
             const workRate = Utils.workRate(creeps, 2);
 
-            if (creeps.length < 1 || workRate < (source.energyCapacity / 300))
+            if (creeps.length < 1 || workRate < (source.energyCapacity / 600))
             {
                 const creepName = `em-h-${proc.metaData.roomName}-${Game.time}`;
                 const spawnRoom = proc.metaData.roomName;

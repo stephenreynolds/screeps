@@ -1,5 +1,5 @@
-import { Utils } from "../../lib/Utils";
 import { Process } from "../../OS/Process";
+import { Utils } from "../../Utils/Utils";
 import { RangerLifetimeProcess } from "../Lifetimes/Ranger";
 
 export class RangerManagementProcess extends Process
@@ -17,7 +17,7 @@ export class RangerManagementProcess extends Process
     }
 
     const count = this.metaData.rangers.length;
-    const counted = _.filter(this.metaData.rangers, function(creepName: string)
+    const counted = _.filter(this.metaData.rangers, (creepName: string) =>
     {
       const creep = Game.creeps[creepName];
 

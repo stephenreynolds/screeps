@@ -1,5 +1,5 @@
-import { Utils } from "../../lib/Utils";
 import { Process } from "../../OS/Process";
+import { Utils } from "../../Utils/Utils";
 
 import { RemoteBuilderLifetimeProcess } from "../Lifetimes/RemoteBuilder";
 

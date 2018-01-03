@@ -2,30 +2,24 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "es6",
+    "outDir": "dist",
+    "baseUrl": "src/",
     "removeComments": true,
-    "noEmitOnError": true,
-    "noResolve": false,
-    "experimentalDecorators": true,
+    "sourceMap": true,
     "strict": true,
+    "experimentalDecorators": true,
+    "noImplicitReturns": true,
+    "noEmitOnError": true,
     "noUnusedParameters": true,
     "noUnusedLocals": true,
-    "sourceMap": true,
-    "baseUrl": "./src/",
+    "noResolve": false,
     "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+    "allowUnreachableCode": false,
     "pretty": true
   },
   "compileOnSave": false,
-  "include": [
-    "webpack.config.ts",
-    "config/*.ts",
-    "libs/*.ts",
-    "typings/**/*.d.ts",
-    "src/**/*.ts",
-    "src/**/*.d.ts"
-  ],
   "exclude": [
-    "dist",
-    "node_modules",
-    "src/snippets"
+    "node_modules"
   ]
 }

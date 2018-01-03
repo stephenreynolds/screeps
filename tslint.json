@@ -1,44 +1,33 @@
 {
-  "extends" : [
-    "tslint:recommended"
-  ],
-  "rules": {
-    "brace-style": [
-      true,
-      "allman",
-      {
-        "allowSingleLine": true
-      }
+    "extends": [
+        "tslint:recommended"
     ],
-    "forin": false,
-    "interface-name": [false],
-    "no-console": [false],
-    "trailing-comma": [
-      true,
-      "never"
-    ],
-    "variable-name": [
-      true,
-      "ban-keywords",
-      "check-format",
-      "allow-pascal-case",
-      "allow-leading-underscore"
-    ],
-    "one-line": [
-      false
-    ],
-    "no-string-literal": false,
-    "no-var-keyword": true,
-    "no-namespace": false,
-    "prefer-for-of": true,
-    "only-arrow-functions": [
-      false
-    ],
-    "quotemark": [
-      true,
-      "double"
-    ],
-    "object-literal-shorthand": false,
-    "object-literal-sort-keys": false
-  }
+    "rules": {
+        "forin": false,
+        "indent": [
+            true,
+            "spaces",
+            4
+        ],
+        "interface-name": [true, "never-prefix"],
+        "member-ordering": [false],
+        "no-console": [false],
+        "no-namespace": [true, "allow-declarations"],
+        "no-string-literal": false,
+        "object-literal-key-quotes": false,
+        "object-literal-shorthand": false,
+        "object-literal-sort-keys": false,
+        "one-line": false,
+        "trailing-comma": [true, {
+            "multiline": "never",
+            "singleline": "never"
+        }],
+        "variable-name": [
+            true,
+            "ban-keywords",
+            "check-format",
+            "allow-pascal-case",
+            "allow-leading-underscore"
+        ]
+    }
 }

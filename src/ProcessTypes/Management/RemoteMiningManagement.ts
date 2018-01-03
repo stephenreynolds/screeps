@@ -1,7 +1,5 @@
 import { Process } from "../../OS/Process";
-
-import { Utils } from "../../lib/Utils";
-
+import { Utils } from "../../Utils/Utils";
 import { RemoteMinerLifetimeProcess } from "../Lifetimes/RemoteMiner";
 
 export class RemoteMiningManagementProcess extends Process
@@ -28,7 +26,7 @@ export class RemoteMiningManagementProcess extends Process
 
     if (Game.rooms[deliverRoom].energyAvailable < 600)
     {
-        return;
+      return;
     }
 
     const miningCreep = Game.creeps[this.metaData.miningCreep];

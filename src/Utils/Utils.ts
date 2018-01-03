@@ -1,4 +1,3 @@
-import { log } from "lib/logger/log";
 import { EscortLifetimeProcess } from "ProcessTypes/Lifetimes/Escort";
 import { Kernel } from "../OS/Kernel";
 import { Process } from "../OS/Process";
@@ -57,7 +56,7 @@ export const Utils = {
         {
             if (!_.includes(kernel.data.usedSpawns, spawn.id) && !spawn.spawning && spawn.canCreateCreep(body) === OK)
             {
-                log.info(`Spawning creep ${name} in ${roomName}.`);
+                console.log(`Spawning creep ${name} in ${roomName}.`);
                 spawn.createCreep(body, name, memory);
                 outcome = true;
                 kernel.data.usedSpawns.push(spawn.id);
@@ -125,7 +124,7 @@ export const Utils = {
     },
 
     /** Finds a room that can supply the given resource/amount */
-    findResource(room: string, resource: string, amount: number)
+    findResource(room: string, resource: _ResourceConstantSansEnergy, amount: number)
     {
         const rooms = [] as Array<{
             name: string
@@ -136,7 +135,21 @@ export const Utils = {
         {
             if (rm.name !== room && rm.controller && rm.controller.my && rm.storage && rm.terminal)
             {
-                if (rm.storage.store[resource] && rm.storage.store[resource]! > amount)
+                let store: number | undefined;
+                switch (resource)
+                {
+                    case RESOURCE_POWER:
+                        store = rm.storage.store.power;
+                        break;
+                    case RESOURCE_OXYGEN:
+                        store = rm.storage.store.O;
+                        break;
+                    case RESOURCE_HYDROGEN:
+                        store = rm.storage.store.H;
+                        break;
+                }
+
+                if (store && store! > amount)
                 {
                     rooms.push({
                         name: rm.name,

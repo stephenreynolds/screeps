@@ -53,7 +53,7 @@ export class UpgraderLifetimeProcess extends LifetimeProcess
 
                     targets = _.filter(targets, (t) =>
                     {
-                        return (t.store.energy > capacity);
+                        return t && (t.store[RESOURCE_ENERGY] > capacity);
                     });
 
                     if (targets.length > 0)
@@ -74,7 +74,8 @@ export class UpgraderLifetimeProcess extends LifetimeProcess
             {
                 // Collect from source containers if no storage or general containers.
                 const sourceContainers = this.kernel.data.roomData[creep.room.name].sourceContainers;
-                const targets = _.filter(sourceContainers, (c: Container) => {
+                const targets = _.filter(sourceContainers, (c: StructureContainer) =>
+                {
                     return c.store[RESOURCE_ENERGY] > 0;
                 });
 

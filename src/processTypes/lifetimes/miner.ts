@@ -17,7 +17,7 @@ export class MinerLifetimeProcess extends LifetimeProcess
             return;
         }
 
-        const container = Game.getObjectById<Container>(this.metaData.container);
+        const container = Game.getObjectById<StructureContainer>(this.metaData.container);
 
         if (container)
         {
@@ -119,7 +119,7 @@ export class MinerLifetimeProcess extends LifetimeProcess
                     });
                 }
 
-                const target = creep.pos.findClosestByPath(deliverTargets);
+                const target = creep.pos.findClosestByPath(deliverTargets) as Structure;
 
                 if (target)
                 {

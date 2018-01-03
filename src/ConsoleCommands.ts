@@ -1,12 +1,23 @@
+const Colors = [
+    "cyan",
+    "red",
+    "green",
+    "yellow",
+    "white",
+    "purple",
+    "pink",
+    "orange"
+];
+
 export const ConsoleCommands = {
     removeConstructionSites(roomName: string, leaveProgressStarted = true, structureType?: string)
     {
-        Game.rooms[roomName].find(FIND_MY_CONSTRUCTION_SITES).forEach((site: ConstructionSite) =>
+        Game.rooms[roomName].find(FIND_MY_CONSTRUCTION_SITES).forEach((site) =>
         {
-            if ((!structureType || site.structureType === structureType) &&
-                (!leaveProgressStarted || site.progress === 0))
+            if ((!structureType || (site as ConstructionSite).structureType === structureType) &&
+                (!leaveProgressStarted || (site as ConstructionSite).progress === 0))
             {
-                site.remove();
+                (site as ConstructionSite).remove();
             }
         });
     },
@@ -28,7 +39,8 @@ export const ConsoleCommands = {
     {
         if (roomName)
         {
-            _.forEach(Memory.kumiOS.processTable, (entry) => {
+            _.forEach(Memory.kumiOS.processTable, (entry) =>
+            {
                 if (entry.split("-")[1] === roomName)
                 {
                     delete Memory.kumiOS.processTable[entry];
@@ -50,5 +62,59 @@ export const ConsoleCommands = {
                 c.suicide();
             }
         });
+    },
+
+    showCreepPrefix(roomName: string, prefix: string)
+    {
+        const room = Game.rooms[roomName];
+        let success = false;
+
+        for (const name in Memory.creeps)
+        {
+            if (room.visual.getSize() < 512000)
+            {
+                const creep = Game.creeps[name];
+                if (creep && creep.name.startsWith(prefix))
+                {
+                    if (!Memory.visualColor)
+                    {
+                        Memory.visualColor = Colors[0];
+                    }
+
+                    creep.memory.visual = Memory.visualColor;
+                    success = true;
+                }
+            }
+            else
+            {
+                console.log("Cannot add more visuals this tick.");
+            }
+        }
+
+        if (success)
+        {
+            if (Memory.visualColor === Colors[Colors.length])
+            {
+                Memory.visualColor = Colors[0];
+            }
+            else
+            {
+                Memory.visualColor = Colors[Colors.indexOf(Memory.visualColor) + 1];
+            }
+        }
+    },
+
+    clearVisuals(roomName: string)
+    {
+        delete Memory.visualColor;
+
+        for (const name in Memory.creeps)
+        {
+            const creep = Game.creeps[name];
+            if (creep && creep.room.name === roomName)
+            {
+                delete creep.memory.visual;
+            }
+        }
     }
 };

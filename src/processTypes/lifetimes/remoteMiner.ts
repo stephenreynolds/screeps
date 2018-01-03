@@ -1,6 +1,6 @@
 import { LifetimeProcess } from "../../OS/LifetimeProcess";
 
-import { Utils } from "lib/Utils";
+import { Utils } from "Utils/Utils";
 import { BuildProcess } from "../CreepActions/Build";
 import { DeliverProcess } from "../CreepActions/Deliver";
 import { HarvestProcess } from "../CreepActions/Harvest";
@@ -78,7 +78,7 @@ export class RemoteMinerLifetimeProcess extends LifetimeProcess
         }
 
         // Deliver energy to room.
-        const constructionSites = creep.room.find<ConstructionSite>(FIND_MY_CONSTRUCTION_SITES);
+        const constructionSites = creep.room.find(FIND_MY_CONSTRUCTION_SITES);
         if (constructionSites[0])
         {
             const site = creep.pos.findClosestByRange(constructionSites);

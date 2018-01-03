@@ -1,6 +1,6 @@
 interface PartList
 {
-    [name: string]: string[];
+    [name: string]: BodyPartConstant[];
 }
 
 interface WeightList
@@ -11,7 +11,7 @@ interface WeightList
 export const CreepBuilder = {
     design: (creepType: string, room: Room) =>
     {
-        const body = [].concat(CreepBuilder.typeStarts[creepType] as never[]) as string[];
+        const body = [].concat(CreepBuilder.typeStarts[creepType] as never[]) as BodyPartConstant[];
         const spendCap = Math.max(room.energyAvailable / 2, 300);
 
         let add = true;
@@ -48,7 +48,7 @@ export const CreepBuilder = {
         });
     },
 
-    bodyCost: (body: string[]) =>
+    bodyCost: (body: BodyPartConstant[]) =>
     {
         let cost = 0;
 

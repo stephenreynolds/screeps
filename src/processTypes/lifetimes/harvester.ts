@@ -1,8 +1,8 @@
 import { LifetimeProcess } from "../../OS/LifetimeProcess";
 
-import { Utils } from "lib/Utils";
 import { BuildProcess } from "ProcessTypes/CreepActions/Build";
 import { CollectProcess } from "ProcessTypes/CreepActions/Collect";
+import { Utils } from "Utils/Utils";
 import { DeliverProcess } from "../CreepActions/Deliver";
 import { HarvestProcess } from "../CreepActions/Harvest";
 import { UpgradeProcess } from "../CreepActions/Upgrade";
@@ -58,7 +58,8 @@ export class HarvesterLifetimeProcess extends LifetimeProcess
 
         let deliverTargets;
 
-        const towers = _.filter(this.kernel.data.roomData[creep.room.name].towers, (t: Tower) => {
+        const towers = _.filter(this.kernel.data.roomData[creep.room.name].towers, (t: StructureTower) =>
+        {
             return t.energy < 500;
         });
 

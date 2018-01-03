@@ -10,7 +10,7 @@ export class InitProcess extends Process
 {
     public type = "init";
 
-    /** Run the init process */
+    // Run the init process
     public run()
     {
         const proc = this;
@@ -22,9 +22,15 @@ export class InitProcess extends Process
 
         for (const name in Memory.creeps)
         {
-            if (!Game.creeps[name])
+            const creep = Game.creeps[name];
+            if (!creep)
             {
                 delete Memory.creeps[name];
+            }
+            else if (creep.memory.visual)
+            {
+                creep.room.visual.circle(creep.pos,
+                    { fill: "transparent", radius: 0.55, stroke: creep.memory.visual });
             }
         }
 

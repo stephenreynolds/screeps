@@ -25,7 +25,7 @@ export class CourierLifetimeProcess extends LifetimeProcess
         else
         {
             const generalContainers = this.kernel.data.roomData[this.metaData.roomName].generalContainers;
-            collectTarget = creep.pos.findClosestByPath(_.filter(generalContainers, (c: Container) =>
+            collectTarget = creep.pos.findClosestByPath(_.filter(generalContainers, (c: StructureContainer) =>
             {
                 return _.sum(c.store) < c.storeCapacity;
             }));
@@ -95,7 +95,7 @@ export class CourierLifetimeProcess extends LifetimeProcess
             });
         }
 
-        const target = creep.pos.findClosestByPath(deliverTargets);
+        const target = creep.pos.findClosestByPath(deliverTargets) as Structure;
 
         if (target)
         {

@@ -54,9 +54,6 @@ import { InitProcess } from "../ProcessTypes/System/Init";
 import { SpawnRemoteBuilderProcess } from "../ProcessTypes/System/SpawnRemoteBuilder";
 import { SuspensionProcess } from "../ProcessTypes/System/Suspension";
 
-// Lib
-import { log } from "../lib/logger/log";
-
 const ProcessTypes = {
     build: BuildProcess,
     blf: BuilderLifetimeProcess,
@@ -147,7 +144,14 @@ export class Kernel
     /** Check if the current cpu usage is below the limit for this tick */
     public underLimit()
     {
-        return (Game.cpu.getUsed() < this.limit);
+        if (this.limit)
+        {
+            return (Game.cpu.getUsed() < this.limit);
+        }
+        else
+        {
+            return (Game.cpu.getUsed() < 50);
+        }
     }
 
     /** Is there any processes left to run */
@@ -210,9 +214,10 @@ export class Kernel
         try
         {
             process.run(this);
-        } catch (e)
+        }
+        catch (e)
         {
-            log.error(`Process ${process.name} failed with error ${e}`);
+            console.log(`Process ${process.name} failed with error ${e}`);
             faulted = true;
         }
 
@@ -300,7 +305,7 @@ export class Kernel
     /** output a message to console */
     public log(proc: Process, message: any)
     {
-        log.info(`{${Game.time}}[${proc.name}] ${message}`);
+        console.log(`{${Game.time}}[${proc.name}] ${message}`);
     }
 
     /** Remove the process if it exists */

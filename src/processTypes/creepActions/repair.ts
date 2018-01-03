@@ -1,5 +1,5 @@
-import { Utils } from "../../lib/Utils";
 import { Process } from "../../OS/Process";
+import { Utils } from "../../Utils/Utils";
 import { MoveProcess } from "./Move";
 
 interface RepairProcessMetaData
@@ -41,7 +41,7 @@ export class RepairProcess extends Process
         else
         {
             if (target.hits === target.hitsMax || (target.structureType === STRUCTURE_RAMPART &&
-                 target.hits > Utils.rampartHealth(this.kernel, creep.room.name)))
+                target.hits > Utils.rampartHealth(this.kernel, creep.room.name)))
             {
                 this.completed = true;
                 this.resumeParent();

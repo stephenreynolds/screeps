@@ -67,7 +67,7 @@ export class RoomDataProcess extends Process
             });
         }
 
-        if (room.controller && room.controller.my && room.controller.level >= 2)
+        if (room.controller && room.controller.my)
         {
             this.kernel.addProcessIfNotExist(RoomLayoutProcess, "room-layout-" + room.name, 20, {
                 roomName: room.name

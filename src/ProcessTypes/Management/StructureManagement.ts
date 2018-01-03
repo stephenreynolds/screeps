@@ -1,5 +1,5 @@
-import { Utils } from "../../lib/Utils";
 import { Process } from "../../OS/Process";
+import { Utils } from "../../Utils/Utils";
 
 import { BuilderLifetimeProcess } from "../Lifetimes/Builder";
 import { RepairerLifetimeProcess } from "../Lifetimes/Repairer";
@@ -47,7 +47,7 @@ export class StructureManagementProcess extends Process
 
     if (this.room().energyAvailable < 300)
     {
-        return;
+      return;
     }
 
     const numBuilders = _.min([
@@ -90,7 +90,7 @@ export class StructureManagementProcess extends Process
       this.kernel.data.roomData[this.metaData.roomName].roads as never[]
     ) as Structure[];
 
-    const repairTargets = _.filter(repairableObjects, function(object)
+    const repairTargets = _.filter(repairableObjects, (object) =>
     {
       return (object.hits < object.hitsMax);
     });

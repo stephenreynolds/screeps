@@ -1,6 +1,6 @@
-import { Utils } from "lib/Utils";
 import { Process } from "OS/Process";
 import { BrawlerLifetimeProcess } from "ProcessTypes/Lifetimes/Brawler";
+import { Utils } from "Utils/Utils";
 import { TowerDefenseProcess } from "../BuildingProcesses/TowerDefense";
 
 export class DefenseManagementProcess extends Process
@@ -10,7 +10,7 @@ export class DefenseManagementProcess extends Process
     public run()
     {
         const room = Game.rooms[this.metaData.roomName];
-        const enemies = room.find<Creep>(FIND_HOSTILE_CREEPS);
+        const enemies = room.find(FIND_HOSTILE_CREEPS);
 
         if (enemies.length === 0)
         {

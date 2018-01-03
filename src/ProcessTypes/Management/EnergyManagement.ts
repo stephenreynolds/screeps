@@ -1,5 +1,5 @@
-import { Utils } from "../../lib/Utils";
 import { Process } from "../../OS/Process";
+import { Utils } from "../../Utils/Utils";
 
 import { HarvesterLifetimeProcess } from "ProcessTypes/Lifetimes/Harvester";
 import { MinerLifetimeProcess } from "ProcessTypes/Lifetimes/Miner";
@@ -201,7 +201,7 @@ export class EnergyManagementProcess extends Process
         if (this.metaData.courierCreeps.length < 1)
         {
             const storedEnergy = (this.room().storage && _.sum(this.room().storage!.store) > 0) ||
-                _.filter(generalContainers, (c: Container) =>
+                _.filter(generalContainers, (c: StructureContainer) =>
                 {
                     return c.store[RESOURCE_ENERGY] > 0;
                 })[0];
@@ -242,7 +242,8 @@ export class EnergyManagementProcess extends Process
         if (!this.metaData.storageCreep && this.room().storage)
         {
             const links = this.kernel.data.roomData[this.room().name].links;
-            const storageLink = _.find(links, (l: StructureLink) => {
+            const storageLink = _.find(links, (l: StructureLink) =>
+            {
                 return l.pos.inRangeTo(this.room().storage!, 2);
             });
 

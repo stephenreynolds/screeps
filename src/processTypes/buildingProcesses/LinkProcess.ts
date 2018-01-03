@@ -27,7 +27,8 @@ export class LinkProcess extends Process
         }
 
         // Find source link
-        const sourceLink = _.find(links, (l) => {
+        const sourceLink = _.find(links, (l) =>
+        {
             if (l.room.terminal && l.pos.inRangeTo(l.room.terminal, 3))
             {
                 return false;
@@ -44,6 +45,7 @@ export class LinkProcess extends Process
             {
                 return true;
             }
+            return false;
         });
 
         if (!sourceLink)

@@ -18,7 +18,7 @@ export class TowerDefenseProcess extends Process
 
     if (enemies.length > 0)
     {
-      _.forEach(this.kernel.data.roomData[this.metaData.roomName].towers, function(tower)
+      _.forEach(this.kernel.data.roomData[this.metaData.roomName].towers, (tower) =>
       {
         const enemy = tower.pos.findClosestByRange(enemies);
 

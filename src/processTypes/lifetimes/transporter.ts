@@ -44,7 +44,7 @@ export class TransporterLifetimeProcess extends LifetimeProcess
         else
         {
             const generalContainers = this.kernel.data.roomData[this.metaData.roomName].generalContainers;
-            target = creep.pos.findClosestByPath(_.filter(generalContainers, (c: Container) =>
+            target = creep.pos.findClosestByPath(_.filter(generalContainers, (c: StructureContainer) =>
             {
                 return c.store[RESOURCE_ENERGY] < c.storeCapacity;
             }));

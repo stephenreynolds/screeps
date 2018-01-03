@@ -1,6 +1,6 @@
 import { LifetimeProcess } from "../../OS/LifetimeProcess";
 
-import { Utils } from "lib/Utils";
+import { Utils } from "Utils/Utils";
 import { BuildProcess } from "../CreepActions/Build";
 import { HarvestProcess } from "../CreepActions/Harvest";
 import { UpgradeProcess } from "../CreepActions/Upgrade";
@@ -27,26 +27,26 @@ export class RemoteBuilderLifetimeProcess extends LifetimeProcess
 
     if (creep.room.name === site.pos.roomName)
     {
-        if (creep.room.find(FIND_HOSTILE_CREEPS).length > 0)
+      if (creep.room.find(FIND_HOSTILE_CREEPS).length > 0)
+      {
+        if (!Memory.remoteRoomStatus)
         {
-            if (!Memory.remoteRoomStatus)
-            {
-                Memory.remoteRoomStatus = {};
-            }
-
-            Memory.remoteRoomStatus[creep.room.name] = false;
-
-            Utils.spawnEscort(this, creep);
+          Memory.remoteRoomStatus = {};
         }
-        else
+
+        Memory.remoteRoomStatus[creep.room.name] = false;
+
+        Utils.spawnEscort(this, creep);
+      }
+      else
+      {
+        if (!Memory.remoteRoomStatus)
         {
-            if (!Memory.remoteRoomStatus)
-            {
-                Memory.remoteRoomStatus = {};
-            }
-
-            Memory.remoteRoomStatus[creep.room.name] = true;
+          Memory.remoteRoomStatus = {};
         }
+
+        Memory.remoteRoomStatus[creep.room.name] = true;
+      }
     }
 
     if (_.sum(creep.carry) === 0)

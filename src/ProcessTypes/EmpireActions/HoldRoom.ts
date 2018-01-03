@@ -1,7 +1,7 @@
 import { Process } from "../../OS/Process";
 import { HoldProcess } from "../CreepActions/Hold";
 
-import { Utils } from "../../lib/Utils";
+import { Utils } from "../../Utils/Utils";
 
 export class HoldRoomProcess extends Process
 {

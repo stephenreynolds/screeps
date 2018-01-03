@@ -1,5 +1,5 @@
-import { Utils } from "../../lib/Utils";
 import { LifetimeProcess } from "../../OS/LifetimeProcess";
+import { Utils } from "../../Utils/Utils";
 
 import { CollectProcess } from "../CreepActions/Collect";
 import { RepairProcess } from "../CreepActions/Repair";
@@ -42,13 +42,13 @@ export class RepairerLifetimeProcess extends LifetimeProcess
     let repairableObjects = [].concat(
       this.kernel.data.roomData[this.metaData.roomName].containers as never[],
       this.roomData().ramparts as never[]
-    ) as StructureRoad[];
+    ) as Array<StructureRoad | StructureRampart | StructureContainer>;
 
     let shortestDecay = 100;
 
     const proc = this;
 
-    let repairTargets = _.filter(repairableObjects, function(object)
+    let repairTargets = _.filter(repairableObjects, (object) =>
     {
       if (object.ticksToDecay < shortestDecay) { shortestDecay = object.ticksToDecay; }
 
@@ -70,7 +70,7 @@ export class RepairerLifetimeProcess extends LifetimeProcess
 
       shortestDecay = 100;
 
-      repairTargets = _.filter(repairableObjects, function(object)
+      repairTargets = _.filter(repairableObjects, (object) =>
       {
         if (object.ticksToDecay < shortestDecay)
         {

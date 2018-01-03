@@ -69,7 +69,7 @@ export class FlagWatcherProcess extends Process
 
     const proc = this;
 
-    _.forEach(Game.flags, function(flag)
+    _.forEach(Game.flags, (flag) =>
     {
       switch (flag.color)
       {

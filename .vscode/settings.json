@@ -1,24 +1,22 @@
 {
-  "editor.tabSize": 4,
-  "editor.insertSpaces": true,
   "editor.renderWhitespace": "boundary",
-  "editor.detectIndentation": false,
   "files.encoding": "utf8",
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    ".rpt2_cache/": true
+  },
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
-  "typescriptHero.resolver.stringQuoteStyle": "\"",
   "search.exclude": {
+    "_book/**": true,
+    ".rpt2_cache/**": true,
     "dist/**": true,
     "node_modules/**": true,
     "typings/**": true
   },
-  "typescript.tsdk": "./node_modules/typescript/lib",
-  "cSpell.words": [
-    "allman"
-  ],
-  "typescript.format.enable": true,
-  "typescript.format.placeOpenBraceOnNewLineForFunctions": true,
-  "typescript.format.placeOpenBraceOnNewLineForControlBlocks": true,
-  "typescriptHero.codeOutline.enabled": true,
-  "typescriptHero.verbosity": "All"
+  "typescript.tsdk": "./node_modules/typescript/lib"
 }

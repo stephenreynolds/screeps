@@ -17,28 +17,29 @@ export class TowerRepairProcess extends Process
       return;
     }
 
-    const ramparts = _.filter(this.roomData().ramparts, function(rampart)
+    const ramparts = _.filter(this.roomData().ramparts, (rampart) =>
     {
       return (rampart.hits < 50000);
     });
 
-    const containers = _.filter(this.roomData().generalContainers, function(container)
+    const containers = _.filter(this.roomData().generalContainers, (container) =>
     {
       return (container.hits < container.hitsMax);
     });
 
-    const sourceContainers = _.filter(this.roomData().sourceContainers, function(container)
+    const sourceContainers = _.filter(this.roomData().sourceContainers, (container) =>
     {
       return (container.hits < container.hitsMax);
     });
 
-    const roads = _.filter(this.roomData().roads, function(road)
+    const roads = _.filter(this.roomData().roads, (road) =>
     {
       return (road.hits < road.hitsMax);
     });
 
-    const walls = _.filter(this.roomData().walls, (w: StructureWall) => {
-        return w.hits < w.hitsMax;
+    const walls = _.filter(this.roomData().walls, (w: StructureWall) =>
+    {
+      return w.hits < w.hitsMax;
     });
 
     const sortedRamparts = _.sortBy([].concat(
@@ -50,15 +51,15 @@ export class TowerRepairProcess extends Process
     ) as Structure[], "hits");
     const usedTowers = {} as { [towerId: string]: boolean };
 
-    _.forEach(this.roomData().towers, function(tower)
+    _.forEach(this.roomData().towers, (tower) =>
     {
       usedTowers[tower.id] = (tower.energy < 500);
     });
 
     const proc = this;
-    _.forEach(sortedRamparts, function(rampart)
+    _.forEach(sortedRamparts, (rampart) =>
     {
-      const towers = _.filter(proc.roomData().towers, function(tower)
+      const towers = _.filter(proc.roomData().towers, (tower) =>
       {
         return !usedTowers[tower.id];
       });

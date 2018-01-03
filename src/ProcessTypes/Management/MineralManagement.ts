@@ -1,7 +1,5 @@
 import { Process } from "../../OS/Process";
-
-import { Utils } from "../../lib/Utils";
-
+import { Utils } from "../../Utils/Utils";
 import { MineralharvesterLifetimeProcess } from "../Lifetimes/MineralHarvester";
 
 export class MineralManagementProcess extends Process

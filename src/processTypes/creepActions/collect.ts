@@ -5,7 +5,7 @@ interface CollectProcessMetaData
 {
   creep: string;
   target: string;
-  resource: string;
+  resource: ResourceConstant;
 }
 
 export class CollectProcess extends Process

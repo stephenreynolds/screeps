@@ -46,7 +46,7 @@ import { InvasionManagementProcess } from "../ProcessTypes/Management/InvasionMa
 import { MineralManagementProcess } from "../ProcessTypes/Management/MineralManagement";
 import { RangerManagementProcess } from "../ProcessTypes/Management/RangerManagement";
 import { RemoteMiningManagementProcess } from "../ProcessTypes/Management/RemoteMiningManagement";
-import { RoomLayoutProcess } from "../ProcessTypes/Management/RoomLayout";
+import { RoomLayoutManagementProcess } from "../ProcessTypes/Management/RoomLayoutManagement";
 import { StructureManagementProcess } from "../ProcessTypes/Management/StructureManagement";
 
 // System Processes
@@ -84,7 +84,7 @@ const ProcessTypes = {
     repair: RepairProcess,
     rlf: RepairerLifetimeProcess,
     roomData: RoomDataProcess,
-    roomLayout: RoomLayoutProcess,
+    roomLayout: RoomLayoutManagementProcess,
     sm: StructureManagementProcess,
     smlf: StorageManagerLifetime,
     spawnRemoteBuilder: SpawnRemoteBuilderProcess,

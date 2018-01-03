@@ -1,6 +1,6 @@
 import { Process } from "../../OS/Process";
 
-export class RoomLayoutProcess extends Process
+export class RoomLayoutManagementProcess extends Process
 {
   public readonly roomPlanVersion = 47;
   public readonly maxSites = 100;

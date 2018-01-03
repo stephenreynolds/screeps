@@ -3,6 +3,7 @@
         "tslint:recommended"
     ],
     "rules": {
+        "align": false,
         "forin": false,
         "indent": [
             true,

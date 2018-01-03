@@ -123,6 +123,8 @@ export class Kernel
 
     public ProcessTypes = ProcessTypes;
 
+    public toRunProcesses?: string[];
+
     public data = {
         roomData: {},
         usedSpawns: []
@@ -130,6 +132,7 @@ export class Kernel
 
     public execOrder: Array<{}> = [];
     public suspendCount = 0;
+    public schedularUsage = 0;
 
     /**  Creates a new kernel ensuring that memory exists and re-loads the process table from the last. */
     constructor()
@@ -160,7 +163,18 @@ export class Kernel
     /** Is there any processes left to run */
     public needsToRun()
     {
-        return (!!this.getHighestProcess());
+        if (this.toRunProcesses && this.toRunProcesses.length > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return _.filter(this.processTable, (process) =>
+            {
+                return !process.ticked && process.suspend === false;
+            }).length > 0;
+        }
+        // return (!!this.getHighestProcess());
     }
 
     /** Load the process table from Memory */
@@ -199,12 +213,31 @@ export class Kernel
     /** Returns the highest priority process in the process table */
     public getHighestProcess()
     {
-        const toRunProcesses = _.filter(this.processTable, (entry) =>
-        {
-            return (!entry.ticked && entry.suspend === false);
-        });
+        const cpu = Game.cpu.getUsed();
 
-        return _.sortBy(toRunProcesses, "priority").reverse()[0];
+        if (!this.toRunProcesses || this.toRunProcesses.length === 0)
+        {
+            const toRunProcesses = _.filter(this.processTable, (entry) =>
+            {
+                return (!entry.ticked && entry.suspend === false);
+            });
+
+            const sorted = _.sortBy(toRunProcesses, "priority").reverse();
+            this.toRunProcesses = _.map(sorted, "name");
+        }
+
+        const name = this.toRunProcesses!.shift()!;
+
+        this.schedularUsage += Game.cpu.getUsed() - cpu;
+
+        return this.processTable[name!];
+
+        // const toRunProcesses = _.filter(this.processTable, (entry) =>
+        // {
+        //     return (!entry.ticked && entry.suspend === false);
+        // });
+
+        // return _.sortBy(toRunProcesses, "priority").reverse()[0];
     }
 
     /** Run the highest priority process in the process table */
@@ -246,6 +279,7 @@ export class Kernel
         }, this);
 
         this.processTable[name] = process;
+        this.toRunProcesses = [];
     }
 
     /** Add a process to the process table if it does not exist */

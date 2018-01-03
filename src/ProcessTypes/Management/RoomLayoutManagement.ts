@@ -200,16 +200,11 @@ export class RoomLayoutManagementProcess extends Process
     }) as RoomPosition[];
     const closestContainer = baseSpawn.pos.findClosestByRange(sourceContainers);
     const ccEmpties: RoomPosition[] = [];
-    for (let y = closestContainer.y - 1; y < closestContainer.y + 1; y++)
+    for (let y = closestContainer.y - 1; y <= closestContainer.y + 1; y++)
     {
-      for (let x = closestContainer.x - 1; x < closestContainer.x + 1; x++)
+      for (let x = closestContainer.x - 1; x <= closestContainer.x + 1; x++)
       {
-        const structures = _.filter(room.lookAt(x, y), (l) =>
-        {
-          return l.type === LOOK_STRUCTURES;
-        });
-
-        if (structures.length === 0)
+        if (room.lookForAt(LOOK_TERRAIN, x, y).indexOf("wall") === -1)
         {
           ccEmpties.push(new RoomPosition(x, y, room.name));
         }

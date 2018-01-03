@@ -30,7 +30,7 @@ import { CourierLifetimeProcess } from "../ProcessTypes/Lifetimes/Courier";
 import { EscortLifetimeProcess } from "../ProcessTypes/Lifetimes/Escort";
 import { HarvesterLifetimeProcess } from "../ProcessTypes/Lifetimes/Harvester";
 import { MinerLifetimeProcess } from "../ProcessTypes/Lifetimes/Miner";
-import { MineralharvesterLifetimeProcess } from "../ProcessTypes/Lifetimes/MineralHarvester";
+import { MineralHarvesterLifetimeProcess } from "../ProcessTypes/Lifetimes/MineralHarvester";
 import { RangerLifetimeProcess } from "../ProcessTypes/Lifetimes/Ranger";
 import { RemoteBuilderLifetimeProcess } from "../ProcessTypes/Lifetimes/RemoteBuilder";
 import { RemoteMinerLifetimeProcess } from "../ProcessTypes/Lifetimes/RemoteMiner";
@@ -75,7 +75,7 @@ const ProcessTypes = {
     inv: InvasionManagementProcess,
     lp: LinkProcess,
     mh: MineralHarvestProcess,
-    mhlf: MineralharvesterLifetimeProcess,
+    mhlf: MineralHarvesterLifetimeProcess,
     mlf: MinerLifetimeProcess,
     mineralManagement: MineralManagementProcess,
     move: MoveProcess,
@@ -174,7 +174,6 @@ export class Kernel
                 return !process.ticked && process.suspend === false;
             }).length > 0;
         }
-        // return (!!this.getHighestProcess());
     }
 
     /** Load the process table from Memory */
@@ -185,7 +184,6 @@ export class Kernel
         {
             if (ProcessTypes[entry.type])
             {
-                // kernel.processTable.push(new ProcessTypes[entry.type](entry, kernel))
                 kernel.processTable[entry.name] = new ProcessTypes[entry.type](entry, kernel);
             }
             else
@@ -231,13 +229,6 @@ export class Kernel
         this.schedularUsage += Game.cpu.getUsed() - cpu;
 
         return this.processTable[name!];
-
-        // const toRunProcesses = _.filter(this.processTable, (entry) =>
-        // {
-        //     return (!entry.ticked && entry.suspend === false);
-        // });
-
-        // return _.sortBy(toRunProcesses, "priority").reverse()[0];
     }
 
     /** Run the highest priority process in the process table */

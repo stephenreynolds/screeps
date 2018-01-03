@@ -5,7 +5,7 @@ export class RoomLayoutManagementProcess extends Process
 {
     public type = "roomLayout";
 
-    public readonly roomPlanVersion = 69; // Update this every time generateRoomPlan() changes.
+    public readonly roomPlanVersion = 71; // Update this every time generateRoomPlan() changes.
     public readonly maxSites = 10;  // Max number of sites per room.
 
     private buildPriorities = [
@@ -173,6 +173,47 @@ export class RoomLayoutManagementProcess extends Process
             new RoomPosition(baseSpawn.pos.x + 6, baseSpawn.pos.y - 2, room.name),
             new RoomPosition(baseSpawn.pos.x + 6, baseSpawn.pos.y, room.name)
         ]);
+        room.memory.roomPlan.rcl[4].rampart = [];
+        for (let x = -5; x <= 8; x++)
+        {
+            room.memory.roomPlan.rcl[4].rampart.push(
+                new RoomPosition(baseSpawn.pos.x + x, baseSpawn.pos.y - 5, room.name));
+        }
+        for (let y = -5; y <= 8; y++)
+        {
+            room.memory.roomPlan.rcl[4].rampart.push(
+                new RoomPosition(baseSpawn.pos.x + 8, baseSpawn.pos.y + y, room.name));
+        }
+        for (let x = 7; x >= -5; x--)
+        {
+            room.memory.roomPlan.rcl[4].rampart.push(
+                new RoomPosition(baseSpawn.pos.x + x, baseSpawn.pos.y + 8, room.name));
+        }
+        for (let y = 8; y >= 4; y--)
+        {
+            room.memory.roomPlan.rcl[4].rampart.push(
+                new RoomPosition(baseSpawn.pos.x - 5, baseSpawn.pos.y + y, room.name));
+        }
+        for (let x = -4; x <= 7; x++)
+        {
+            room.memory.roomPlan.rcl[4].rampart.push(
+                new RoomPosition(baseSpawn.pos.x + x, baseSpawn.pos.y - 4, room.name));
+        }
+        for (let y = -4; y <= 7; y++)
+        {
+            room.memory.roomPlan.rcl[4].rampart.push(
+                new RoomPosition(baseSpawn.pos.x + 7, baseSpawn.pos.y + y, room.name));
+        }
+        for (let x = 6; x >= -4; x--)
+        {
+            room.memory.roomPlan.rcl[4].rampart.push(
+                new RoomPosition(baseSpawn.pos.x + x, baseSpawn.pos.y + 7, room.name));
+        }
+        for (let y = 7; y >= 3; y--)
+        {
+            room.memory.roomPlan.rcl[4].rampart.push(
+                new RoomPosition(baseSpawn.pos.x - 4, baseSpawn.pos.y + y, room.name));
+        }
 
         // RCL 5
         room.memory.roomPlan.rcl[5] = {};
@@ -182,6 +223,7 @@ export class RoomLayoutManagementProcess extends Process
         room.memory.roomPlan.rcl[5].extension = _.clone(room.memory.roomPlan.rcl[4].extension);
         room.memory.roomPlan.rcl[5].storage = _.clone(room.memory.roomPlan.rcl[4].storage);
         room.memory.roomPlan.rcl[5].tower = _.clone(room.memory.roomPlan.rcl[4].tower);
+        room.memory.roomPlan.rcl[5].rampart = _.clone(room.memory.roomPlan.rcl[4].rampart);
         const storageLinkPos = new RoomPosition(baseSpawn.pos.x + 3, baseSpawn.pos.y + 1, room.name);
         const sourceContainers = _.filter(room.memory.roomPlan.rcl[5].container, (c: RoomPosition) =>
         {
@@ -218,6 +260,16 @@ export class RoomLayoutManagementProcess extends Process
         room.memory.roomPlan.rcl[5].tower = room.memory.roomPlan.rcl[5].tower.concat([
             new RoomPosition(baseSpawn.pos.x + 8, baseSpawn.pos.y + 8, room.name)
         ]);
+        for (let y = controller.pos.y - 1; y <= controller.pos.y + 1; y++)
+        {
+            for (let x = controller.pos.x - controller.pos.x; x <= controller.pos.x + 1; x++)
+            {
+                if (room.lookForAt(LOOK_TERRAIN, x, y).indexOf("wall") === -1)
+                {
+                    room.memory.roomPlan.rcl[5].rampart.push(new RoomPosition(x, y, room.name));
+                }
+            }
+        }
 
         // RCL 6
         room.memory.roomPlan.rcl[6] = {};
@@ -226,6 +278,7 @@ export class RoomLayoutManagementProcess extends Process
         room.memory.roomPlan.rcl[6].container = _.clone(room.memory.roomPlan.rcl[5].container);
         room.memory.roomPlan.rcl[6].extension = _.clone(room.memory.roomPlan.rcl[5].extension);
         room.memory.roomPlan.rcl[6].tower = _.clone(room.memory.roomPlan.rcl[5].tower);
+        room.memory.roomPlan.rcl[6].rampart = _.clone(room.memory.roomPlan.rcl[5].rampart);
         room.memory.roomPlan.rcl[6].storage = _.clone(room.memory.roomPlan.rcl[5].storage);
         room.memory.roomPlan.rcl[6].link = _.clone(room.memory.roomPlan.rcl[5].link);
         room.memory.roomPlan.rcl[6].terminal = [new RoomPosition(baseSpawn.pos.x + 3, baseSpawn.pos.y + 3, room.name)];
@@ -262,6 +315,7 @@ export class RoomLayoutManagementProcess extends Process
         room.memory.roomPlan.rcl[7].container = _.clone(room.memory.roomPlan.rcl[6].container);
         room.memory.roomPlan.rcl[7].extension = _.clone(room.memory.roomPlan.rcl[6].extension);
         room.memory.roomPlan.rcl[7].tower = _.clone(room.memory.roomPlan.rcl[6].tower);
+        room.memory.roomPlan.rcl[7].rampart = _.clone(room.memory.roomPlan.rcl[6].rampart);
         room.memory.roomPlan.rcl[7].storage = _.clone(room.memory.roomPlan.rcl[6].storage);
         room.memory.roomPlan.rcl[7].link = _.clone(room.memory.roomPlan.rcl[6].link);
         room.memory.roomPlan.rcl[7].terminal = _.clone(room.memory.roomPlan.rcl[6].terminal);
@@ -301,6 +355,7 @@ export class RoomLayoutManagementProcess extends Process
         room.memory.roomPlan.rcl[8].container = _.clone(room.memory.roomPlan.rcl[7].container);
         room.memory.roomPlan.rcl[8].extension = _.clone(room.memory.roomPlan.rcl[7].extension);
         room.memory.roomPlan.rcl[8].tower = _.clone(room.memory.roomPlan.rcl[7].tower);
+        room.memory.roomPlan.rcl[8].rampart = _.clone(room.memory.roomPlan.rcl[7].rampart);
         room.memory.roomPlan.rcl[8].storage = _.clone(room.memory.roomPlan.rcl[7].storage);
         room.memory.roomPlan.rcl[8].link = _.clone(room.memory.roomPlan.rcl[7].link);
         room.memory.roomPlan.rcl[8].terminal = _.clone(room.memory.roomPlan.rcl[7].terminal);

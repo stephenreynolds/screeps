@@ -4,7 +4,7 @@ export class RoomLayoutManagementProcess extends Process
 {
   public type = "roomLayout";
 
-  public readonly roomPlanVersion = 65; // Update this every time generateRoomPlan() changes.
+  public readonly roomPlanVersion = 67; // Update this every time generateRoomPlan() changes.
   public readonly maxSites = 10;  // Max number of sites per room.
 
   private buildPriorities = [

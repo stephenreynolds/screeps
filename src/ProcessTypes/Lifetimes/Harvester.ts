@@ -46,7 +46,7 @@ export class HarvesterLifetimeProcess extends LifetimeProcess
         // Creep has been harvesting and has energy in it
         const source = Game.getObjectById(this.metaData.source) as Source;
         const constructionSites = source.pos.findInRange(FIND_CONSTRUCTION_SITES, 1) as ConstructionSite[];
-        if (constructionSites.length > 0)
+        if (constructionSites.length > 0 && creep.room.energyAvailable > 300)
         {
             this.fork(BuildProcess, "build-" + creep.name, this.priority - 1, {
                 creep: creep.name,

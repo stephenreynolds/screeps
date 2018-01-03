@@ -313,16 +313,11 @@ export class RoomLayoutManagementProcess extends Process
       new RoomPosition(baseSpawn.pos.x - 4, baseSpawn.pos.y + 4, room.name)
     ]);
     const towerEmpties: RoomPosition[] = [];
-    for (let y = controller.pos.y - 2; y < controller.pos.y + 2; y++)
+    for (let y = controller.pos.y - 2; y <= controller.pos.y + 2; y++)
     {
-      for (let x = controller.pos.x - 2; x < controller.pos.x + 2; x++)
+      for (let x = controller.pos.x - 2; x <= controller.pos.x + 2; x++)
       {
-        const structures = _.filter(room.lookAt(x, y), (l) =>
-        {
-          return l.type === LOOK_STRUCTURES;
-        });
-
-        if (structures.length === 0)
+        if (room.lookForAt(LOOK_TERRAIN, x, y).indexOf("wall") === -1)
         {
           towerEmpties.push(new RoomPosition(x, y, room.name));
         }

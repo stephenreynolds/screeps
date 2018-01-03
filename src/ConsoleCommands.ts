@@ -64,6 +64,22 @@ export const ConsoleCommands = {
         });
     },
 
+    destroyall(roomName: string, structureType: StructureConstant)
+    {
+        let sum = 0;
+
+        for (const structure of Game.rooms[roomName].find(FIND_STRUCTURES))
+        {
+            if (structure.structureType === structureType)
+            {
+                structure.destroy();
+                sum++;
+            }
+        }
+
+        return "Destroyed " + sum + " " + structureType + "s.";
+    },
+
     showCreepPrefix(roomName: string, prefix: string)
     {
         const room = Game.rooms[roomName];

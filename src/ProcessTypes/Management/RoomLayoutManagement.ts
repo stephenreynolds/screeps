@@ -2,9 +2,10 @@ import { Process } from "../../OS/Process";
 
 export class RoomLayoutManagementProcess extends Process
 {
-  public readonly roomPlanVersion = 47;
-  public readonly maxSites = 100;
   public type = "roomLayout";
+
+  public readonly roomPlanVersion = 47; // Update this every time generateRoomPlan() changes.
+  public readonly maxSites = 10;  // Max number of sites per room.
 
   private buildPriorities = [
     "spawn",

@@ -1,3 +1,4 @@
+import { log } from "Lib/Logger/Log";
 import { Process } from "../../OS/Process";
 
 export class RoomLayoutManagementProcess extends Process
@@ -410,7 +411,7 @@ export class RoomLayoutManagementProcess extends Process
           {
             if (pos.createConstructionSite(key as BuildableStructureConstant) === OK)
             {
-              console.log(`Site created for ${key} at ${pos}`);
+              log.info(`Site created for ${key} at ${pos}`);
               siteCount++;
             }
 

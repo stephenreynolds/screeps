@@ -1,3 +1,5 @@
+import { log } from "Lib/Logger/Log";
+
 const Colors = [
     "cyan",
     "red",
@@ -103,7 +105,7 @@ export const ConsoleCommands = {
             }
             else
             {
-                console.log("Cannot add more visuals this tick.");
+                log.warning("Cannot add more visuals this tick.");
             }
         }
 

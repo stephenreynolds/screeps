@@ -54,6 +54,9 @@ import { InitProcess } from "../ProcessTypes/System/Init";
 import { SpawnRemoteBuilderProcess } from "../ProcessTypes/System/SpawnRemoteBuilder";
 import { SuspensionProcess } from "../ProcessTypes/System/Suspension";
 
+// Libs
+import { log } from "../Lib/Logger/Log";
+
 const ProcessTypes = {
     build: BuildProcess,
     blf: BuilderLifetimeProcess,
@@ -217,7 +220,7 @@ export class Kernel
         }
         catch (e)
         {
-            console.log(`Process ${process.name} failed with error ${e}`);
+            log.error(`Process ${process.name} failed with error ${e}`);
             faulted = true;
         }
 
@@ -305,7 +308,7 @@ export class Kernel
     /** output a message to console */
     public log(proc: Process, message: any)
     {
-        console.log(`{${Game.time}}[${proc.name}] ${message}`);
+        log.info(`{${Game.time}}[${proc.name}] ${message}`);
     }
 
     /** Remove the process if it exists */

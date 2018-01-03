@@ -31,13 +31,15 @@
         "rollup-plugin-commonjs": "^8.2.6",
         "rollup-plugin-json": "^2.3.0",
         "rollup-plugin-node-resolve": "^3.0.0",
+        "rollup-plugin-replace": "^2.0.0",
         "rollup-plugin-screeps": "0.0.1",
         "rollup-plugin-typescript2": "^0.8.1",
+        "source-map-loader": "^0.2.3",
         "tslint": "^5.8.0",
         "typescript": "^2.6.1"
     },
     "dependencies": {
-        "rollup-plugin-copy": "^0.2.3",
+        "git-rev-sync": "^1.9.1",
         "source-map": "^0.6.1"
     }
 }

@@ -1,10 +1,12 @@
+import { log } from "Lib/Logger/Log";
 import { Process } from "../../OS/Process";
 
-export class RoomLayoutProcess extends Process
+export class RoomLayoutManagementProcess extends Process
 {
-  public readonly roomPlanVersion = 47;
-  public readonly maxSites = 100;
   public type = "roomLayout";
+
+  public readonly roomPlanVersion = 67; // Update this every time generateRoomPlan() changes.
+  public readonly maxSites = 10;  // Max number of sites per room.
 
   private buildPriorities = [
     "spawn",
@@ -25,10 +27,6 @@ export class RoomLayoutProcess extends Process
 
   public run()
   {
-    if (Game.cpu.limit < 300)
-    {
-      return;
-    }
     const room = Game.rooms[this.metaData.roomName];
 
     if (room.memory.roomPlan && room.memory.roomPlan.version === this.roomPlanVersion)
@@ -55,14 +53,44 @@ export class RoomLayoutProcess extends Process
     room.memory.roomPlan.rcl[1] = {};
     const baseSpawn = _.find(room.find(FIND_MY_SPAWNS), (s) =>
     {
-      return s.name === "base-" + room.name;
+      return s.name === "base-" + room.name || s.name === "Spawn1"; // TODO: remove Spawn1 ASAP
     })!;
     room.memory.roomPlan.rcl[1].spawn = [baseSpawn.pos];
 
     // RCL 2
     room.memory.roomPlan.rcl[2] = {};
     room.memory.roomPlan.rcl[2].spawn = _.clone(room.memory.roomPlan.rcl[1].spawn);
-    room.memory.roomPlan.rcl[2].road = [  // Base roads
+    room.memory.roomPlan.rcl[2].container = [];
+    const sources = room.find(FIND_SOURCES);
+    for (const source of sources)
+    {
+      const empties: RoomPosition[] = [];
+      for (let y = source.pos.y - 1; y <= source.pos.y + 1; y++)
+      {
+        for (let x = source.pos.x - 1; x <= source.pos.x + 1; x++)
+        {
+          if (room.lookForAt(LOOK_TERRAIN, x, y).indexOf("wall") === -1)
+          {
+            empties.push(new RoomPosition(x, y, room.name));
+          }
+        }
+      }
+      room.memory.roomPlan.rcl[2].container.push(baseSpawn.pos.findClosestByPath(empties));
+    }
+    room.memory.roomPlan.rcl[2].road = [];
+    for (const s of sources)
+    {
+      for (const pos of PathFinder.search(baseSpawn.pos, { pos: s.pos, range: 1 }).path)
+      {
+        room.memory.roomPlan.rcl[2].road.push(pos);
+      }
+    }
+    const controller = room.controller!;
+    for (const pos of PathFinder.search(baseSpawn.pos, { pos: controller.pos, range: 1 }).path)
+    {
+      room.memory.roomPlan.rcl[2].road.push(pos);
+    }
+    room.memory.roomPlan.rcl[2].road = room.memory.roomPlan.rcl[2].road.concat([  // Base roads
       // Top
       new RoomPosition(baseSpawn.pos.x - 1, baseSpawn.pos.y - 1, room.name),
       new RoomPosition(baseSpawn.pos.x, baseSpawn.pos.y - 1, room.name),
@@ -87,20 +115,7 @@ export class RoomLayoutProcess extends Process
       new RoomPosition(baseSpawn.pos.x - 1, baseSpawn.pos.y + 2, room.name),
       new RoomPosition(baseSpawn.pos.x - 1, baseSpawn.pos.y + 1, room.name),
       new RoomPosition(baseSpawn.pos.x - 1, baseSpawn.pos.y, room.name)
-    ];
-    const sources = room.find(FIND_SOURCES);
-    for (const s of sources)
-    {
-      for (const pos of PathFinder.search(baseSpawn.pos, { pos: s.pos, range: 1 }).path)
-      {
-        room.memory.roomPlan.rcl[2].road.push(pos);
-      }
-    }
-    const controller = room.controller!;
-    for (const pos of PathFinder.search(baseSpawn.pos, { pos: controller.pos, range: 1 }).path)
-    {
-      room.memory.roomPlan.rcl[2].road.push(pos);
-    }
+    ]);
     room.memory.roomPlan.rcl[2].extension = [
       new RoomPosition(baseSpawn.pos.x - 1, baseSpawn.pos.y - 2, room.name),
       new RoomPosition(baseSpawn.pos.x + 1, baseSpawn.pos.y - 2, room.name),
@@ -115,27 +130,6 @@ export class RoomLayoutProcess extends Process
       new RoomPosition(baseSpawn.pos.x + 5, baseSpawn.pos.y - 1, room.name),
       new RoomPosition(baseSpawn.pos.x + 5, baseSpawn.pos.y + 1, room.name)
     ]);
-    room.memory.roomPlan.rcl[2].container = [];
-    for (const source of sources)
-    {
-      const empties: RoomPosition[] = [];
-      for (let y = source.pos.y - 1; y < source.pos.y + 1; y++)
-      {
-        for (let x = source.pos.x - 1; x < source.pos.x + 1; x++)
-        {
-          const structures = _.filter(room.lookAt(x, y), (l) =>
-          {
-            return l.type === LOOK_STRUCTURES;
-          });
-
-          if (structures.length === 0)
-          {
-            empties.push(new RoomPosition(x, y, room.name));
-          }
-        }
-      }
-      room.memory.roomPlan.rcl[2].container.push(baseSpawn.pos.findClosestByPath(empties));
-    }
 
     // RCL 3
     room.memory.roomPlan.rcl[3] = {};
@@ -207,16 +201,11 @@ export class RoomLayoutProcess extends Process
     }) as RoomPosition[];
     const closestContainer = baseSpawn.pos.findClosestByRange(sourceContainers);
     const ccEmpties: RoomPosition[] = [];
-    for (let y = closestContainer.y - 1; y < closestContainer.y + 1; y++)
+    for (let y = closestContainer.y - 1; y <= closestContainer.y + 1; y++)
     {
-      for (let x = closestContainer.x - 1; x < closestContainer.x + 1; x++)
+      for (let x = closestContainer.x - 1; x <= closestContainer.x + 1; x++)
       {
-        const structures = _.filter(room.lookAt(x, y), (l) =>
-        {
-          return l.type === LOOK_STRUCTURES;
-        });
-
-        if (structures.length === 0)
+        if (room.lookForAt(LOOK_TERRAIN, x, y).indexOf("wall") === -1)
         {
           ccEmpties.push(new RoomPosition(x, y, room.name));
         }
@@ -325,16 +314,11 @@ export class RoomLayoutProcess extends Process
       new RoomPosition(baseSpawn.pos.x - 4, baseSpawn.pos.y + 4, room.name)
     ]);
     const towerEmpties: RoomPosition[] = [];
-    for (let y = controller.pos.y - 2; y < controller.pos.y + 2; y++)
+    for (let y = controller.pos.y - 2; y <= controller.pos.y + 2; y++)
     {
-      for (let x = controller.pos.x - 2; x < controller.pos.x + 2; x++)
+      for (let x = controller.pos.x - 2; x <= controller.pos.x + 2; x++)
       {
-        const structures = _.filter(room.lookAt(x, y), (l) =>
-        {
-          return l.type === LOOK_STRUCTURES;
-        });
-
-        if (structures.length === 0)
+        if (room.lookForAt(LOOK_TERRAIN, x, y).indexOf("wall") === -1)
         {
           towerEmpties.push(new RoomPosition(x, y, room.name));
         }
@@ -385,7 +369,8 @@ export class RoomLayoutProcess extends Process
 
   private createSites(room: Room)
   {
-    const roomPlan = room.memory.roomPlan.rcl[room.controller!.level];
+    const buildableRCL = this.getBuildableRCL(room, room.controller!.level);
+    const roomPlan = room.memory.roomPlan.rcl[buildableRCL];
     let siteCount = room.memory.numSites;
 
     if (siteCount < this.maxSites)
@@ -426,7 +411,7 @@ export class RoomLayoutProcess extends Process
           {
             if (pos.createConstructionSite(key as BuildableStructureConstant) === OK)
             {
-              console.log(`Site created for ${key} at ${pos}`);
+              log.info(`Site created for ${key} at ${pos}`);
               siteCount++;
             }
 
@@ -438,5 +423,56 @@ export class RoomLayoutProcess extends Process
         }
       }
     }
+  }
+
+  private getBuildableRCL(room: Room, rcl: number): number
+  {
+    if (this.isPlanFinished(room, rcl - 1))
+    {
+      return rcl;
+    }
+
+    return this.getBuildableRCL(room, rcl - 1);
+  }
+
+  private isPlanFinished(room: Room, rcl: number): boolean
+  {
+    const roomPlan = room.memory.roomPlan.rcl[rcl];
+
+    for (const key of this.buildPriorities)
+    {
+      if (!roomPlan.hasOwnProperty(key))
+      {
+        continue;
+      }
+
+      // Get each position...
+      for (const position in roomPlan[key])
+      {
+        const pos = new RoomPosition(roomPlan[key][position].x,
+          roomPlan[key][position].y, room.name);
+
+        // Check if structure exists here.
+        const structures = _.filter(pos.look(), (r) =>
+        {
+          if (r.type === "structure")
+          {
+            return r.structure!.structureType === key;
+          }
+          else
+          {
+            return false;
+          }
+        });
+
+        // Create construction site if nothing is here.
+        if (structures.length === 0)
+        {
+          return false;
+        }
+      }
+    }
+
+    return true;
   }
 }

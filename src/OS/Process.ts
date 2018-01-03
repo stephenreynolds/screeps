@@ -1,3 +1,4 @@
+import { log } from "Lib/Logger/Log";
 import { Kernel } from "./Kernel";
 
 export class Process
@@ -46,7 +47,7 @@ export class Process
   /** Run the process */
   public run(kernel: Kernel)
   {
-    console.log("Process " + this.name + " did not have a type.");
+    log.error("Process " + this.name + " did not have a type.");
     this.completed = true;
     kernel.noop();
   }

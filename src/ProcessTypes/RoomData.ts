@@ -4,7 +4,7 @@ import { LinkProcess } from "ProcessTypes/BuildingProcesses/LinkProcess";
 import { DefenseManagementProcess } from "ProcessTypes/Management/DefenseManagement";
 import { TowerRepairProcess } from "./BuildingProcesses/TowerRepair";
 import { MineralManagementProcess } from "./Management/MineralManagement";
-import { RoomLayoutProcess } from "./Management/RoomLayout";
+import { RoomLayoutManagementProcess } from "./Management/RoomLayoutManagement";
 import { SpawnRemoteBuilderProcess } from "./System/SpawnRemoteBuilder";
 
 interface RoomDataMeta
@@ -69,7 +69,7 @@ export class RoomDataProcess extends Process
 
         if (room.controller && room.controller.my)
         {
-            this.kernel.addProcessIfNotExist(RoomLayoutProcess, "room-layout-" + room.name, 20, {
+            this.kernel.addProcessIfNotExist(RoomLayoutManagementProcess, "room-layout-" + room.name, 20, {
                 roomName: room.name
             });
         }

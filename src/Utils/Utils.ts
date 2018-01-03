@@ -4,6 +4,8 @@ import { Process } from "../OS/Process";
 import { CreepBuilder } from "./CreepBuilder";
 import { RoomPathFinder } from "./RoomPathFinder";
 
+import { log } from "Lib/Logger/Log";
+
 export const Utils = {
     clearDeadCreeps: (list: string[]) =>
     {
@@ -56,7 +58,7 @@ export const Utils = {
         {
             if (!_.includes(kernel.data.usedSpawns, spawn.id) && !spawn.spawning && spawn.canCreateCreep(body) === OK)
             {
-                console.log(`Spawning creep ${name} in ${roomName}.`);
+                log.info(`Spawning creep ${name} in ${roomName}.`);
                 spawn.createCreep(body, name, memory);
                 outcome = true;
                 kernel.data.usedSpawns.push(spawn.id);

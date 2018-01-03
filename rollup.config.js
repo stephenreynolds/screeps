@@ -3,7 +3,9 @@
 import clean from "rollup-plugin-clean";
 import resolve from "rollup-plugin-node-resolve";
 import commonjs from "rollup-plugin-commonjs";
+import git from "git-rev-sync";
 import typescript from "rollup-plugin-typescript2";
+import replace from 'rollup-plugin-replace';
 import screeps from "rollup-plugin-screeps";
 
 let cfg;
@@ -27,6 +29,9 @@ export default {
         clean(),
         resolve(),
         commonjs(),
+        replace({
+            __REVISION__: JSON.stringify(git.short())
+        }),
         typescript({
             tsconfig: "./tsconfig.json"
         }),

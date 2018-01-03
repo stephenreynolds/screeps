@@ -53,7 +53,7 @@ export class RoomLayoutManagementProcess extends Process
     room.memory.roomPlan.rcl[1] = {};
     const baseSpawn = _.find(room.find(FIND_MY_SPAWNS), (s) =>
     {
-      return s.name === "base-" + room.name || s.name === "Spawn1";
+      return s.name === "base-" + room.name || s.name === "Spawn1"; // TODO: remove Spawn1 ASAP
     })!;
     room.memory.roomPlan.rcl[1].spawn = [baseSpawn.pos];
 

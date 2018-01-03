@@ -1,11 +1,11 @@
-import { Process } from "../OS/Process";
-import { ClaimProcess } from "./EmpireActions/Claim";
-import { HoldRoomProcess } from "./EmpireActions/HoldRoom";
-import { InvasionManagementProcess } from "./Management/InvasionManagement";
-import { RangerManagementProcess } from "./Management/RangerManagement";
-import { RemoteMiningManagementProcess } from "./Management/RemoteMiningManagement";
+import { Process } from "../../OS/Process";
+import { ClaimProcess } from "../EmpireActions/Claim";
+import { HoldRoomProcess } from "../EmpireActions/HoldRoom";
+import { InvasionManagementProcess } from "./InvasionManagement";
+import { RangerManagementProcess } from "./RangerManagement";
+import { RemoteMiningManagementProcess } from "./RemoteMiningManagement";
 
-export class FlagWatcherProcess extends Process
+export class FlagManagementProcess extends Process
 {
     public type = "flagWatcher";
 

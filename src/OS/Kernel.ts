@@ -1,8 +1,5 @@
 import { Process } from "./Process";
 
-// Uncategorized Processes
-import { RoomDataProcess } from "../ProcessTypes/RoomData";
-
 // Building Processes
 import { LinkProcess } from "../ProcessTypes/BuildingProcesses/LinkProcess";
 import { TowerDefenseProcess } from "../ProcessTypes/BuildingProcesses/TowerDefense";
@@ -42,6 +39,7 @@ import { UpgraderLifetimeProcess } from "../ProcessTypes/Lifetimes/Upgrader";
 // Management Processes
 import { DefenseManagementProcess } from "../ProcessTypes/Management/DefenseManagement";
 import { EnergyManagementProcess } from "../ProcessTypes/Management/EnergyManagement";
+import { FlagManagementProcess } from "../ProcessTypes/Management/FlagManagement";
 import { InvasionManagementProcess } from "../ProcessTypes/Management/InvasionManagement";
 import { MineralManagementProcess } from "../ProcessTypes/Management/MineralManagement";
 import { RangerManagementProcess } from "../ProcessTypes/Management/RangerManagement";
@@ -51,10 +49,12 @@ import { StructureManagementProcess } from "../ProcessTypes/Management/Structure
 
 // System Processes
 import { InitProcess } from "../ProcessTypes/System/Init";
+import { RoomDataProcess } from "../ProcessTypes/System/RoomData";
 import { SpawnRemoteBuilderProcess } from "../ProcessTypes/System/SpawnRemoteBuilder";
 import { SuspensionProcess } from "../ProcessTypes/System/Suspension";
 
 // Libs
+import { Stats } from "Utils/Stats";
 import { log } from "../Lib/Logger/Log";
 
 const ProcessTypes = {
@@ -68,6 +68,7 @@ const ProcessTypes = {
     dm: DefenseManagementProcess,
     elf: EscortLifetimeProcess,
     em: EnergyManagementProcess,
+    flag: FlagManagementProcess,
     harvest: HarvestProcess,
     hlf: HarvesterLifetimeProcess,
     holdRoom: HoldRoomProcess,
@@ -115,7 +116,7 @@ interface ProcessTable
 export class Kernel
 {
     /** The CPU Limit for this tick */
-    public limit = Game.cpu.limit * 0.9;
+    public limit: number;
     /** The process table */
     public processTable: ProcessTable = {};
     /** IPC Messages */
@@ -132,7 +133,7 @@ export class Kernel
 
     public execOrder: Array<{}> = [];
     public suspendCount = 0;
-    public schedularUsage = 0;
+    public schedulerUsage = 0;
 
     /**  Creates a new kernel ensuring that memory exists and re-loads the process table from the last. */
     constructor()
@@ -142,9 +143,53 @@ export class Kernel
             Memory.kumiOS = {};
         }
 
+        this.setCPULimit();
+
         this.loadProcessTable();
 
         this.addProcess(InitProcess, "init", 99, {});
+    }
+
+    private sigmoid(x: number)
+    {
+        return 1.0 / (1.0 + Math.exp(-x));
+    }
+
+    private sigmoidSkewed(x: number)
+    {
+        return this.sigmoid((x * 12.0) - 6.0);
+    }
+
+    public setCPULimit()
+    {
+        const bucketCeiling = 9500;
+        const bucketFloor = 2000;
+        const cpuMin = 0.6;
+
+        if (Game.cpu.limit === undefined)
+        {
+            // We are in the simulator
+            this.limit = 1000;
+            return;
+        }
+
+        if (Game.cpu.bucket > bucketCeiling)
+        {
+            this.limit = Game.cpu.tickLimit - 10;
+        } else if (Game.cpu.bucket < 1000)
+        {
+            this.limit = Game.cpu.limit * 0.4;
+        } else if (Game.cpu.bucket < bucketFloor)
+        {
+            this.limit = Game.cpu.limit * cpuMin;
+        } else
+        {
+            const bucketRange = bucketCeiling - bucketFloor;
+            const depthInRange = (Game.cpu.bucket - bucketFloor) / bucketRange;
+            const minAssignable = Game.cpu.limit * cpuMin;
+            const maxAssignable = Game.cpu.tickLimit - 15;
+            this.limit = Math.round(minAssignable + this.sigmoidSkewed(depthInRange) * (maxAssignable - minAssignable));
+        }
     }
 
     /** Check if the current cpu usage is below the limit for this tick */
@@ -194,7 +239,7 @@ export class Kernel
     }
 
     /** Tear down the OS ready for the end of the tick */
-    public teardown()
+    public teardown(stats = true)
     {
         const list: SerializedProcess[] = [];
         _.forEach(this.processTable, (entry) =>
@@ -204,6 +249,11 @@ export class Kernel
                 list.push(entry.serialize());
             }
         });
+
+        if (stats)
+        {
+            Stats.build(this);
+        }
 
         Memory.kumiOS.processTable = list;
     }
@@ -226,7 +276,7 @@ export class Kernel
 
         const name = this.toRunProcesses!.shift()!;
 
-        this.schedularUsage += Game.cpu.getUsed() - cpu;
+        this.schedulerUsage += Game.cpu.getUsed() - cpu;
 
         return this.processTable[name!];
     }

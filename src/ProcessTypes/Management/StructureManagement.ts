@@ -45,7 +45,7 @@ export class StructureManagementProcess extends Process
       return;
     }
 
-    if (this.room().energyAvailable < 300)
+    if (this.room().energyAvailable < 300 || this.kernel.data.roomData[this.metaData.roomName].containers.length === 0)
     {
       return;
     }

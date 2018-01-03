@@ -31,7 +31,7 @@ export class MineralManagementProcess extends Process
                 }
                 else
                 {
-                    this.fork(MineralharvesterLifetimeProcess, "mhlf-" + creep.name, 20, {
+                    this.fork(MineralHarvesterLifetimeProcess, "mhlf-" + creep.name, 20, {
                         creep: creep.name,
                         extractor: this.roomData().extractor!.id,
                         mineral: this.roomData().mineral!.id

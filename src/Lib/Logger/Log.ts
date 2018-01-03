@@ -130,6 +130,7 @@ export class Log
     {
         if (this.level >= LogLevels.ERROR)
         {
+            this.showSource = true;
             console.log.apply(this, this.buildArguments(LogLevels.ERROR).concat([].slice.call(args)));
         }
     }
@@ -138,6 +139,7 @@ export class Log
     {
         if (this.level >= LogLevels.WARNING)
         {
+            this.showSource = true;
             console.log.apply(this, this.buildArguments(LogLevels.WARNING).concat([].slice.call(args)));
         }
     }
@@ -146,6 +148,7 @@ export class Log
     {
         if (this.level >= LogLevels.INFO)
         {
+            this.showSource = false;
             console.log.apply(this, this.buildArguments(LogLevels.INFO).concat([].slice.call(args)));
         }
     }
@@ -154,6 +157,7 @@ export class Log
     {
         if (this.level >= LogLevels.DEBUG)
         {
+            this.showSource = true;
             console.log.apply(this, this.buildArguments(LogLevels.DEBUG).concat([].slice.call(args)));
         }
     }

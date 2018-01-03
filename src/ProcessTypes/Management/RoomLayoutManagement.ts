@@ -5,7 +5,7 @@ export class RoomLayoutManagementProcess extends Process
 {
     public type = "roomLayout";
 
-    public readonly roomPlanVersion = 71; // Update this every time generateRoomPlan() changes.
+    public readonly roomPlanVersion = 72; // Update this every time generateRoomPlan() changes.
     public readonly maxSites = 10;  // Max number of sites per room.
 
     private buildPriorities = [
@@ -65,6 +65,11 @@ export class RoomLayoutManagementProcess extends Process
         {
             room.memory.roomPlan.rcl[2].container.push(this.findEmptyInRange(room, source.pos, 1, baseSpawn.pos)!);
         }
+        const controller = room.controller!;
+        const midpoint = new RoomPosition(
+            Math.round((baseSpawn.pos.x + controller.pos.x) / 2),
+            Math.round((baseSpawn.pos.y + controller.pos.y) / 2), room.name);
+        room.memory.roomPlan.rcl[2].container.push(this.findEmptyInRange(room, midpoint, 5));
         room.memory.roomPlan.rcl[2].road = [];
         for (const s of this.kernel.data.roomData[room.name].sources)
         {
@@ -73,7 +78,6 @@ export class RoomLayoutManagementProcess extends Process
                 room.memory.roomPlan.rcl[2].road.push(pos);
             }
         }
-        const controller = room.controller!;
         for (const pos of PathFinder.search(baseSpawn.pos, { pos: controller.pos, range: 1 }).path)
         {
             room.memory.roomPlan.rcl[2].road.push(pos);
@@ -378,11 +382,8 @@ export class RoomLayoutManagementProcess extends Process
             new RoomPosition(baseSpawn.pos.x - 4, baseSpawn.pos.y - 2, room.name),
             new RoomPosition(baseSpawn.pos.x - 4, baseSpawn.pos.y - 4, room.name)
         ]);
-        const midpoint = new RoomPosition(
-            Math.round((baseSpawn.pos.x + controller.pos.x) / 2),
-            Math.round((baseSpawn.pos.y + controller.pos.y) / 2), room.name);
         room.memory.roomPlan.rcl[8].tower = room.memory.roomPlan.rcl[8].tower.concat([
-            midpoint,
+            this.findEmptyInRange(room, new RoomPosition(midpoint.x + 2, midpoint.y + 2, room.name), 5),
             new RoomPosition(baseSpawn.pos.x + 8, baseSpawn.pos.y - 5, room.name),
             new RoomPosition(baseSpawn.pos.x - 5, baseSpawn.pos.y + 8, room.name)
         ]);

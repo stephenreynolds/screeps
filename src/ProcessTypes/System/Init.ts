@@ -1,9 +1,9 @@
 import { Process } from "../../OS/Process";
 
-import { FlagWatcherProcess } from "../FlagWatcher";
 import { EnergyManagementProcess } from "../Management/EnergyManagement";
+import { FlagManagementProcess } from "../Management/FlagManagement";
 import { StructureManagementProcess } from "../Management/StructureManagement";
-import { RoomDataProcess } from "../RoomData";
+import { RoomDataProcess } from "./RoomData";
 import { SuspensionProcess } from "./Suspension";
 
 export class InitProcess extends Process
@@ -59,7 +59,7 @@ export class InitProcess extends Process
         });
 
         this.kernel.addProcess(SuspensionProcess, "suspension-master", 99, { master: true });
-        this.kernel.addProcess(FlagWatcherProcess, "flag-watcher", 98, {});
+        this.kernel.addProcess(FlagManagementProcess, "flag-", 98, {});
 
         this.completed = true;
     }

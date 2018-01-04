@@ -3,6 +3,7 @@
         "tslint:recommended"
     ],
     "rules": {
+        "align": false,
         "forin": false,
         "indent": [
             true,
@@ -11,6 +12,7 @@
         ],
         "interface-name": [true, "never-prefix"],
         "member-ordering": [false],
+        "no-conditional-assignment": false,
         "no-console": [false],
         "no-namespace": [true, "allow-declarations"],
         "no-string-literal": false,

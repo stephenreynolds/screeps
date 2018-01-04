@@ -1,5 +1,5 @@
+import { ConsoleCommands } from "Utils/ConsoleCommands";
 import { ErrorMapper } from "Utils/ErrorMapper";
-import { ConsoleCommands } from "./ConsoleCommands";
 import { Kernel } from "./OS/Kernel";
 
 // When compiling TS to JS and bundling with rollup, the line numbers and file names in error messages change
@@ -33,4 +33,11 @@ export const loop = ErrorMapper.wrapLoop(() =>
 
     // Tear down the OS
     kernel.teardown();
+
+    Memory.stats["cpu.getUsed"] = Game.cpu.getUsed();
+    Memory.stats["cpu.limit"] = Game.cpu.limit;
+    Memory.stats["cpu.bucket"] = Game.cpu.bucket;
+    Memory.stats["gcl.progress"] = Game.gcl.progress;
+    Memory.stats["gcl.progressTotal"] = Game.gcl.progressTotal;
+    Memory.stats["gcl.level"] = Game.gcl.level;
 });

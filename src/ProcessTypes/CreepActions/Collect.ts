@@ -3,54 +3,54 @@ import { MoveProcess } from "./Move";
 
 interface CollectProcessMetaData
 {
-  creep: string;
-  target: string;
-  resource: ResourceConstant;
+    creep: string;
+    target: string;
+    resource: ResourceConstant;
 }
 
 export class CollectProcess extends Process
 {
-  public metaData: CollectProcessMetaData;
-  public type = "collect";
+    public metaData: CollectProcessMetaData;
+    public type = "collect";
 
-  public run()
-  {
-    const creep = Game.creeps[this.metaData.creep];
-
-    if (!creep)
+    public run()
     {
-      this.completed = true;
-      this.resumeParent();
-      return;
-    }
+        const creep = Game.creeps[this.metaData.creep];
 
-    const target = Game.getObjectById(this.metaData.target) as Structure;
+        if (!creep)
+        {
+            this.completed = true;
+            this.resumeParent();
+            return;
+        }
 
-    if (!target)
-    {
-      this.completed = true;
-      this.resumeParent(true);
-      return;
-    }
+        const target = Game.getObjectById(this.metaData.target) as Structure;
 
-    if (!creep.pos.isNearTo(target))
-    {
-      this.kernel.addProcess(MoveProcess, creep.name + "-collect-move", this.priority + 1, {
-        creep: creep.name,
-        pos: {
-          x: target.pos.x,
-          y: target.pos.y,
-          roomName: target.pos.roomName
-        },
-        range: 1
-      });
-      this.suspend = creep.name + "-collect-move";
+        if (!target)
+        {
+            this.completed = true;
+            this.resumeParent(true);
+            return;
+        }
+
+        if (!creep.pos.isNearTo(target))
+        {
+            this.kernel.addProcess(MoveProcess, creep.name + "-collect-move", this.priority + 1, {
+                creep: creep.name,
+                pos: {
+                    x: target.pos.x,
+                    y: target.pos.y,
+                    roomName: target.pos.roomName
+                },
+                range: 1
+            });
+            this.suspend = creep.name + "-collect-move";
+        }
+        else
+        {
+            creep.withdraw(target, this.metaData.resource);
+            this.completed = true;
+            this.resumeParent();
+        }
     }
-    else
-    {
-      creep.withdraw(target, this.metaData.resource);
-      this.completed = true;
-      this.resumeParent();
-    }
-  }
 }

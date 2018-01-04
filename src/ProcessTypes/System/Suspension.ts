@@ -2,40 +2,40 @@ import { Process } from "../../OS/Process";
 
 export class SuspensionProcess extends Process
 {
-  public type = "suspend";
-  /** Run the SuspensionProcess process */
-  public run()
-  {
-    const proc = this;
-    proc.kernel.suspendCount = 0;
-    _.forEach(proc.kernel.processTable, (process) =>
+    public type = "suspend";
+    /** Run the SuspensionProcess process */
+    public run()
     {
-      if (!process.suspend === false)
-      {
-        proc.kernel.suspendCount += 1;
-        if (typeof process.suspend === "number" && proc.metaData.master)
+        const proc = this;
+        proc.kernel.suspendCount = 0;
+        _.forEach(proc.kernel.processTable, (process) =>
         {
-          process.suspend -= 1;
-          if (process.suspend === 0)
-          {
-            process.suspend = false;
-          }
-        }
+            if (!process.suspend === false)
+            {
+                proc.kernel.suspendCount += 1;
+                if (typeof process.suspend === "number" && proc.metaData.master)
+                {
+                    process.suspend -= 1;
+                    if (process.suspend === 0)
+                    {
+                        process.suspend = false;
+                    }
+                }
 
-        if (typeof process.suspend === "string")
-        {
-          if (
-            !process.kernel.hasProcess(process.suspend)
-            ||
-            process.kernel.getProcessByName(process.suspend).completed
-          )
-          {
-            process.suspend = false;
-          }
-        }
-      }
-    });
+                if (typeof process.suspend === "string")
+                {
+                    if (
+                        !process.kernel.hasProcess(process.suspend)
+                        ||
+                        process.kernel.getProcessByName(process.suspend).completed
+                    )
+                    {
+                        process.suspend = false;
+                    }
+                }
+            }
+        });
 
-    this.completed = true;
-  }
+        this.completed = true;
+    }
 }

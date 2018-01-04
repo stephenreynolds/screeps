@@ -39,6 +39,7 @@ export class MoveProcess extends Process
             else
             {
                 creep.moveTo(target, {
+                    reusePath: 7,
                     visualizePathStyle: {
                         fill: "transparent",
                         lineStyle: "dashed",

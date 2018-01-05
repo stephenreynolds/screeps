@@ -27,7 +27,7 @@ export class RCL2 extends RCLPlan
         }
 
         const baseToController = PathFinder.search(
-            this.baseSpawn.pos, { pos: this.controller.pos, range: 1 }).path;
+            this.baseSpawn.pos, { pos: this.controller.pos, range: 3 }).path;
 
         // Controller roads
         for (const pos of baseToController)

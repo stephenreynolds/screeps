@@ -49,7 +49,21 @@ export class RCL6 extends RCLPlan
         ]);
 
         // Extractor
-        this.room.memory.roomPlan.rcl[6].extractor = [this.kernel.data.roomData[this.room.name].mineral!.pos];
+        const mineral = this.kernel.data.roomData[this.room.name].mineral;
+        if (mineral)
+        {
+            this.room.memory.roomPlan.rcl[6].extractor = [mineral.pos];
+
+            // Extractor container
+            const extractorContainerPos = this.findEmptyInRange(mineral.pos, 1, this.baseSpawn.pos)!;
+            this.room.memory.roomPlan.rcl[6].container.push(extractorContainerPos);
+
+            // Extractor container roads
+            for (const pos of PathFinder.search(this.baseSpawn.pos, { pos: extractorContainerPos, range: 1 }).path)
+            {
+                this.room.memory.roomPlan.rcl[6].road.push(pos);
+            }
+        }
 
         // Labs
         this.room.memory.roomPlan.rcl[6].lab = [
@@ -57,17 +71,6 @@ export class RCL6 extends RCLPlan
             new RoomPosition(this.baseSpawn.pos.x - 3, this.baseSpawn.pos.y + 5, this.room.name),
             new RoomPosition(this.baseSpawn.pos.x - 2, this.baseSpawn.pos.y + 5, this.room.name)
         ];
-
-        // Extractor container
-        const extractorContainerPos = this.findEmptyInRange(
-            this.kernel.data.roomData[this.room.name].mineral!.pos, 1, this.baseSpawn.pos)!;
-        this.room.memory.roomPlan.rcl[6].container.push(extractorContainerPos);
-
-        // Extractor container roads
-        for (const pos of PathFinder.search(this.baseSpawn.pos, { pos: extractorContainerPos, range: 1 }).path)
-        {
-            this.room.memory.roomPlan.rcl[6].road.push(pos);
-        }
 
         // Second source link
         const sourceContainers = _.filter(this.room.memory.roomPlan.rcl[6].container, (c: RoomPosition) =>

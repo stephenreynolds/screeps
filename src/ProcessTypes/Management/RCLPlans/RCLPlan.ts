@@ -11,7 +11,7 @@ export abstract class RCLPlan
     protected controller: StructureController;
     protected midpoint: RoomPosition;
 
-    public static readonly version = 104; // Update this every time generateRoomPlan() changes.
+    public static readonly version = 107; // Update this every time generateRoomPlan() changes.
 
     public constructor(room: Room, kernel: Kernel)
     {

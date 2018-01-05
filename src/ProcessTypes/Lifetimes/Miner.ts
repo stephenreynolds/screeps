@@ -25,7 +25,7 @@ export class MinerLifetimeProcess extends LifetimeProcess
             // Move to source container if on it.
             if (!creep.pos.isEqualTo(container))
             {
-                this.kernel.addProcess(MoveProcess, `${creep.name}-mine-move`, this.priority - 1, {
+                this.fork(MoveProcess, `${creep.name}-mine-move`, this.priority - 1, {
                     creep: creep.name,
                     pos: {
                         x: container.pos.x,
@@ -34,7 +34,6 @@ export class MinerLifetimeProcess extends LifetimeProcess
                     }
                 });
 
-                this.suspend = `${creep.name}-mine-move`;
                 return;
             }
 
@@ -49,97 +48,98 @@ export class MinerLifetimeProcess extends LifetimeProcess
                 return;
             }
 
-            // Creep has been harvesting and has energy in it.
-            const links = creep.pos.findInRange(this.kernel.data.roomData[creep.room.name].links, 1);
-            const link = _.find(links, (l) =>
+            this.transfer(creep, container);
+        }
+    }
+
+    private transfer(creep: Creep, container: StructureContainer)
+    {
+        const links = creep.pos.findInRange(this.kernel.data.roomData[creep.room.name].links, 1);
+        const link = _.find(links, (l) =>
+        {
+            return l.energy < l.energyCapacity;
+        });
+
+        if (creep.memory.linked === undefined)
+        {
+            creep.memory.linked = false;
+        }
+
+        // Transfer energy to link if it exists, otherwise drop it into container.
+        if (link && link.energy < link.energyCapacity && creep.memory.linked === false)
+        {
+            // Transfer amount equal to 2.5% of what's in container.
+            creep.transfer(link, RESOURCE_ENERGY, Math.max(_.sum(container.store) * 0.025, 10));
+            creep.memory.linked = true;
+        }
+        else if (_.sum(container.store) < container.storeCapacity)
+        {
+            creep.drop(RESOURCE_ENERGY);
+            creep.memory.linked = false;
+        }
+        else
+        {
+            creep.memory.linked = false;
+
+            // Link and container are full, act as courier instead.
+            let targets = [].concat(
+                this.kernel.data.roomData[creep.room.name].spawns as never[],
+                this.kernel.data.roomData[creep.room.name].extensions as never[]
+            );
+
+            let deliverTargets = _.filter(targets, (t: DeliveryTarget) =>
             {
-                return l.energy < l.energyCapacity;
+                return (t.energy < t.energyCapacity);
             });
 
-            if (creep.memory.linked === undefined)
+            if (deliverTargets.length === 0)
             {
-                creep.memory.linked = false;
+                const targs = [].concat(
+                    this.kernel.data.roomData[creep.room.name].towers as never[]
+                );
+
+                deliverTargets = _.filter(targs, (t: DeliveryTarget) =>
+                {
+                    return (t.energy < t.energyCapacity - 250);
+                });
             }
 
-            // Transfer energy to link if it exists, otherwise drop it into container.
-            if (link && link.energy < link.energyCapacity && creep.memory.linked === false)
+            if (deliverTargets.length === 0)
             {
-                // Transfer amount equal to 2.5% of what's in container.
-                creep.transfer(link, RESOURCE_ENERGY, Math.max(_.sum(container.store) * 0.025, 10));
-                creep.memory.linked = true;
+                targets = [].concat(
+                    this.kernel.data.roomData[creep.room.name].labs as never[],
+                    this.kernel.data.roomData[creep.room.name].generalContainers as never[]
+                );
+
+                deliverTargets = _.filter(targets, (t: DeliveryTarget) =>
+                {
+                    if (t.store)
+                    {
+                        return (_.sum(t.store) < t.storeCapacity);
+                    }
+                    else
+                    {
+                        return (t.energy < t.energyCapacity);
+                    }
+                });
             }
-            else if (_.sum(container.store) < container.storeCapacity)
+
+            const target = creep.pos.findClosestByPath(deliverTargets) as Structure;
+
+            if (target)
             {
-                creep.drop(RESOURCE_ENERGY);
-                creep.memory.linked = false;
+                this.fork(DeliverProcess, "deliver-" + creep.name, this.priority - 1, {
+                    creep: creep.name,
+                    target: target.id,
+                    resource: RESOURCE_ENERGY
+                });
             }
             else
             {
-                creep.memory.linked = false;
-
-                // Link and container are full, act as courier instead.
-                let targets = [].concat(
-                    this.kernel.data.roomData[creep.room.name].spawns as never[],
-                    this.kernel.data.roomData[creep.room.name].extensions as never[]
-                );
-
-                let deliverTargets = _.filter(targets, (t: DeliveryTarget) =>
-                {
-                    return (t.energy < t.energyCapacity);
+                // If there is no where to deliver to, upgrade.
+                this.fork(UpgradeProcess, creep.name + "-upgrade", this.priority, {
+                    creep: creep.name
                 });
-
-                if (deliverTargets.length === 0)
-                {
-                    const targs = [].concat(
-                        this.kernel.data.roomData[creep.room.name].towers as never[]
-                    );
-
-                    deliverTargets = _.filter(targs, (t: DeliveryTarget) =>
-                    {
-                        return (t.energy < t.energyCapacity - 250);
-                    });
-                }
-
-                if (deliverTargets.length === 0)
-                {
-                    targets = [].concat(
-                        this.kernel.data.roomData[creep.room.name].labs as never[],
-                        this.kernel.data.roomData[creep.room.name].generalContainers as never[]
-                    );
-
-                    deliverTargets = _.filter(targets, (t: DeliveryTarget) =>
-                    {
-                        if (t.store)
-                        {
-                            return (_.sum(t.store) < t.storeCapacity);
-                        }
-                        else
-                        {
-                            return (t.energy < t.energyCapacity);
-                        }
-                    });
-                }
-
-                const target = creep.pos.findClosestByPath(deliverTargets) as Structure;
-
-                if (target)
-                {
-                    this.fork(DeliverProcess, "deliver-" + creep.name, this.priority - 1, {
-                        creep: creep.name,
-                        target: target.id,
-                        resource: RESOURCE_ENERGY
-                    });
-                }
-                else
-                {
-                    // If there is no where to deliver to
-                    this.kernel.addProcess(UpgradeProcess, creep.name + "-upgrade", this.priority, {
-                        creep: creep.name
-                    });
-
-                    this.suspend = creep.name + "-upgrade";
-                    return;
-                }
             }
         }
     }

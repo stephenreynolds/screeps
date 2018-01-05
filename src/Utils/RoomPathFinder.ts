@@ -37,7 +37,7 @@ export class RoomPathFinder
             const pathFinder = this;
             const roomNames = _.values(Game.map.describeExits(this.currentRoom.name)) as string[];
 
-            _.forEach(roomNames, function (roomName)
+            _.forEach(roomNames, (roomName) =>
             {
                 const distanceToTarget = Game.map.getRoomLinearDistance(roomName, pathFinder.targetRoom);
                 const distanceFromStart = Game.map.getRoomLinearDistance(roomName, pathFinder.startRoom);

@@ -21,28 +21,73 @@ export class BuilderLifetimeProcess extends LifetimeProcess
 
         if (_.sum(creep.carry) === 0)
         {
-            const withdrawTarget = Utils.withdrawTarget(creep, this);
-
-            if (withdrawTarget)
-            {
-                this.fork(CollectProcess, "collect-" + creep.name, this.priority - 1, {
-                    creep: creep.name,
-                    target: withdrawTarget.id,
-                    resource: RESOURCE_ENERGY
-                });
-
-                return;
-            }
-            else
-            {
-                this.suspend = 10;
-                return;
-            }
+            this.collect(creep);
         }
 
         // If the creep has been refilled
         const sites = this.kernel.data.roomData[creep.room.name].constructionSites;
+        const buildNow = this.buildNow(sites);
+        const target = creep.pos.findClosestByRange(buildNow);
 
+        if (target)
+        {
+            this.fork(BuildProcess, "build-" + creep.name, this.priority - 1, {
+                creep: creep.name,
+                site: target.id
+            });
+        }
+        else
+        {
+            const repairTarget = creep.pos.findClosestByRange(
+                _.filter(this.kernel.data.roomData[creep.room.name].myStructures, (s: Structure) =>
+                {
+                    if (s.structureType === STRUCTURE_RAMPART)
+                    {
+                        return s.hits < Utils.rampartHealth(this.kernel, creep.room.name);
+                    }
+                    else
+                    {
+                        return s.hits < s.hitsMax;
+                    }
+                }));
+
+            if (repairTarget)
+            {
+                this.fork(RepairProcess, "repair-" + creep.name, this.priority - 1, {
+                    creep: creep.name,
+                    target: repairTarget.id
+                });
+            }
+            else
+            {
+                this.deliver(creep);
+            }
+        }
+    }
+
+    private collect(creep: Creep)
+    {
+        const withdrawTarget = Utils.withdrawTarget(creep, this);
+
+        if (withdrawTarget)
+        {
+            this.fork(CollectProcess, "collect-" + creep.name, this.priority - 1, {
+                creep: creep.name,
+                target: withdrawTarget.id,
+                resource: RESOURCE_ENERGY
+            });
+
+            return;
+        }
+        else
+        {
+            this.suspend = 10;
+            return;
+        }
+    }
+
+    private buildNow(sites: ConstructionSite[])
+    {
         const towerSites = _.filter(sites, (site) =>
         {
             return (site.structureType === STRUCTURE_TOWER);
@@ -77,6 +122,7 @@ export class BuilderLifetimeProcess extends LifetimeProcess
         });
 
         let buildNow: ConstructionSite[];
+
         if (towerSites.length > 0)
         {
             buildNow = towerSites;
@@ -107,86 +153,56 @@ export class BuilderLifetimeProcess extends LifetimeProcess
             }
         }
 
-        const target = creep.pos.findClosestByRange(buildNow);
+        return buildNow;
+    }
 
-        if (target)
+    private deliver(creep: Creep)
+    {
+        let deliverTargets;
+
+        const targets = [].concat(
+            this.kernel.data.roomData[creep.room.name].spawns as never[],
+            this.kernel.data.roomData[creep.room.name].extensions as never[]
+        );
+
+        deliverTargets = _.filter(targets, (t: DeliveryTarget) =>
         {
-            this.fork(BuildProcess, "build-" + creep.name, this.priority - 1, {
-                creep: creep.name,
-                site: target.id
+            return (t.energy < t.energyCapacity);
+        });
+
+        if (deliverTargets.length === 0)
+        {
+            const targs = [].concat(
+                this.kernel.data.roomData[creep.room.name].towers as never[]
+            );
+
+            deliverTargets = _.filter(targs, (t: DeliveryTarget) =>
+            {
+                return t.energy < t.energyCapacity;
             });
         }
-        else
+
+        if (creep.room.storage && deliverTargets.length === 0)
         {
-            const repairTarget = creep.pos.findClosestByRange(
-                _.filter(this.kernel.data.roomData[creep.room.name].myStructures, (s: Structure) =>
-                {
-                    if (s.structureType === STRUCTURE_RAMPART)
-                    {
-                        return s.hits < Utils.rampartHealth(this.kernel, creep.room.name);
-                    }
-                    else
-                    {
-                        return s.hits < s.hitsMax;
-                    }
-                }));
+            const targs = [].concat(
+                [creep.room.storage] as never[]
+            );
 
-            if (repairTarget)
+            deliverTargets = _.filter(targs, (t: DeliveryTarget) =>
             {
-                this.fork(RepairProcess, "repair-" + creep.name, this.priority - 1, {
-                    creep: creep.name,
-                    target: repairTarget.id
-                });
-            }
-            else
-            {
-                let deliverTargets;
+                return (_.sum(t.store) < t.storeCapacity);
+            });
+        }
 
-                const targets = [].concat(
-                    this.kernel.data.roomData[creep.room.name].spawns as never[],
-                    this.kernel.data.roomData[creep.room.name].extensions as never[]
-                );
+        const deliverTarget = creep.pos.findClosestByPath(deliverTargets) as Structure;
 
-                deliverTargets = _.filter(targets, (t: DeliveryTarget) =>
-                {
-                    return (t.energy < t.energyCapacity);
-                });
-
-                if (deliverTargets.length === 0)
-                {
-                    const targs = [].concat(
-                        this.kernel.data.roomData[creep.room.name].towers as never[]
-                    );
-
-                    deliverTargets = _.filter(targs, (t: DeliveryTarget) =>
-                    {
-                        return t.energy < t.energyCapacity;
-                    });
-                }
-
-                if (creep.room.storage && deliverTargets.length === 0)
-                {
-                    const targs = [].concat(
-                        [creep.room.storage] as never[]
-                    );
-
-                    deliverTargets = _.filter(targs, (t: DeliveryTarget) =>
-                    {
-                        return (_.sum(t.store) < t.storeCapacity);
-                    });
-                }
-
-                const deliverTarget = creep.pos.findClosestByPath(deliverTargets) as Structure;
-
-                if (deliverTarget)
-                {
-                    this.fork(DeliverProcess, creep.name + "-deliver", this.priority, {
-                        creep: creep.name,
-                        target: deliverTarget.id,
-                        resource: RESOURCE_ENERGY
-                    });
-                }
-            }
+        if (deliverTarget)
+        {
+            this.fork(DeliverProcess, creep.name + "-deliver", this.priority, {
+                creep: creep.name,
+                target: deliverTarget.id,
+                resource: RESOURCE_ENERGY
+            });
         }
     }
 }

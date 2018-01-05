@@ -1,8 +1,9 @@
-import { Process } from "../../OS/Process";
+import { Process } from "OS/Process";
 
 import { EnergyManagementProcess } from "../Management/EnergyManagement";
 import { FlagManagementProcess } from "../Management/FlagManagement";
 import { StructureManagementProcess } from "../Management/StructureManagement";
+
 import { RoomDataProcess } from "./RoomData";
 import { SuspensionProcess } from "./Suspension";
 

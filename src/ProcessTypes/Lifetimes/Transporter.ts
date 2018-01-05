@@ -1,6 +1,7 @@
-import { CollectProcess } from "ProcessTypes/CreepActions/Collect";
-import { DeliverProcess } from "ProcessTypes/CreepActions/Deliver";
-import { LifetimeProcess } from "../../OS/LifetimeProcess";
+import { LifetimeProcess } from "OS/LifetimeProcess";
+
+import { CollectProcess } from "../CreepActions/Collect";
+import { DeliverProcess } from "../CreepActions/Deliver";
 
 export class TransporterLifetimeProcess extends LifetimeProcess
 {

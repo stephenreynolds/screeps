@@ -1,4 +1,5 @@
-import { Process } from "../../OS/Process";
+import { Process } from "OS/Process";
+
 import { MoveProcess } from "./Move";
 
 interface CollectProcessMetaData

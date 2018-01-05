@@ -20,6 +20,12 @@
         "object-literal-shorthand": false,
         "object-literal-sort-keys": false,
         "one-line": false,
+        "ordered-imports": [
+            true,
+            {
+                "grouped-imports": true
+            }
+        ],
         "trailing-comma": [true, {
             "multiline": "never",
             "singleline": "never"

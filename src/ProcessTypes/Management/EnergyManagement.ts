@@ -1,11 +1,11 @@
-import { Process } from "../../OS/Process";
-import { Utils } from "../../Utils/Utils";
+import { Process } from "OS/Process";
+import { Utils } from "Utils/Utils";
 
-import { HarvesterLifetimeProcess } from "ProcessTypes/Lifetimes/Harvester";
-import { MinerLifetimeProcess } from "ProcessTypes/Lifetimes/Miner";
-import { TransporterLifetimeProcess } from "ProcessTypes/Lifetimes/Transporter";
 import { CourierLifetimeProcess } from "../Lifetimes/Courier";
+import { HarvesterLifetimeProcess } from "../Lifetimes/Harvester";
+import { MinerLifetimeProcess } from "../Lifetimes/Miner";
 import { StorageManagerLifetime } from "../Lifetimes/StorageManager";
+import { TransporterLifetimeProcess } from "../Lifetimes/Transporter";
 import { UpgraderLifetimeProcess } from "../Lifetimes/Upgrader";
 
 export class EnergyManagementProcess extends Process

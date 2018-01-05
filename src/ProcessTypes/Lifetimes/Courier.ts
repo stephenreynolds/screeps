@@ -1,4 +1,4 @@
-import { LifetimeProcess } from "../../OS/LifetimeProcess";
+import { LifetimeProcess } from "OS/LifetimeProcess";
 
 import { CollectProcess } from "../CreepActions/Collect";
 import { DeliverProcess } from "../CreepActions/Deliver";

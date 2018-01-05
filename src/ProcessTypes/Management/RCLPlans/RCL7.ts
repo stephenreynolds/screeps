@@ -25,32 +25,31 @@ export class RCL7 extends RCLPlan
 
         // Extensions
         this.room.memory.roomPlan.rcl[7].extension = this.room.memory.roomPlan.rcl[7].extension.concat([
-            new RoomPosition(this.baseSpawn.pos.x - 4, this.baseSpawn.pos.y - 3, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x - 3, this.baseSpawn.pos.y - 3, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x + 5, this.baseSpawn.pos.y + 5, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x + 5, this.baseSpawn.pos.y + 6, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x + 5, this.baseSpawn.pos.y + 7, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x + 4, this.baseSpawn.pos.y + 6, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x + 4, this.baseSpawn.pos.y + 7, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x + 3, this.baseSpawn.pos.y + 7, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x + 5, this.baseSpawn.pos.y - 1, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x + 4, this.baseSpawn.pos.y - 2, this.room.name)
+            this.baseSpawn.pos.offset(-4, -3),
+            this.baseSpawn.pos.offset(-2, -3),
+            this.baseSpawn.pos.offset(5, 5),
+            this.baseSpawn.pos.offset(5, 6),
+            this.baseSpawn.pos.offset(5, 7),
+            this.baseSpawn.pos.offset(4, 6),
+            this.baseSpawn.pos.offset(4, 7),
+            this.baseSpawn.pos.offset(3, 7),
+            this.baseSpawn.pos.offset(5, -1),
+            this.baseSpawn.pos.offset(4, -2)
         ]);
 
         // Extension roads
         this.room.memory.roomPlan.rcl[7].road = this.room.memory.roomPlan.rcl[7].road.concat([
-            new RoomPosition(this.baseSpawn.pos.x + 3, this.baseSpawn.pos.y + 8, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x + 4, this.baseSpawn.pos.y + 8, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x + 5, this.baseSpawn.pos.y + 8, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x + 6, this.baseSpawn.pos.y + 7, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x + 6, this.baseSpawn.pos.y + 6, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x + 6, this.baseSpawn.pos.y + 5, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x + 6, this.baseSpawn.pos.y - 1, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x + 6, this.baseSpawn.pos.y - 2, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x + 6, this.baseSpawn.pos.y - 3, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x + 5, this.baseSpawn.pos.y - 4, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x + 4, this.baseSpawn.pos.y - 4, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x + 4, this.baseSpawn.pos.y - 4, this.room.name)
+            this.baseSpawn.pos.offset(3, 8),
+            this.baseSpawn.pos.offset(4, 8),
+            this.baseSpawn.pos.offset(5, 8),
+            this.baseSpawn.pos.offset(6, 7),
+            this.baseSpawn.pos.offset(6, 6),
+            this.baseSpawn.pos.offset(6, 5),
+            this.baseSpawn.pos.offset(6, -1),
+            this.baseSpawn.pos.offset(6, -2),
+            this.baseSpawn.pos.offset(6, -3),
+            this.baseSpawn.pos.offset(5, -4),
+            this.baseSpawn.pos.offset(4, -4)
         ]);
 
         // Tower
@@ -60,19 +59,19 @@ export class RCL7 extends RCLPlan
 
         // Labs
         this.room.memory.roomPlan.rcl[7].lab = this.room.memory.roomPlan.rcl[7].lab.concat([
-            new RoomPosition(this.baseSpawn.pos.x - 5, this.baseSpawn.pos.y + 6, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x - 4, this.baseSpawn.pos.y + 6, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x - 4, this.baseSpawn.pos.y + 7, this.room.name)
+            this.baseSpawn.pos.offset(-5, 6),
+            this.baseSpawn.pos.offset(-4, 6),
+            this.baseSpawn.pos.offset(-4, 7)
         ]);
 
         // Lab Roads
         this.room.memory.roomPlan.rcl[7].road = this.room.memory.roomPlan.rcl[7].road.concat([
-            new RoomPosition(this.baseSpawn.pos.x - 6, this.baseSpawn.pos.y + 5, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x - 6, this.baseSpawn.pos.y + 6, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x - 6, this.baseSpawn.pos.y + 7, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x - 5, this.baseSpawn.pos.y + 8, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x - 4, this.baseSpawn.pos.y + 8, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x - 3, this.baseSpawn.pos.y + 8, this.room.name)
+            this.baseSpawn.pos.offset(-6, 5),
+            this.baseSpawn.pos.offset(-6, 6),
+            this.baseSpawn.pos.offset(-6, 7),
+            this.baseSpawn.pos.offset(-5, 8),
+            this.baseSpawn.pos.offset(-4, 8),
+            this.baseSpawn.pos.offset(-3, 8)
         ]);
 
         // Controller Link

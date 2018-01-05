@@ -36,8 +36,7 @@ export class RCL2 extends RCLPlan
         }
 
         // General container
-        const btcMidpoint = baseToController[Math.floor(baseToController.length / 2)];
-        const generalContainerPos = this.findEmptyInRange(btcMidpoint, 1, this.controller.pos, ["wall", "road"]);
+        const generalContainerPos = baseToController[Math.floor(baseToController.length / 2)];
         this.room.memory.roomPlan.rcl[2].container.push(generalContainerPos);
 
         // Base roads

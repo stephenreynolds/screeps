@@ -18,17 +18,20 @@ export class RoomLayoutManagementProcess extends Process
 {
     public type = "roomLayout";
 
-    public readonly roomPlanVersion = 90; // Update this every time generateRoomPlan() changes.
     public readonly maxSites = 10;  // Max number of sites per room.
 
     public run()
     {
         const room = Game.rooms[this.metaData.roomName];
 
-        if (room.memory.roomPlan && room.memory.roomPlan.version === this.roomPlanVersion)
+        if (room.memory.roomPlan && room.memory.roomPlan.version === RCLPlan.version)
         {
-            this.createSites(room);
-            this.completed = true;
+            const siteCount = room.memory.numSites;
+
+            if (siteCount < this.maxSites)
+            {
+                this.createSites(room);
+            }
         }
         else
         {
@@ -39,7 +42,7 @@ export class RoomLayoutManagementProcess extends Process
     private generateRoomPlan(room: Room)
     {
         room.memory.roomPlan = {};
-        room.memory.roomPlan.version = this.roomPlanVersion;
+        room.memory.roomPlan.version = RCLPlan.version;
         room.memory.roomPlan.rcl = [];
 
         for (let i = 0; i <= 8; i++)
@@ -79,56 +82,52 @@ export class RoomLayoutManagementProcess extends Process
 
     private createSites(room: Room)
     {
-        const buildableRCL = this.getBuildableRCL(room, room.controller!.level);
-        const roomPlan = room.memory.roomPlan.rcl[buildableRCL];
+        const roomPlan = room.memory.roomPlan.rcl[this.getBuildableRCL(room, room.controller!.level)];
         let siteCount = room.memory.numSites;
 
-        if (siteCount < this.maxSites)
+        // For each building...
+        for (const key of BuildPriorities)
         {
-            // For each building...
-            for (const key of BuildPriorities)
+            if (!roomPlan.hasOwnProperty(key))
             {
-                if (!roomPlan.hasOwnProperty(key))
+                continue;
+            }
+
+            // Get each position...
+            for (const i in roomPlan[key])
+            {
+                const position = new RoomPosition(roomPlan[key][i].x,
+                    roomPlan[key][i].y, room.name);
+
+                // Check if structure or construction site already exists here.
+                const structures = _.filter(position.look(), (r) =>
                 {
-                    continue;
-                }
+                    if (r.type === "structure")
+                    {
+                        return r.structure!.structureType === key;
+                    }
+                    else if (r.type === "constructionSite")
+                    {
+                        return r.constructionSite!.structureType === key;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                });
 
-                // Get each position...
-                for (const position in roomPlan[key])
+                // Create construction site if nothing is here.
+                if (structures.length === 0)
                 {
-                    const pos = new RoomPosition(roomPlan[key][position].x,
-                        roomPlan[key][position].y, room.name);
-
-                    // Check if structure or construction site already exists here.
-                    const structures = _.filter(pos.look(), (r) =>
+                    if (position.createConstructionSite(key as BuildableStructureConstant) === OK)
                     {
-                        if (r.type === "structure")
-                        {
-                            return r.structure!.structureType === key;
-                        }
-                        else if (r.type === "constructionSite")
-                        {
-                            return r.constructionSite!.structureType === key;
-                        }
-                        else
-                        {
-                            return false;
-                        }
-                    });
+                        log.info(`Site created for ${key} at ${position} `);
+                        siteCount++;
+                    }
 
-                    // Create construction site if nothing is here.
-                    if (structures.length === 0)
+                    if (siteCount >= this.maxSites)
                     {
-                        if (pos.createConstructionSite(key as BuildableStructureConstant) === OK)
-                        {
-                            log.info(`Site created for ${key} at ${pos} `);
-                            siteCount++;
-                        }
-
-                        if (siteCount >= this.maxSites)
-                        {
-                            return;
-                        }
+                        return;
                     }
                 }
             }

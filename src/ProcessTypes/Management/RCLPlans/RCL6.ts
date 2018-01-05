@@ -49,7 +49,7 @@ export class RCL6 extends RCLPlan
         ]);
 
         // Extractor
-        this.room.memory.roomPlan.rcl[6].extractor = this.kernel.data.roomData[this.room.name].mineral!.pos;
+        this.room.memory.roomPlan.rcl[6].extractor = [this.kernel.data.roomData[this.room.name].mineral!.pos];
 
         // Labs
         this.room.memory.roomPlan.rcl[6].lab = [

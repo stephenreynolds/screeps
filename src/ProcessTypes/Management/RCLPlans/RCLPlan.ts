@@ -11,7 +11,7 @@ export abstract class RCLPlan
     protected controller: StructureController;
     protected midpoint: RoomPosition;
 
-    public static readonly version = 102; // Update this every time generateRoomPlan() changes.
+    public static readonly version = 104; // Update this every time generateRoomPlan() changes.
 
     public constructor(room: Room, kernel: Kernel)
     {
@@ -50,20 +50,9 @@ export abstract class RCLPlan
                     roomPlan[key][position].y, room.name);
 
                 // Check if structure exists here.
-                const structures = _.filter(pos.look(), (r) =>
-                {
-                    if (r.type === "structure")
-                    {
-                        return r.structure!.structureType === key;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                });
+                const structures = pos.lookFor(LOOK_STRUCTURES);
 
-                // Create construction site if nothing is here.
-                if (structures.length === 0)
+                if (!_.any(structures, (s: Structure) => s.structureType === key))
                 {
                     return false;
                 }
@@ -154,12 +143,13 @@ export abstract class RCLPlan
                 const position = new RoomPosition(roomPlan[key][i].x,
                     roomPlan[key][i].y, this.room.name);
 
-                this.room.memory.roomPlan.rcl[rcl][STRUCTURE_ROAD] = _.remove(
-                    this.room.memory.roomPlan.rcl[rcl][STRUCTURE_ROAD], (p: RoomPosition) =>
-                    {
-                        const roadPosition = new RoomPosition(p.x, p.y, this.room.name);
-                        return position === roadPosition;
-                    });
+                const roads = this.room.memory.roomPlan.rcl[rcl][STRUCTURE_ROAD];
+                _.remove(roads, (p: RoomPosition) =>
+                {
+                    const roadPosition = new RoomPosition(p.x, p.y, this.room.name);
+                    return position === roadPosition;
+                });
+                this.room.memory.roomPlan.rcl[rcl][STRUCTURE_ROAD] = roads;
             }
         }
     }

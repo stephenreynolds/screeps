@@ -15,36 +15,45 @@ export class HarvesterLifetimeProcess extends LifetimeProcess
     {
         const creep = this.getCreep();
 
-        if (!creep)
+        if (creep)
         {
-            return;
-        }
-
-        if (_.sum(creep.carry) === 0)
-        {
-            const withdrawTarget = Utils.withdrawTarget(creep, this);
-
-            if (withdrawTarget)
+            if (_.sum(creep.carry) === 0)
             {
-                this.fork(CollectProcess, "collect-" + creep.name, this.priority - 1, {
-                    creep: creep.name,
-                    target: withdrawTarget.id,
-                    resource: RESOURCE_ENERGY
-                });
+                this.onCarryEmpty(creep);
             }
             else
             {
-                this.fork(HarvestProcess, "harvest-" + creep.name, this.priority - 1, {
-                    source: this.metaData.source,
-                    creep: creep.name
-                });
+                this.onCarryFull(creep);
             }
-
-            return;
         }
+    }
 
-        // Creep has been harvesting and has energy in it
+    private onCarryEmpty(creep: Creep)
+    {
+        const withdrawTarget = Utils.withdrawTarget(creep, this);
+
+        if (withdrawTarget)
+        {
+            this.fork(CollectProcess, "collect-" + creep.name, this.priority - 1, {
+                creep: creep.name,
+                target: withdrawTarget.id,
+                resource: RESOURCE_ENERGY
+            });
+        }
+        else
+        {
+            this.fork(HarvestProcess, "harvest-" + creep.name, this.priority - 1, {
+                source: this.metaData.source,
+                creep: creep.name
+            });
+        }
+    }
+
+    private onCarryFull(creep: Creep)
+    {
         const source = Game.getObjectById(this.metaData.source) as Source;
+
+        // Construct sites in immediate vicinity.
         const constructionSites = source.pos.findInRange(FIND_CONSTRUCTION_SITES, 1) as ConstructionSite[];
         if (constructionSites.length > 0)
         {
@@ -56,6 +65,7 @@ export class HarvesterLifetimeProcess extends LifetimeProcess
             return;
         }
 
+        // Deliver energy to structures.
         let deliverTargets;
 
         const towers = _.filter(this.kernel.data.roomData[creep.room.name].towers, (t: StructureTower) =>

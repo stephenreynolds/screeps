@@ -83,8 +83,7 @@ export class RoomLayoutManagementProcess extends Process
 
     private createSites(room: Room)
     {
-        const buildableRCL = this.getBuildableRCL(room, room.controller!.level);
-        const roomPlan = room.memory.roomPlan.rcl[buildableRCL];
+        const roomPlan = room.memory.roomPlan.rcl[this.getBuildableRCL(room, room.controller!.level)];
         let siteCount = room.memory.numSites;
 
         // For each building...

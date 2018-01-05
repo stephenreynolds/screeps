@@ -101,6 +101,11 @@ interface EnergyManagementMetaData
     transportCreeps: { [container: string]: string }
 }
 
+interface RoomPosition
+{
+    offset(this: RoomPosition, x: number, y: number): RoomPosition
+}
+
 declare module "*.json"
 {
     const value: any;

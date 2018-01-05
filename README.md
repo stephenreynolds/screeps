@@ -1,5 +1,8 @@
 ![](/assets/kuminet-logo.png)
 
+[![Build Status](https://travis-ci.org/kumikill/kuminet.svg?branch=master)]
+(https://travis-ci.org/kumikill/kuminet)
+&nbsp;&nbsp;
 [![Maintainability](https://api.codeclimate.com/v1/badges/bad044055c34eed17a3f/maintainability)](https://codeclimate.com/github/kumikill/kuminet/maintainability)
 &nbsp;&nbsp;
 [![Test Coverage](https://api.codeclimate.com/v1/badges/bad044055c34eed17a3f/test_coverage)](https://codeclimate.com/github/kumikill/kuminet/test_coverage)

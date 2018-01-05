@@ -78,7 +78,6 @@ export abstract class RCLPlan
     protected findEmptyInRange(origin: RoomPosition, range: number,
         nearestTo?: RoomPosition, objects: Array<StructureConstant | Terrain> = ["wall"]): RoomPosition | undefined
     {
-        console.log(`Origin: ${origin}`);
         const empties: RoomPosition[] = [];
         for (let y = origin.y - range; y <= origin.y + range; y++)
         {
@@ -91,7 +90,7 @@ export abstract class RCLPlan
                 {
                     if (object === "wall" || object === "plain" || object === "swamp")
                     {
-                        if (this.room.lookForAt(LOOK_TERRAIN, pos).indexOf(object) >= 0)
+                        if (Game.map.getTerrainAt(pos) === object)
                         {
                             empty = false;
                             break;

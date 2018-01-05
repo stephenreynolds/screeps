@@ -1,4 +1,5 @@
-import { Process } from "./Process";
+// Stats
+import { Stats } from "Utils/Stats";
 
 // Building Processes
 import { LinkProcess } from "../ProcessTypes/BuildingProcesses/LinkProcess";
@@ -54,8 +55,10 @@ import { SpawnRemoteBuilderProcess } from "../ProcessTypes/System/SpawnRemoteBui
 import { SuspensionProcess } from "../ProcessTypes/System/Suspension";
 
 // Libs
-import { Stats } from "Utils/Stats";
 import { log } from "../Lib/Logger/Log";
+
+// Abstract process
+import { Process } from "./Process";
 
 const ProcessTypes = {
     build: BuildProcess,

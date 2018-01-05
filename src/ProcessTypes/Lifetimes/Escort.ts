@@ -1,4 +1,4 @@
-import { LifetimeProcess } from "../../OS/LifetimeProcess";
+import { LifetimeProcess } from "OS/LifetimeProcess";
 
 export class EscortLifetimeProcess extends LifetimeProcess
 {

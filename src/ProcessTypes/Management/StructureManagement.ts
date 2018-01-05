@@ -1,5 +1,5 @@
-import { Process } from "../../OS/Process";
-import { Utils } from "../../Utils/Utils";
+import { Process } from "OS/Process";
+import { Utils } from "Utils/Utils";
 
 import { BuilderLifetimeProcess } from "../Lifetimes/Builder";
 import { RepairerLifetimeProcess } from "../Lifetimes/Repairer";

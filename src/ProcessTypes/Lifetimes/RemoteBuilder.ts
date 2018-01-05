@@ -1,6 +1,6 @@
-import { LifetimeProcess } from "../../OS/LifetimeProcess";
-
+import { LifetimeProcess } from "OS/LifetimeProcess";
 import { Utils } from "Utils/Utils";
+
 import { BuildProcess } from "../CreepActions/Build";
 import { HarvestProcess } from "../CreepActions/Harvest";
 import { UpgradeProcess } from "../CreepActions/Upgrade";

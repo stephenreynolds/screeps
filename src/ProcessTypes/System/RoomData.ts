@@ -1,7 +1,7 @@
-import { Process } from "../../OS/Process";
-
+import { Process } from "OS/Process";
 import { LinkProcess } from "ProcessTypes/BuildingProcesses/LinkProcess";
 import { DefenseManagementProcess } from "ProcessTypes/Management/DefenseManagement";
+
 import { TowerRepairProcess } from "../BuildingProcesses/TowerRepair";
 import { MineralManagementProcess } from "../Management/MineralManagement";
 import { RoomLayoutManagementProcess } from "../Management/RoomLayoutManagement";

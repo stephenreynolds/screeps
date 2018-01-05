@@ -1,4 +1,5 @@
 import { log } from "Lib/Logger/Log";
+
 import { Kernel } from "./Kernel";
 
 export class Process

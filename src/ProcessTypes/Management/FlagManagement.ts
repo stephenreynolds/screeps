@@ -1,6 +1,8 @@
-import { Process } from "../../OS/Process";
+import { Process } from "OS/Process";
+
 import { ClaimProcess } from "../EmpireActions/Claim";
 import { HoldRoomProcess } from "../EmpireActions/HoldRoom";
+
 import { InvasionManagementProcess } from "./InvasionManagement";
 import { RangerManagementProcess } from "./RangerManagement";
 import { RemoteMiningManagementProcess } from "./RemoteMiningManagement";

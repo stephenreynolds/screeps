@@ -1,10 +1,11 @@
+import { log } from "Lib/Logger/Log";
 import { EscortLifetimeProcess } from "ProcessTypes/Lifetimes/Escort";
+
 import { Kernel } from "../OS/Kernel";
 import { Process } from "../OS/Process";
+
 import { CreepBuilder } from "./CreepBuilder";
 import { RoomPathFinder } from "./RoomPathFinder";
-
-import { log } from "Lib/Logger/Log";
 
 export const Utils = {
     clearDeadCreeps: (list: string[]) =>

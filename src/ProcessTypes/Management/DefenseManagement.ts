@@ -1,6 +1,7 @@
 import { Process } from "OS/Process";
 import { BrawlerLifetimeProcess } from "ProcessTypes/Lifetimes/Brawler";
 import { Utils } from "Utils/Utils";
+
 import { TowerDefenseProcess } from "../BuildingProcesses/TowerDefense";
 
 export class DefenseManagementProcess extends Process

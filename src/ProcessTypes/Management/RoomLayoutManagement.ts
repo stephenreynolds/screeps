@@ -1,6 +1,8 @@
 import { log } from "Lib/Logger/Log";
-import { Process } from "../../OS/Process";
 
+import { Process } from "OS/Process";
+
+import { BuildPriorities } from "./RCLPlans/BuildPriorities";
 import { RCL0 } from "./RCLPlans/RCL0";
 import { RCL1 } from "./RCLPlans/RCL1";
 import { RCL2 } from "./RCLPlans/RCL2";
@@ -10,8 +12,6 @@ import { RCL5 } from "./RCLPlans/RCL5";
 import { RCL6 } from "./RCLPlans/RCL6";
 import { RCL7 } from "./RCLPlans/RCL7";
 import { RCL8 } from "./RCLPlans/RCL8";
-
-import { BuildPriorities } from "./RCLPlans/BuildPriorities";
 import { RCLPlan } from "./RCLPlans/RCLPlan";
 
 export class RoomLayoutManagementProcess extends Process

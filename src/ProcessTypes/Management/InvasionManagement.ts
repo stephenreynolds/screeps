@@ -1,6 +1,7 @@
 import { Process } from "OS/Process";
 import { RangerLifetimeProcess } from "ProcessTypes/Lifetimes/Ranger";
 import { Utils } from "Utils/Utils";
+
 import { BrawlerLifetimeProcess } from "../Lifetimes/Brawler";
 
 export class InvasionManagementProcess extends Process

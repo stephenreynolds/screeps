@@ -1,8 +1,9 @@
-import { DeliverProcess } from "ProcessTypes/CreepActions/Deliver";
-import { UpgradeProcess } from "ProcessTypes/CreepActions/Upgrade";
-import { LifetimeProcess } from "../../OS/LifetimeProcess";
+import { LifetimeProcess } from "OS/LifetimeProcess";
+
+import { DeliverProcess } from "../CreepActions/Deliver";
 import { HarvestProcess } from "../CreepActions/Harvest";
 import { MoveProcess } from "../CreepActions/Move";
+import { UpgradeProcess } from "../CreepActions/Upgrade";
 
 export class MinerLifetimeProcess extends LifetimeProcess
 {

@@ -1,4 +1,4 @@
-import { Process } from "../../OS/Process";
+import { Process } from "OS/Process";
 
 export class LinkProcess extends Process
 {

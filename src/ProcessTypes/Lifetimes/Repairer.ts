@@ -1,5 +1,5 @@
-import { LifetimeProcess } from "../../OS/LifetimeProcess";
-import { Utils } from "../../Utils/Utils";
+import { LifetimeProcess } from "OS/LifetimeProcess";
+import { Utils } from "Utils/Utils";
 
 import { CollectProcess } from "../CreepActions/Collect";
 import { RepairProcess } from "../CreepActions/Repair";

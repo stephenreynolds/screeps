@@ -18,7 +18,7 @@ export class RoomLayoutManagementProcess extends Process
 {
     public type = "roomLayout";
 
-    public readonly roomPlanVersion = 78; // Update this every time generateRoomPlan() changes.
+    public readonly roomPlanVersion = 90; // Update this every time generateRoomPlan() changes.
     public readonly maxSites = 10;  // Max number of sites per room.
 
     public run()
@@ -121,7 +121,7 @@ export class RoomLayoutManagementProcess extends Process
                     {
                         if (pos.createConstructionSite(key as BuildableStructureConstant) === OK)
                         {
-                            log.info(`Site created for ${key} at ${pos}`);
+                            log.info(`Site created for ${key} at ${pos} `);
                             siteCount++;
                         }
 

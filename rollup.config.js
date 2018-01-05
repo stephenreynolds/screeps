@@ -20,10 +20,10 @@ export default {
     input: "src/Main.ts",
     output: {
         file: "dist/main.js",
-        format: "cjs"
+        format: "cjs",
+        name: "kuminet",
+        sourcemap: true
     },
-
-    sourcemap: true,
 
     plugins: [
         clean(),

@@ -18,7 +18,7 @@ export class RoomLayoutManagementProcess extends Process
 {
     public type = "roomLayout";
 
-    public readonly roomPlanVersion = 90; // Update this every time generateRoomPlan() changes.
+    public readonly roomPlanVersion = 92; // Update this every time generateRoomPlan() changes.
     public readonly maxSites = 10;  // Max number of sites per room.
 
     public run()
@@ -27,8 +27,12 @@ export class RoomLayoutManagementProcess extends Process
 
         if (room.memory.roomPlan && room.memory.roomPlan.version === this.roomPlanVersion)
         {
-            this.createSites(room);
-            this.completed = true;
+            const siteCount = room.memory.numSites;
+
+            if (siteCount < this.maxSites)
+            {
+                this.createSites(room);
+            }
         }
         else
         {
@@ -83,52 +87,49 @@ export class RoomLayoutManagementProcess extends Process
         const roomPlan = room.memory.roomPlan.rcl[buildableRCL];
         let siteCount = room.memory.numSites;
 
-        if (siteCount < this.maxSites)
+        // For each building...
+        for (const key of BuildPriorities)
         {
-            // For each building...
-            for (const key of BuildPriorities)
+            if (!roomPlan.hasOwnProperty(key))
             {
-                if (!roomPlan.hasOwnProperty(key))
+                continue;
+            }
+
+            // Get each position...
+            for (const position in roomPlan[key])
+            {
+                const pos = new RoomPosition(roomPlan[key][position].x,
+                    roomPlan[key][position].y, room.name);
+
+                // Check if structure or construction site already exists here.
+                const structures = _.filter(pos.look(), (r) =>
                 {
-                    continue;
-                }
+                    if (r.type === "structure")
+                    {
+                        return r.structure!.structureType === key;
+                    }
+                    else if (r.type === "constructionSite")
+                    {
+                        return r.constructionSite!.structureType === key;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                });
 
-                // Get each position...
-                for (const position in roomPlan[key])
+                // Create construction site if nothing is here.
+                if (structures.length === 0)
                 {
-                    const pos = new RoomPosition(roomPlan[key][position].x,
-                        roomPlan[key][position].y, room.name);
-
-                    // Check if structure or construction site already exists here.
-                    const structures = _.filter(pos.look(), (r) =>
+                    if (pos.createConstructionSite(key as BuildableStructureConstant) === OK)
                     {
-                        if (r.type === "structure")
-                        {
-                            return r.structure!.structureType === key;
-                        }
-                        else if (r.type === "constructionSite")
-                        {
-                            return r.constructionSite!.structureType === key;
-                        }
-                        else
-                        {
-                            return false;
-                        }
-                    });
+                        log.info(`Site created for ${key} at ${pos} `);
+                        siteCount++;
+                    }
 
-                    // Create construction site if nothing is here.
-                    if (structures.length === 0)
+                    if (siteCount >= this.maxSites)
                     {
-                        if (pos.createConstructionSite(key as BuildableStructureConstant) === OK)
-                        {
-                            log.info(`Site created for ${key} at ${pos} `);
-                            siteCount++;
-                        }
-
-                        if (siteCount >= this.maxSites)
-                        {
-                            return;
-                        }
+                        return;
                     }
                 }
             }

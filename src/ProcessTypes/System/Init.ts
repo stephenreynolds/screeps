@@ -14,16 +14,10 @@ export class InitProcess extends Process
     // Run the init process
     public run()
     {
-        const proc = this;
-
-        if (Game.cpu.bucket > 3000)
-        {
-            this.kernel.limit = (Game.cpu.limit + 500) - 20;
-        }
-
         for (const name in Memory.creeps)
         {
             const creep = Game.creeps[name];
+
             if (!creep)
             {
                 delete Memory.creeps[name];
@@ -39,20 +33,20 @@ export class InitProcess extends Process
         {
             if (room.controller && room.controller.my)
             {
-                proc.kernel.addProcess(RoomDataProcess, "roomData-" + room.name, 99, {
+                this.kernel.addProcess(RoomDataProcess, "roomData-" + room.name, 99, {
                     roomName: room.name
                 });
 
-                if (!proc.kernel.getProcessByName("em-" + room.name))
+                if (!this.kernel.getProcessByName("em-" + room.name))
                 {
-                    proc.kernel.addProcess(EnergyManagementProcess, "em-" + room.name, 50, {
+                    this.kernel.addProcess(EnergyManagementProcess, "em-" + room.name, 50, {
                         roomName: room.name
                     });
                 }
 
-                if (!proc.kernel.hasProcess("sm-" + room.name))
+                if (!this.kernel.hasProcess("sm-" + room.name))
                 {
-                    proc.kernel.addProcess(StructureManagementProcess, "sm-" + room.name, 48, {
+                    this.kernel.addProcess(StructureManagementProcess, "sm-" + room.name, 48, {
                         roomName: room.name
                     });
                 }

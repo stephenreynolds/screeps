@@ -76,7 +76,7 @@ export class RoomLayoutManagementProcess extends Process
                     roomPlan[key][i].y, room.name);
 
                 // Check if structure or construction site already exists here.
-                const structures = _.filter(position.look(), (r) =>
+                const structures = _.filter(position.look(), (r: LookAtResult) =>
                 {
                     if (r.type === "structure")
                     {

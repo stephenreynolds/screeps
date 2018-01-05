@@ -71,7 +71,7 @@ export class FlagManagementProcess extends Process
 
         const proc = this;
 
-        _.forEach(Game.flags, (flag) =>
+        _.forEach(Game.flags, (flag: Flag) =>
         {
             switch (flag.color)
             {

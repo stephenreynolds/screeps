@@ -1,6 +1,7 @@
 declare const require: (module: string) => any;
 declare var module: any;
 declare var global: any
+declare const _: any;
 
 declare namespace NodeJS
 {

@@ -17,22 +17,22 @@ export class TowerRepairProcess extends Process
             return;
         }
 
-        const ramparts = _.filter(this.roomData().ramparts, (rampart) =>
+        const ramparts = _.filter(this.roomData().ramparts, (rampart: StructureRampart) =>
         {
             return (rampart.hits < 50000);
         });
 
-        const containers = _.filter(this.roomData().generalContainers, (container) =>
+        const containers = _.filter(this.roomData().generalContainers, (container: StructureContainer) =>
         {
             return (container.hits < container.hitsMax);
         });
 
-        const sourceContainers = _.filter(this.roomData().sourceContainers, (container) =>
+        const sourceContainers = _.filter(this.roomData().sourceContainers, (container: StructureContainer) =>
         {
             return (container.hits < container.hitsMax);
         });
 
-        const roads = _.filter(this.roomData().roads, (road) =>
+        const roads = _.filter(this.roomData().roads, (road: StructureRoad) =>
         {
             return (road.hits < road.hitsMax);
         });
@@ -51,22 +51,22 @@ export class TowerRepairProcess extends Process
         ) as Structure[], "hits");
         const usedTowers = {} as { [towerId: string]: boolean };
 
-        _.forEach(this.roomData().towers, (tower) =>
+        _.forEach(this.roomData().towers, (tower: StructureTower) =>
         {
             usedTowers[tower.id] = (tower.energy < 500);
         });
 
         const proc = this;
-        _.forEach(sortedRamparts, (rampart) =>
+        _.forEach(sortedRamparts, (rampart: StructureRampart) =>
         {
-            const towers = _.filter(proc.roomData().towers, (tower) =>
+            const towers = _.filter(proc.roomData().towers, (tower: StructureTower) =>
             {
                 return !usedTowers[tower.id];
             });
 
             if (towers.length > 0)
             {
-                const tower = rampart.pos.findClosestByRange(towers);
+                const tower = rampart.pos.findClosestByRange<StructureTower>(towers);
 
                 tower.repair(rampart);
 

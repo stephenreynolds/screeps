@@ -217,7 +217,7 @@ export class Kernel
         }
         else
         {
-            return _.filter(this.processTable, (process) =>
+            return _.filter(this.processTable, (process: Process) =>
             {
                 return !process.ticked && process.suspend === false;
             }).length > 0;
@@ -228,7 +228,7 @@ export class Kernel
     public loadProcessTable()
     {
         const kernel = this;
-        _.forEach(Memory.kumiOS.processTable, (entry) =>
+        _.forEach(Memory.kumiOS.processTable, (entry: any) =>
         {
             if (ProcessTypes[entry.type])
             {
@@ -245,7 +245,7 @@ export class Kernel
     public teardown(stats = true)
     {
         const list: SerializedProcess[] = [];
-        _.forEach(this.processTable, (entry) =>
+        _.forEach(this.processTable, (entry: Process) =>
         {
             if (!entry.completed)
             {
@@ -268,7 +268,7 @@ export class Kernel
 
         if (!this.toRunProcesses || this.toRunProcesses.length === 0)
         {
-            const toRunProcesses = _.filter(this.processTable, (entry) =>
+            const toRunProcesses = _.filter(this.processTable, (entry: Process) =>
             {
                 return (!entry.ticked && entry.suspend === false);
             });
@@ -354,7 +354,7 @@ export class Kernel
     /** Get ipc messages for the given process */
     public getIpc(targetProcess: string)
     {
-        return _.filter(this.ipc, (entry) =>
+        return _.filter(this.ipc, (entry: any) =>
         {
             return (entry.to === targetProcess);
         });
@@ -403,7 +403,7 @@ export class Kernel
     /** Get processes by type */
     public getProcessesByType(type: string)
     {
-        return _.filter(this.processTable, (process) =>
+        return _.filter(this.processTable, (process: Process) =>
         {
             return (process.type === type);
         });

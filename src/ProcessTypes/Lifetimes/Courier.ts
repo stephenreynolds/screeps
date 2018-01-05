@@ -17,7 +17,7 @@ export class CourierLifetimeProcess extends LifetimeProcess
         }
 
         // Prefer collecting energy from storage, fallback to containers.
-        let collectTarget;
+        let collectTarget: Structure;
         if (creep.room.storage)
         {
             collectTarget = creep.room.storage;
@@ -28,7 +28,7 @@ export class CourierLifetimeProcess extends LifetimeProcess
             collectTarget = creep.pos.findClosestByPath(_.filter(generalContainers, (c: StructureContainer) =>
             {
                 return _.sum(c.store) < c.storeCapacity;
-            }));
+            })) as Structure;
         }
 
         if (!collectTarget)

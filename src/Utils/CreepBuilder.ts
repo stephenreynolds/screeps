@@ -42,7 +42,7 @@ export const CreepBuilder = {
             }
         }
 
-        return _.sortBy(body, (part) =>
+        return _.sortBy(body, (part: BodyPartConstant) =>
         {
             return CreepBuilder.partWeight[part];
         });

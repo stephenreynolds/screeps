@@ -51,7 +51,7 @@ export class UpgraderLifetimeProcess extends LifetimeProcess
 
                     const capacity = creep.carryCapacity;
 
-                    targets = _.filter(targets, (t) =>
+                    targets = _.filter(targets, (t: DeliveryTarget) =>
                     {
                         return t && (t.store[RESOURCE_ENERGY] > capacity);
                     });
@@ -81,7 +81,7 @@ export class UpgraderLifetimeProcess extends LifetimeProcess
 
                 if (targets)
                 {
-                    const target = creep.pos.findClosestByPath(targets);
+                    const target = creep.pos.findClosestByPath(targets) as Structure;
 
                     this.fork(CollectProcess, "collect-" + creep.name, this.priority - 1, {
                         target: target.id,

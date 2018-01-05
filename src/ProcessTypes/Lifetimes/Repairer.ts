@@ -48,34 +48,10 @@ export class RepairerLifetimeProcess extends LifetimeProcess
 
         const proc = this;
 
-        let repairTargets = _.filter(repairableObjects, (object) =>
-        {
-            if (object.ticksToDecay < shortestDecay) { shortestDecay = object.ticksToDecay; }
-
-            if (object.structureType !== STRUCTURE_RAMPART)
+        let repairTargets = _.filter(repairableObjects,
+            (object: StructureRoad | StructureRampart | StructureContainer) =>
             {
-                return (object.hits < object.hitsMax);
-            }
-            else
-            {
-                return (object.hits < Utils.rampartHealth(proc.kernel, proc.metaData.roomName));
-            }
-        });
-
-        if (repairTargets.length === 0)
-        {
-            repairableObjects = [].concat(
-                this.kernel.data.roomData[this.metaData.roomName].roads as never[]
-            ) as StructureRoad[];
-
-            shortestDecay = 100;
-
-            repairTargets = _.filter(repairableObjects, (object) =>
-            {
-                if (object.ticksToDecay < shortestDecay)
-                {
-                    shortestDecay = object.ticksToDecay;
-                }
+                if (object.ticksToDecay < shortestDecay) { shortestDecay = object.ticksToDecay; }
 
                 if (object.structureType !== STRUCTURE_RAMPART)
                 {
@@ -86,11 +62,37 @@ export class RepairerLifetimeProcess extends LifetimeProcess
                     return (object.hits < Utils.rampartHealth(proc.kernel, proc.metaData.roomName));
                 }
             });
+
+        if (repairTargets.length === 0)
+        {
+            repairableObjects = [].concat(
+                this.kernel.data.roomData[this.metaData.roomName].roads as never[]
+            ) as StructureRoad[];
+
+            shortestDecay = 100;
+
+            repairTargets = _.filter(repairableObjects,
+                (object: StructureRoad | StructureRampart | StructureContainer) =>
+                {
+                    if (object.ticksToDecay < shortestDecay)
+                    {
+                        shortestDecay = object.ticksToDecay;
+                    }
+
+                    if (object.structureType !== STRUCTURE_RAMPART)
+                    {
+                        return (object.hits < object.hitsMax);
+                    }
+                    else
+                    {
+                        return (object.hits < Utils.rampartHealth(proc.kernel, proc.metaData.roomName));
+                    }
+                });
         }
 
         if (repairTargets.length > 0)
         {
-            const target = creep.pos.findClosestByPath(repairTargets);
+            const target = creep.pos.findClosestByPath<Structure>(repairTargets);
 
             this.fork(RepairProcess, "repair-" + creep.name, this.priority - 1, {
                 creep: creep.name,

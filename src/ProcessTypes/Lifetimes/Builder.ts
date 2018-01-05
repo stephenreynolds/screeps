@@ -38,7 +38,7 @@ export class BuilderLifetimeProcess extends LifetimeProcess
         }
         else
         {
-            const repairTarget = creep.pos.findClosestByRange(
+            const repairTarget = creep.pos.findClosestByRange<Structure>(
                 _.filter(this.kernel.data.roomData[creep.room.name].myStructures, (s: Structure) =>
                 {
                     if (s.structureType === STRUCTURE_RAMPART)
@@ -88,27 +88,27 @@ export class BuilderLifetimeProcess extends LifetimeProcess
 
     private buildNow(sites: ConstructionSite[])
     {
-        const towerSites = _.filter(sites, (site) =>
+        const towerSites = _.filter(sites, (site: ConstructionSite) =>
         {
             return (site.structureType === STRUCTURE_TOWER);
         });
 
-        const extensionSites = _.filter(sites, (site) =>
+        const extensionSites = _.filter(sites, (site: ConstructionSite) =>
         {
             return (site.structureType === STRUCTURE_EXTENSION);
         });
 
-        const containerSites = _.filter(sites, (site) =>
+        const containerSites = _.filter(sites, (site: ConstructionSite) =>
         {
             return (site.structureType === STRUCTURE_CONTAINER);
         });
 
-        const rampartSites = _.filter(sites, (site) =>
+        const rampartSites = _.filter(sites, (site: ConstructionSite) =>
         {
             return (site.structureType === STRUCTURE_RAMPART);
         });
 
-        const normalSites = _.filter(sites, (site) =>
+        const normalSites = _.filter(sites, (site: ConstructionSite) =>
         {
             return !(
                 site.structureType === STRUCTURE_TOWER

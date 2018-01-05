@@ -96,7 +96,7 @@ export class RemoteMinerLifetimeProcess extends LifetimeProcess
 
             if (structures[0])
             {
-                const structure = creep.pos.findClosestByRange(structures);
+                const structure = creep.pos.findClosestByRange<Structure>(structures);
                 this.fork(RepairProcess, "repair-" + creep.name, this.priority - 1, {
                     creep: creep.name,
                     target: structure.id

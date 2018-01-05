@@ -53,7 +53,7 @@ export class MoveProcess extends Process
         else
         {
             let decreasePerTick = 0;
-            _.forEach(creep.body, (part) =>
+            _.forEach(creep.body, (part: BodyPartDefinition) =>
             {
                 if (part.type === MOVE)
                 {

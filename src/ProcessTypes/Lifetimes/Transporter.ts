@@ -36,8 +36,8 @@ export class TransporterLifetimeProcess extends LifetimeProcess
             return;
         }
 
-        // Prefer transfering to storage, otherwise general containers.
-        let target;
+        // Prefer transferring to storage, otherwise general containers.
+        let target: Structure;
         if (creep.room.storage)
         {
             target = creep.room.storage;
@@ -48,7 +48,7 @@ export class TransporterLifetimeProcess extends LifetimeProcess
             target = creep.pos.findClosestByPath(_.filter(generalContainers, (c: StructureContainer) =>
             {
                 return c.store[RESOURCE_ENERGY] < c.storeCapacity;
-            }));
+            })) as Structure;
         }
 
         if (!target)

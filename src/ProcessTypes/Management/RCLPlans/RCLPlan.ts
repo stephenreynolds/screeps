@@ -18,7 +18,7 @@ export abstract class RCLPlan
         this.room = room;
         this.kernel = kernel;
 
-        this.baseSpawn = _.find(this.kernel.data.roomData[this.room.name].spawns, (s) =>
+        this.baseSpawn = _.find(this.kernel.data.roomData[this.room.name].spawns, (s: StructureSpawn) =>
         {
             return s.name === "base-" + this.room.name || s.name === "Spawn1"; // TODO: remove Spawn1 ASAP
         })!;

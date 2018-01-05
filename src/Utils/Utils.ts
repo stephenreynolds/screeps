@@ -10,7 +10,7 @@ import { RoomPathFinder } from "./RoomPathFinder";
 export const Utils = {
     clearDeadCreeps: (list: string[]) =>
     {
-        return _.filter(list, (entry) =>
+        return _.filter(list, (entry: string) =>
         {
             if (!Game.creeps[entry])
             {
@@ -25,7 +25,7 @@ export const Utils = {
 
     inflateCreeps: (list: string[]): Creep[] =>
     {
-        return _.transform(list, (result, entry) =>
+        return _.transform(list, (result: any, entry: any) =>
         {
             result.push(Game.creeps[entry]);
         });
@@ -35,9 +35,9 @@ export const Utils = {
     {
         let workRate = 0;
 
-        _.forEach(creeps, (creep) =>
+        _.forEach(creeps, (creep: Creep) =>
         {
-            _.forEach(creep.body, (part) =>
+            _.forEach(creep.body, (part: BodyPartDefinition) =>
             {
                 if (part.type === WORK)
                 {
@@ -55,7 +55,7 @@ export const Utils = {
         const spawns = kernel.data.roomData[roomName].spawns;
         let outcome = false;
 
-        _.forEach(spawns, (spawn) =>
+        _.forEach(spawns, (spawn: StructureSpawn) =>
         {
             if (!_.includes(kernel.data.usedSpawns, spawn.id) && !spawn.spawning && spawn.canCreateCreep(body) === OK)
             {
@@ -106,7 +106,7 @@ export const Utils = {
         let bestRoom = "";
         let bestDistance = 999;
 
-        _.forEach(Game.rooms, (room) =>
+        _.forEach(Game.rooms, (room: Room) =>
         {
             if (room.controller && room.controller.my)
             {

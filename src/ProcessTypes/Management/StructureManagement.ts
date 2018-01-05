@@ -91,7 +91,7 @@ export class StructureManagementProcess extends Process
             this.kernel.data.roomData[this.metaData.roomName].roads as never[]
         ) as Structure[];
 
-        const repairTargets = _.filter(repairableObjects, (object) =>
+        const repairTargets = _.filter(repairableObjects, (object: Structure) =>
         {
             return (object.hits < object.hitsMax);
         });

@@ -55,7 +55,7 @@ export class MinerLifetimeProcess extends LifetimeProcess
     private transfer(creep: Creep, container: StructureContainer)
     {
         const links = creep.pos.findInRange(this.kernel.data.roomData[creep.room.name].links, 1);
-        const link = _.find(links, (l) =>
+        const link = _.find(links, (l: StructureLink) =>
         {
             return l.energy < l.energyCapacity;
         });

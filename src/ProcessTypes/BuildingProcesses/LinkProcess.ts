@@ -15,7 +15,7 @@ export class LinkProcess extends Process
         }
 
         // Find link needing energy
-        const needingEnergy = _.find(links, (l) =>
+        const needingEnergy = _.find(links, (l: StructureLink) =>
         {
             return l.energy < l.energyCapacity &&
                 (l.pos.inRangeTo(l.room.controller!.pos, 3) || l.pos.inRangeTo(l.room.storage!, 2));
@@ -27,7 +27,7 @@ export class LinkProcess extends Process
         }
 
         // Find source link
-        const sourceLink = _.find(links, (l) =>
+        const sourceLink = _.find(links, (l: StructureLink) =>
         {
             if (l.room.terminal && l.pos.inRangeTo(l.room.terminal, 3))
             {

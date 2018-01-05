@@ -41,7 +41,7 @@ export const ConsoleCommands = {
     {
         if (roomName)
         {
-            _.forEach(Memory.kumiOS.processTable, (entry) =>
+            _.forEach(Memory.kumiOS.processTable, (entry: any) =>
             {
                 if (entry.split("-")[1] === roomName)
                 {

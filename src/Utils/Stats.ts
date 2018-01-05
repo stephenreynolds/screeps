@@ -32,7 +32,7 @@ export class Stats
             Memory.stats["processes.counts.missed"] = 0;
         }
 
-        _.forEach(Object.keys(kernel.ProcessTypes), (type) =>
+        _.forEach(Object.keys(kernel.ProcessTypes), (type: string) =>
         {
             Memory.stats["processes.types." + type] = 0;
         });
@@ -54,7 +54,7 @@ export class Stats
         Memory.stats["processes.types.scheduler"] = kernel.schedulerUsage;
         Memory.stats["processes.types.kernel-scheduler"] = 0;
 
-        _.forEach(Object.keys(kernel.data.roomData), (roomName) =>
+        _.forEach(Object.keys(kernel.data.roomData), (roomName: string) =>
         {
             const room = Game.rooms[roomName];
 

@@ -103,7 +103,7 @@ export class EnergyManagementProcess extends Process
     {
         let ret = false;
 
-        _.forEach(sources, (source) =>
+        _.forEach(sources, (source: Source) =>
         {
             if (!this.metaData.harvestCreeps[source.id])
             {
@@ -151,7 +151,7 @@ export class EnergyManagementProcess extends Process
     {
         let ret = false;
 
-        _.forEach(this.kernel.data.roomData[this.metaData.roomName].sourceContainers, (container) =>
+        _.forEach(this.kernel.data.roomData[this.metaData.roomName].sourceContainers, (container: StructureContainer) =>
         {
             if (!this.metaData.miningCreeps[container.id])
             {
@@ -198,42 +198,44 @@ export class EnergyManagementProcess extends Process
         if (Object.keys(this.metaData.miningCreeps).length > 0 &&
             this.room().storage !== undefined || generalContainers.length > 0)
         {
-            _.forEach(this.kernel.data.roomData[this.metaData.roomName].sourceContainers, (container) =>
-            {
-                if (this.metaData.transportCreeps[container.id])
+            _.forEach(this.kernel.data.roomData[this.metaData.roomName].sourceContainers,
+                (container: StructureContainer) =>
                 {
-                    const creep = Game.creeps[this.metaData.transportCreeps[container.id]];
-
-                    if (!creep)
+                    if (this.metaData.transportCreeps[container.id])
                     {
-                        delete this.metaData.transportCreeps[container.id];
-                        return;
+                        const creep = Game.creeps[this.metaData.transportCreeps[container.id]];
+
+                        if (!creep)
+                        {
+                            delete this.metaData.transportCreeps[container.id];
+                            return;
+                        }
+                    }
+                    else if (Object.keys(this.metaData.transportCreeps).length < sourceContainers.length)
+                    {
+                        const creepName = "em-tr-" + this.metaData.roomName + "-" + Game.time;
+                        const spawned = Utils.spawn(
+                            this.kernel,
+                            this.metaData.roomName,
+                            "mover",
+                            creepName,
+                            {}
+                        );
+
+                        if (spawned)
+                        {
+                            this.metaData.transportCreeps[container.id] = creepName;
+                            this.kernel.addProcess(TransporterLifetimeProcess, "trlf-" + creepName, 48, {
+                                sourceContainer: container.id,
+                                creep: creepName,
+                                roomName: this.metaData.roomName
+                            });
+                        }
+
+                        ret = true;
                     }
                 }
-                else if (Object.keys(this.metaData.transportCreeps).length < sourceContainers.length)
-                {
-                    const creepName = "em-tr-" + this.metaData.roomName + "-" + Game.time;
-                    const spawned = Utils.spawn(
-                        this.kernel,
-                        this.metaData.roomName,
-                        "mover",
-                        creepName,
-                        {}
-                    );
-
-                    if (spawned)
-                    {
-                        this.metaData.transportCreeps[container.id] = creepName;
-                        this.kernel.addProcess(TransporterLifetimeProcess, "trlf-" + creepName, 48, {
-                            sourceContainer: container.id,
-                            creep: creepName,
-                            roomName: this.metaData.roomName
-                        });
-                    }
-
-                    ret = true;
-                }
-            });
+            );
         }
 
         return ret;

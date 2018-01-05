@@ -23,7 +23,7 @@
     },
     "homepage": "https://github.com/kumikill/kuminet#readme",
     "devDependencies": {
-        "@types/lodash": "^3.10.1",
+        "@types/lodash": "^4.14.92",
         "@types/screeps": "^2.1.0",
         "@types/source-map": "^0.5.2",
         "rollup": "^0.53.3",

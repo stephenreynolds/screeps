@@ -29,7 +29,7 @@ export class InitProcess extends Process
             }
         }
 
-        _.forEach(Game.rooms, (room) =>
+        _.forEach(Game.rooms, (room: Room) =>
         {
             if (room.controller && room.controller.my)
             {

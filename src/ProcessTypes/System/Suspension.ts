@@ -8,7 +8,7 @@ export class SuspensionProcess extends Process
     {
         const proc = this;
         proc.kernel.suspendCount = 0;
-        _.forEach(proc.kernel.processTable, (process) =>
+        _.forEach(proc.kernel.processTable, (process: Process) =>
         {
             if (!process.suspend === false)
             {

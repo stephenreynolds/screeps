@@ -10,7 +10,7 @@ export abstract class RCLPlan
     protected controller: StructureController;
     protected midpoint: RoomPosition;
 
-    public static readonly version = 101; // Update this every time generateRoomPlan() changes.
+    public static readonly version = 102; // Update this every time generateRoomPlan() changes.
 
     public constructor(room: Room, kernel: Kernel)
     {
@@ -142,7 +142,8 @@ export abstract class RCLPlan
 
         for (const key of BuildPriorities)
         {
-            if (key === STRUCTURE_ROAD || !roomPlan.hasOwnProperty(key))
+            if (!roomPlan.hasOwnProperty(key) || key === STRUCTURE_ROAD ||
+                key === STRUCTURE_CONTAINER || key === STRUCTURE_RAMPART)
             {
                 continue;
             }

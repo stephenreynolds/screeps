@@ -45,39 +45,15 @@ export class RoomLayoutManagementProcess extends Process
         room.memory.roomPlan.version = RCLPlan.version;
         room.memory.roomPlan.rcl = [];
 
-        for (let i = 0; i <= 8; i++)
-        {
-            switch (i)
-            {
-                case 0:
-                    new RCL0(room, this.kernel).generate();
-                    break;
-                case 1:
-                    new RCL1(room, this.kernel).generate();
-                    break;
-                case 2:
-                    new RCL2(room, this.kernel).generate();
-                    break;
-                case 3:
-                    new RCL3(room, this.kernel).generate();
-                    break;
-                case 4:
-                    new RCL4(room, this.kernel).generate();
-                    break;
-                case 5:
-                    new RCL5(room, this.kernel).generate();
-                    break;
-                case 6:
-                    new RCL6(room, this.kernel).generate();
-                    break;
-                case 7:
-                    new RCL7(room, this.kernel).generate();
-                    break;
-                case 8:
-                    new RCL8(room, this.kernel).generate();
-                    break;
-            }
-        }
+        new RCL0(room, this.kernel).generate();
+        new RCL1(room, this.kernel).generate();
+        new RCL2(room, this.kernel).generate();
+        new RCL3(room, this.kernel).generate();
+        new RCL4(room, this.kernel).generate();
+        new RCL5(room, this.kernel).generate();
+        new RCL6(room, this.kernel).generate();
+        new RCL7(room, this.kernel).generate();
+        new RCL8(room, this.kernel).generate();
     }
 
     private createSites(room: Room)

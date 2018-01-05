@@ -23,29 +23,29 @@ export class RCL6 extends RCLPlan
 
         // Extensions
         this.room.memory.roomPlan.rcl[6].extension = this.room.memory.roomPlan.rcl[6].extension.concat([
-            new RoomPosition(this.baseSpawn.pos.x + 2, this.baseSpawn.pos.y + 5, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x + 2, this.baseSpawn.pos.y + 6, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x - 4, this.baseSpawn.pos.y + 2, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x - 5, this.baseSpawn.pos.y + 2, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x - 5, this.baseSpawn.pos.y + 3, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x - 5, this.baseSpawn.pos.y + 1, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x - 5, this.baseSpawn.pos.y - 1, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x - 5, this.baseSpawn.pos.y - 2, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x - 5, this.baseSpawn.pos.y - 3, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x - 4, this.baseSpawn.pos.y - 2, this.room.name)
+            this.baseSpawn.pos.offset(2, 5),
+            this.baseSpawn.pos.offset(2, 6),
+            this.baseSpawn.pos.offset(-4, 2),
+            this.baseSpawn.pos.offset(-5, 2),
+            this.baseSpawn.pos.offset(-5, 3),
+            this.baseSpawn.pos.offset(-5, 1),
+            this.baseSpawn.pos.offset(-5, -1),
+            this.baseSpawn.pos.offset(-5, -2),
+            this.baseSpawn.pos.offset(-5, -3),
+            this.baseSpawn.pos.offset(-5, -2)
         ]);
 
         // Extension Roads
         this.room.memory.roomPlan.rcl[6].road = this.room.memory.roomPlan.rcl[6].road.concat([
-            new RoomPosition(this.baseSpawn.pos.x - 6, this.baseSpawn.pos.y + 3, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x - 6, this.baseSpawn.pos.y + 2, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x - 6, this.baseSpawn.pos.y + 1, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x - 6, this.baseSpawn.pos.y - 1, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x - 6, this.baseSpawn.pos.y - 2, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x - 6, this.baseSpawn.pos.y - 3, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x - 5, this.baseSpawn.pos.y - 4, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x - 4, this.baseSpawn.pos.y - 4, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x - 3, this.baseSpawn.pos.y - 4, this.room.name)
+            this.baseSpawn.pos.offset(-6, 3),
+            this.baseSpawn.pos.offset(-6, 2),
+            this.baseSpawn.pos.offset(-6, 1),
+            this.baseSpawn.pos.offset(-6, -1),
+            this.baseSpawn.pos.offset(-6, -2),
+            this.baseSpawn.pos.offset(-6, -3),
+            this.baseSpawn.pos.offset(-5, -4),
+            this.baseSpawn.pos.offset(-4, -4),
+            this.baseSpawn.pos.offset(-3, -4)
         ]);
 
         // Extractor
@@ -53,9 +53,9 @@ export class RCL6 extends RCLPlan
 
         // Labs
         this.room.memory.roomPlan.rcl[6].lab = [
-            new RoomPosition(this.baseSpawn.pos.x - 3, this.baseSpawn.pos.y + 4, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x - 3, this.baseSpawn.pos.y + 5, this.room.name),
-            new RoomPosition(this.baseSpawn.pos.x - 2, this.baseSpawn.pos.y + 5, this.room.name)
+            this.baseSpawn.pos.offset(-3, 4),
+            this.baseSpawn.pos.offset(-3, 5),
+            this.baseSpawn.pos.offset(-2, 5)
         ];
 
         // Extractor container

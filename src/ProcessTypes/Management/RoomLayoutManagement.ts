@@ -18,14 +18,13 @@ export class RoomLayoutManagementProcess extends Process
 {
     public type = "roomLayout";
 
-    public readonly roomPlanVersion = 92; // Update this every time generateRoomPlan() changes.
     public readonly maxSites = 10;  // Max number of sites per room.
 
     public run()
     {
         const room = Game.rooms[this.metaData.roomName];
 
-        if (room.memory.roomPlan && room.memory.roomPlan.version === this.roomPlanVersion)
+        if (room.memory.roomPlan && room.memory.roomPlan.version === RCLPlan.version)
         {
             const siteCount = room.memory.numSites;
 
@@ -43,7 +42,7 @@ export class RoomLayoutManagementProcess extends Process
     private generateRoomPlan(room: Room)
     {
         room.memory.roomPlan = {};
-        room.memory.roomPlan.version = this.roomPlanVersion;
+        room.memory.roomPlan.version = RCLPlan.version;
         room.memory.roomPlan.rcl = [];
 
         for (let i = 0; i <= 8; i++)
@@ -95,13 +94,13 @@ export class RoomLayoutManagementProcess extends Process
             }
 
             // Get each position...
-            for (const position in roomPlan[key])
+            for (const i in roomPlan[key])
             {
-                const pos = new RoomPosition(roomPlan[key][position].x,
-                    roomPlan[key][position].y, room.name);
+                const position = new RoomPosition(roomPlan[key][i].x,
+                    roomPlan[key][i].y, room.name);
 
                 // Check if structure or construction site already exists here.
-                const structures = _.filter(pos.look(), (r) =>
+                const structures = _.filter(position.look(), (r) =>
                 {
                     if (r.type === "structure")
                     {
@@ -120,9 +119,9 @@ export class RoomLayoutManagementProcess extends Process
                 // Create construction site if nothing is here.
                 if (structures.length === 0)
                 {
-                    if (pos.createConstructionSite(key as BuildableStructureConstant) === OK)
+                    if (position.createConstructionSite(key as BuildableStructureConstant) === OK)
                     {
-                        log.info(`Site created for ${key} at ${pos} `);
+                        log.info(`Site created for ${key} at ${position} `);
                         siteCount++;
                     }
 

@@ -10,6 +10,8 @@ export abstract class RCLPlan
     protected controller: StructureController;
     protected midpoint: RoomPosition;
 
+    public static readonly version = 101; // Update this every time generateRoomPlan() changes.
+
     public constructor(room: Room, kernel: Kernel)
     {
         this.room = room;
@@ -72,6 +74,7 @@ export abstract class RCLPlan
 
     protected finished(rcl: number)
     {
+        this.removeRoadsUnderStructures(rcl);
         log.debug(`Plan for ${this.room.name} RCL ${rcl} generated successfully.`);
     }
 
@@ -131,5 +134,31 @@ export abstract class RCLPlan
         }
 
         return undefined;
+    }
+
+    protected removeRoadsUnderStructures(rcl: number)
+    {
+        const roomPlan = this.room.memory.roomPlan.rcl[rcl];
+
+        for (const key of BuildPriorities)
+        {
+            if (key === STRUCTURE_ROAD || !roomPlan.hasOwnProperty(key))
+            {
+                continue;
+            }
+
+            for (const i in roomPlan[key])
+            {
+                const position = new RoomPosition(roomPlan[key][i].x,
+                    roomPlan[key][i].y, this.room.name);
+
+                this.room.memory.roomPlan.rcl[rcl][STRUCTURE_ROAD] = _.remove(
+                    this.room.memory.roomPlan.rcl[rcl][STRUCTURE_ROAD], (p: RoomPosition) =>
+                    {
+                        const roadPosition = new RoomPosition(p.x, p.y, this.room.name);
+                        return position === roadPosition;
+                    });
+            }
+        }
     }
 }

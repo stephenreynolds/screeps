@@ -5,6 +5,8 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/bad044055c34eed17a3f/maintainability)](https://codeclimate.com/github/kumikill/kuminet/maintainability)
 &nbsp;&nbsp;
 [![Test Coverage](https://api.codeclimate.com/v1/badges/bad044055c34eed17a3f/test_coverage)](https://codeclimate.com/github/kumikill/kuminet/test_coverage)
+&nbsp;&nbsp;
+[![Waffle.io - Columns and their card count](https://badge.waffle.io/kumikill/kuminet.svg?columns=all)](https://waffle.io/kumikill/kuminet)
 
 # kumikill's Screeps AI
 > Uses [Screeps Typescript Starter v3.0](https://github.com/screepers/screeps-typescript-starter). Process management is based on [Arcath's part 20 script](https://github.com/Arcath/screeps-code).

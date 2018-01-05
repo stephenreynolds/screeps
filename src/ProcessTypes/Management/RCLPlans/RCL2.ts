@@ -16,10 +16,6 @@ export class RCL2 extends RCLPlan
             this.room.memory.roomPlan.rcl[2].container.push(this.findEmptyInRange(source.pos, 1, this.baseSpawn.pos)!);
         }
 
-        // General container
-        const generalContainerPos = this.findEmptyInRange(this.midpoint, 5)!;
-        this.room.memory.roomPlan.rcl[2].container.push(generalContainerPos);
-
         // Source roads
         this.room.memory.roomPlan.rcl[2].road = [];
         for (const s of this.kernel.data.roomData[this.room.name].sources)
@@ -30,17 +26,19 @@ export class RCL2 extends RCLPlan
             }
         }
 
-        // General container roads
-        for (const pos of PathFinder.search(this.baseSpawn.pos, { pos: generalContainerPos, range: 1 }).path)
+        const baseToController = PathFinder.search(
+            this.baseSpawn.pos, { pos: this.controller.pos, range: 1 }).path;
+
+        // Controller roads
+        for (const pos of baseToController)
         {
             this.room.memory.roomPlan.rcl[2].road.push(pos);
         }
 
-        // Controller roads
-        for (const pos of PathFinder.search(this.baseSpawn.pos, { pos: this.controller.pos, range: 1 }).path)
-        {
-            this.room.memory.roomPlan.rcl[2].road.push(pos);
-        }
+        // General container
+        const btcMidpoint = baseToController[Math.floor(baseToController.length / 2)];
+        const generalContainerPos = this.findEmptyInRange(btcMidpoint, 1, this.controller.pos, ["wall", "road"]);
+        this.room.memory.roomPlan.rcl[2].container.push(generalContainerPos);
 
         // Base roads
         this.room.memory.roomPlan.rcl[2].road = this.room.memory.roomPlan.rcl[2].road.concat([  // Base roads

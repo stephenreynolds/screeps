@@ -75,17 +75,45 @@ export abstract class RCLPlan
         log.debug(`Plan for ${this.room.name} RCL ${rcl} generated successfully.`);
     }
 
-    protected findEmptyInRange(origin: RoomPosition, range: number, nearestTo?: RoomPosition): RoomPosition | undefined
+    protected findEmptyInRange(origin: RoomPosition, range: number,
+        nearestTo?: RoomPosition, objects: Array<StructureConstant | Terrain> = ["wall"]): RoomPosition | undefined
     {
+        console.log(`Origin: ${origin}`);
         const empties: RoomPosition[] = [];
         for (let y = origin.y - range; y <= origin.y + range; y++)
         {
             for (let x = origin.x - range; x <= origin.x + range; x++)
             {
-                if (this.room.lookForAt(LOOK_TERRAIN, x, y).indexOf("wall") === -1)
-                {
-                    const pos = new RoomPosition(x, y, this.room.name);
+                const pos = new RoomPosition(x, y, this.room.name);
+                let empty = true;
 
+                for (const object of objects)
+                {
+                    if (object === "wall" || object === "plain" || object === "swamp")
+                    {
+                        if (this.room.lookForAt(LOOK_TERRAIN, pos).indexOf(object) >= 0)
+                        {
+                            empty = false;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        const structures = this.room.lookForAt(LOOK_STRUCTURES, pos) as Structure[];
+
+                        for (const structure of structures)
+                        {
+                            if (structure.structureType === object)
+                            {
+                                empty = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (empty)
+                {
                     if (nearestTo)
                     {
                         empties.push(pos);

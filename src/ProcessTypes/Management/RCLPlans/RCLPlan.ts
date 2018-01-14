@@ -11,7 +11,7 @@ export abstract class RCLPlan
     protected controller: StructureController;
     protected midpoint: RoomPosition;
 
-    public static readonly version = 107; // Update this every time generateRoomPlan() changes.
+    public static readonly version = 109; // Update this every time generateRoomPlan() changes.
 
     public constructor(room: Room, kernel: Kernel)
     {
@@ -20,7 +20,7 @@ export abstract class RCLPlan
 
         this.baseSpawn = _.find(this.kernel.data.roomData[this.room.name].spawns, (s: StructureSpawn) =>
         {
-            return s.name === "base-" + this.room.name || s.name === "Spawn1"; // TODO: remove Spawn1 ASAP
+            return s.name === "base-" + this.room.name; // TODO: remove Spawn1 ASAP
         })!;
 
         this.controller = room.controller!;
@@ -64,7 +64,6 @@ export abstract class RCLPlan
 
     protected finished(rcl: number)
     {
-        this.removeRoadsUnderStructures(rcl);
         log.debug(`Plan for ${this.room.name} RCL ${rcl} generated successfully.`);
     }
 
@@ -124,33 +123,5 @@ export abstract class RCLPlan
         }
 
         return undefined;
-    }
-
-    protected removeRoadsUnderStructures(rcl: number)
-    {
-        const roomPlan = this.room.memory.roomPlan.rcl[rcl];
-
-        for (const key of BuildPriorities)
-        {
-            if (!roomPlan.hasOwnProperty(key) || key === STRUCTURE_ROAD ||
-                key === STRUCTURE_CONTAINER || key === STRUCTURE_RAMPART)
-            {
-                continue;
-            }
-
-            for (const i in roomPlan[key])
-            {
-                const position = new RoomPosition(roomPlan[key][i].x,
-                    roomPlan[key][i].y, this.room.name);
-
-                const roads = this.room.memory.roomPlan.rcl[rcl][STRUCTURE_ROAD];
-                _.remove(roads, (p: RoomPosition) =>
-                {
-                    const roadPosition = new RoomPosition(p.x, p.y, this.room.name);
-                    return position === roadPosition;
-                });
-                this.room.memory.roomPlan.rcl[rcl][STRUCTURE_ROAD] = roads;
-            }
-        }
     }
 }

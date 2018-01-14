@@ -2,7 +2,6 @@ import { LifetimeProcess } from "OS/LifetimeProcess";
 
 import { DeliverProcess } from "../CreepActions/Deliver";
 import { HarvestProcess } from "../CreepActions/Harvest";
-import { MoveProcess } from "../CreepActions/Move";
 import { UpgradeProcess } from "../CreepActions/Upgrade";
 
 export class MinerLifetimeProcess extends LifetimeProcess
@@ -18,41 +17,21 @@ export class MinerLifetimeProcess extends LifetimeProcess
             return;
         }
 
-        const container = Game.getObjectById<StructureContainer>(this.metaData.container);
-
-        if (container)
+        // Harvest energy from source.
+        if (_.sum(creep.carry) === 0)
         {
-            // Move to source container if on it.
-            if (!creep.pos.isEqualTo(container))
-            {
-                this.fork(MoveProcess, `${creep.name}-mine-move`, this.priority - 1, {
-                    creep: creep.name,
-                    pos: {
-                        x: container.pos.x,
-                        y: container.pos.y,
-                        roomName: container.pos.roomName
-                    }
-                });
+            this.fork(HarvestProcess, `harvest-${creep.name}`, this.priority - 1, {
+                source: this.metaData.source,
+                creep: creep.name
+            });
 
-                return;
-            }
-
-            // Harvest energy from source.
-            if (_.sum(creep.carry) === 0)
-            {
-                this.fork(HarvestProcess, `harvest-${creep.name}`, this.priority - 1, {
-                    source: this.metaData.source,
-                    creep: creep.name
-                });
-
-                return;
-            }
-
-            this.transfer(creep, container);
+            return;
         }
+
+        this.transfer(creep);
     }
 
-    private transfer(creep: Creep, container: StructureContainer)
+    private transfer(creep: Creep)
     {
         const links = creep.pos.findInRange(this.kernel.data.roomData[creep.room.name].links, 1);
         const link = _.find(links, (l: StructureLink) =>
@@ -65,14 +44,18 @@ export class MinerLifetimeProcess extends LifetimeProcess
             creep.memory.linked = false;
         }
 
+        const source = Game.getObjectById(this.metaData.source) as Source;
+        const container = source.pos.findInRange(this.kernel.data.roomData[creep.room.name].sourceContainers, 1)[0];
+
         // Transfer energy to link if it exists, otherwise drop it into container.
         if (link && link.energy < link.energyCapacity && creep.memory.linked === false)
         {
             // Transfer amount equal to 2.5% of what's in container.
-            creep.transfer(link, RESOURCE_ENERGY, Math.max(_.sum(container.store) * 0.025, 10));
+            const containerStore = container ? _.sum(container.store) : 0;
+            creep.transfer(link, RESOURCE_ENERGY, Math.max(containerStore * 0.025, 10));
             creep.memory.linked = true;
         }
-        else if (_.sum(container.store) < container.storeCapacity)
+        else if (container && _.sum(container.store) < container.storeCapacity)
         {
             creep.drop(RESOURCE_ENERGY);
             creep.memory.linked = false;

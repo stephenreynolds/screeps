@@ -67,10 +67,6 @@ export class FlagManagementProcess extends Process
 
     public run()
     {
-        this.completed = true;
-
-        const proc = this;
-
         _.forEach(Game.flags, (flag: Flag) =>
         {
             switch (flag.color)
@@ -79,23 +75,25 @@ export class FlagManagementProcess extends Process
                     switch (flag.secondaryColor)
                     {
                         case COLOR_PURPLE:
-                            proc.holdFlag(flag);
+                            this.holdFlag(flag);
                             break;
                         case COLOR_RED:
-                            proc.claimFlag(flag);
+                            this.claimFlag(flag);
                             break;
                     }
                     break;
                 case COLOR_YELLOW:
-                    proc.remoteMiningFlag(flag);
+                    this.remoteMiningFlag(flag);
                     break;
                 case COLOR_BLUE:
-                    proc.rangerFlag(flag);
+                    this.rangerFlag(flag);
                     break;
                 case COLOR_RED:
-                    proc.invasionFlag(flag);
+                    this.invasionFlag(flag);
                     break;
             }
         });
+
+        this.completed = true;
     }
 }

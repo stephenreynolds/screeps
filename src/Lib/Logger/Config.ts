@@ -9,7 +9,7 @@ export const ENABLE_DEBUG_MODE: boolean = false;
 /**
  * Debug level for log output
  */
-export const LOG_LEVEL: number = LogLevels.DEBUG;
+export const LOG_LEVEL: number = LogLevels.INFO;
 
 /**
  * Prepend log output with current tick number.

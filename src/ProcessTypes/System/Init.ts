@@ -1,6 +1,7 @@
 import { Process } from "OS/Process";
 
 import { EnergyManagementProcess } from "../Management/EnergyManagement";
+import { ExpansionManagementProcess } from "../Management/ExpansionManagement";
 import { FlagManagementProcess } from "../Management/FlagManagement";
 import { StructureManagementProcess } from "../Management/StructureManagement";
 
@@ -47,6 +48,13 @@ export class InitProcess extends Process
                 if (!this.kernel.hasProcess("sm-" + room.name))
                 {
                     this.kernel.addProcess(StructureManagementProcess, "sm-" + room.name, 48, {
+                        roomName: room.name
+                    });
+                }
+
+                if (!this.kernel.hasProcess("exp-" + room.name))
+                {
+                    this.kernel.addProcess(ExpansionManagementProcess, "exp-" + room.name, 40, {
                         roomName: room.name
                     });
                 }

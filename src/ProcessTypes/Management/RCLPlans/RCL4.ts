@@ -15,7 +15,7 @@ export class RCL4 extends RCLPlan
 
         // Storage
         this.room.memory.roomPlan.rcl[4].storage = [
-            new RoomPosition(this.baseSpawn.pos.x, this.baseSpawn.pos.y - 6, this.room.name)
+            new RoomPosition(this.baseSpawn.pos.x, this.baseSpawn.pos.y + 6, this.room.name)
         ];
 
         // Extensions

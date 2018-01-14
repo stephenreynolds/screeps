@@ -51,16 +51,17 @@ export class TransporterLifetimeProcess extends LifetimeProcess
             })) as Structure;
         }
 
-        if (!target)
+        if (target)
+        {
+            this.fork(DeliverProcess, "deliver-" + creep.name, this.priority - 1, {
+                creep: creep.name,
+                target: target.id,
+                resource: RESOURCE_ENERGY
+            });
+        }
+        else
         {
             this.suspend = 10;
-            return;
         }
-
-        this.fork(DeliverProcess, "deliver-" + creep.name, this.priority - 1, {
-            creep: creep.name,
-            target: target.id,
-            resource: RESOURCE_ENERGY
-        });
     }
 }

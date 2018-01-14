@@ -41,6 +41,11 @@ export class RoomLayoutManagementProcess extends Process
 
     private generateRoomPlan(room: Room)
     {
+        if (!room.controller!.my || room.memory.cache.spawns.length === 0)
+        {
+            return;
+        }
+
         room.memory.roomPlan = {};
         room.memory.roomPlan.version = RCLPlan.version;
         room.memory.roomPlan.rcl = [];

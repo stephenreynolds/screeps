@@ -56,10 +56,9 @@ export class TowerRepairProcess extends Process
             usedTowers[tower.id] = (tower.energy < 500);
         });
 
-        const proc = this;
         _.forEach(sortedRamparts, (rampart: StructureRampart) =>
         {
-            const towers = _.filter(proc.roomData().towers, (tower: StructureTower) =>
+            const towers = _.filter(this.roomData().towers, (tower: StructureTower) =>
             {
                 return !usedTowers[tower.id];
             });

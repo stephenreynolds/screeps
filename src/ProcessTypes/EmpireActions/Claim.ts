@@ -3,6 +3,8 @@ import { Utils } from "Utils/Utils";
 
 import { MoveProcess } from "../CreepActions/Move";
 
+import { BuildSpawnProcess } from "./BuildSpawn";
+
 interface ClaimProcessMetaData
 {
     creep: string;
@@ -50,19 +52,34 @@ export class ClaimProcess extends Process
 
         if (!room)
         {
-            this.kernel.addProcess(MoveProcess, "move-" + creep.name, this.priority - 1, {
+            this.fork(MoveProcess, "move-" + creep.name, this.priority - 1, {
                 creep: creep.name,
                 pos: flag.pos,
                 range: 1
             });
-
-            this.suspend = "move-" + creep.name;
         }
         else
         {
-            creep.claimController(creep.room.controller!);
-            this.completed = true;
-            flag.remove();
+            const claimed = creep.claimController(creep.room.controller!);
+
+            if (claimed === OK)
+            {
+                this.kernel.addProcess(BuildSpawnProcess, `bsp-${creep.room.name}`, this.priority, {
+                    pos: flag.pos,
+                    roomName: Utils.nearestRoom(this.metaData.targetRoom, 0)
+                });
+                flag.remove();
+                creep.suicide();
+                this.completed = true;
+            }
+            else
+            {
+                this.fork(MoveProcess, "move-" + creep.name, this.priority - 1, {
+                    creep: creep.name,
+                    pos: creep.room.controller!.pos,
+                    range: 1
+                });
+            }
         }
     }
 }

@@ -25,9 +25,9 @@ export class BuilderLifetimeProcess extends LifetimeProcess
         }
 
         // If the creep has been refilled
-        const sites = this.kernel.data.roomData[creep.room.name].constructionSites;
-        const buildNow = this.buildNow(sites);
-        const target = creep.pos.findClosestByRange(buildNow);
+        // const sites = this.kernel.data.roomData[creep.room.name].constructionSites;
+        // const buildNow = this.buildNow(sites);
+        const target = this.kernel.data.roomData[creep.room.name].constructionSites[0];
 
         if (target)
         {
@@ -86,75 +86,75 @@ export class BuilderLifetimeProcess extends LifetimeProcess
         }
     }
 
-    private buildNow(sites: ConstructionSite[])
-    {
-        const towerSites = _.filter(sites, (site: ConstructionSite) =>
-        {
-            return (site.structureType === STRUCTURE_TOWER);
-        });
+    // private buildNow(sites: ConstructionSite[])
+    // {
+    //     const towerSites = _.filter(sites, (site: ConstructionSite) =>
+    //     {
+    //         return (site.structureType === STRUCTURE_TOWER);
+    //     });
 
-        const extensionSites = _.filter(sites, (site: ConstructionSite) =>
-        {
-            return (site.structureType === STRUCTURE_EXTENSION);
-        });
+    //     const extensionSites = _.filter(sites, (site: ConstructionSite) =>
+    //     {
+    //         return (site.structureType === STRUCTURE_EXTENSION);
+    //     });
 
-        const containerSites = _.filter(sites, (site: ConstructionSite) =>
-        {
-            return (site.structureType === STRUCTURE_CONTAINER);
-        });
+    //     const containerSites = _.filter(sites, (site: ConstructionSite) =>
+    //     {
+    //         return (site.structureType === STRUCTURE_CONTAINER);
+    //     });
 
-        const rampartSites = _.filter(sites, (site: ConstructionSite) =>
-        {
-            return (site.structureType === STRUCTURE_RAMPART);
-        });
+    //     const rampartSites = _.filter(sites, (site: ConstructionSite) =>
+    //     {
+    //         return (site.structureType === STRUCTURE_RAMPART);
+    //     });
 
-        const normalSites = _.filter(sites, (site: ConstructionSite) =>
-        {
-            return !(
-                site.structureType === STRUCTURE_TOWER
-                ||
-                site.structureType === STRUCTURE_EXTENSION
-                ||
-                site.structureType === STRUCTURE_RAMPART
-                ||
-                site.structureType === STRUCTURE_CONTAINER
-            );
-        });
+    //     const normalSites = _.filter(sites, (site: ConstructionSite) =>
+    //     {
+    //         return !(
+    //             site.structureType === STRUCTURE_TOWER
+    //             ||
+    //             site.structureType === STRUCTURE_EXTENSION
+    //             ||
+    //             site.structureType === STRUCTURE_RAMPART
+    //             ||
+    //             site.structureType === STRUCTURE_CONTAINER
+    //         );
+    //     });
 
-        let buildNow: ConstructionSite[];
+    //     let buildNow: ConstructionSite[];
 
-        if (towerSites.length > 0)
-        {
-            buildNow = towerSites;
-        }
-        else
-        {
-            if (extensionSites.length > 0)
-            {
-                buildNow = extensionSites;
-            }
-            else
-            {
-                if (containerSites.length > 0)
-                {
-                    buildNow = containerSites;
-                }
-                else
-                {
-                    if (rampartSites.length > 0)
-                    {
-                        buildNow = rampartSites;
-                    }
-                    else
-                    {
-                        buildNow = normalSites;
-                    }
-                }
-            }
-        }
+    //     if (towerSites.length > 0)
+    //     {
+    //         buildNow = towerSites;
+    //     }
+    //     else
+    //     {
+    //         if (extensionSites.length > 0)
+    //         {
+    //             buildNow = extensionSites;
+    //         }
+    //         else
+    //         {
+    //             if (containerSites.length > 0)
+    //             {
+    //                 buildNow = containerSites;
+    //             }
+    //             else
+    //             {
+    //                 if (rampartSites.length > 0)
+    //                 {
+    //                     buildNow = rampartSites;
+    //                 }
+    //                 else
+    //                 {
+    //                     buildNow = normalSites;
+    //                 }
+    //             }
+    //         }
+    //     }
 
-        return buildNow;
-    }
+    //     return buildNow;
+    // }
 
     private deliver(creep: Creep)
     {

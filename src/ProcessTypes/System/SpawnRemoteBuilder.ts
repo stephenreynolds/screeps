@@ -19,18 +19,20 @@ export class SpawnRemoteBuilderProcess extends Process
 
         if (!this.kernel.hasProcess("rblf-rb-" + site))
         {
+            const creepName = "rb-" + Game.time;
+
             const spawned = Utils.spawn(
                 this.kernel,
                 Utils.nearestRoom(this.metaData.roomName, 500),
                 "worker",
-                "rb-" + Game.time,
+                creepName,
                 {}
             );
 
             if (spawned)
             {
                 this.kernel.addProcess(RemoteBuilderLifetimeProcess, "rblf-rb-" + site, 70, {
-                    creep: "rb-" + Game.time,
+                    creep: creepName,
                     site: site
                 });
             }

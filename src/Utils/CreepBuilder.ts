@@ -12,7 +12,12 @@ export const CreepBuilder = {
     design: (creepType: string, room: Room) =>
     {
         const body = [].concat(CreepBuilder.typeStarts[creepType] as never[]) as BodyPartConstant[];
-        const spendCap = Math.max(room.energyAvailable / 2, 300);
+        let spendCap = Math.max(room.energyCapacityAvailable / 2, 300);
+
+        if (creepType === "harvester")
+        {
+            spendCap = Math.max(room.energyAvailable, 300);
+        }
 
         let add = true;
         let extendIndex = 0;

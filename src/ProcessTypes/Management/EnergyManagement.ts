@@ -113,9 +113,9 @@ export class EnergyManagementProcess extends Process
             const creepNames = Utils.clearDeadCreeps(this.metaData.harvestCreeps[source.id]);
             this.metaData.harvestCreeps[source.id] = creepNames;
             const creeps = Utils.inflateCreeps(creepNames);
-            const workRate = Utils.workRate(creeps, 2);
+            // const workRate = Utils.workRate(creeps, 2);
 
-            if (creeps.length < 1 || workRate < (source.energyCapacity / 600))
+            if (creeps.length < 1 /*|| workRate < (source.energyCapacity / 600)*/)
             {
                 const creepName = `em-h-${this.metaData.roomName}-${Game.time}`;
                 const spawnRoom = this.metaData.roomName;
@@ -151,20 +151,19 @@ export class EnergyManagementProcess extends Process
     {
         let ret = false;
 
-        _.forEach(this.kernel.data.roomData[this.metaData.roomName].sourceContainers, (container: StructureContainer) =>
+        _.forEach(sources, (source: Source) =>
         {
-            if (!this.metaData.miningCreeps[container.id])
+            if (!this.metaData.miningCreeps[source.id])
             {
-                this.metaData.miningCreeps[container.id] = [];
+                this.metaData.miningCreeps[source.id] = [];
             }
 
-            const creepNames = Utils.clearDeadCreeps(this.metaData.miningCreeps[container.id]);
-            this.metaData.miningCreeps[container.id] = creepNames;
+            const creepNames = Utils.clearDeadCreeps(this.metaData.miningCreeps[source.id]);
+            this.metaData.miningCreeps[source.id] = creepNames;
             const creeps = Utils.inflateCreeps(creepNames);
 
             if (creeps.length === 0)
             {
-                const source = container.pos.findInRange(sources, 1)[0];
                 const creepName = `em-miner-${this.metaData.roomName}-${Game.time}`;
                 const spawnRoom = this.metaData.roomName;
 
@@ -172,11 +171,10 @@ export class EnergyManagementProcess extends Process
 
                 if (spawned)
                 {
-                    this.metaData.miningCreeps[container.id].push(creepName);
+                    this.metaData.miningCreeps[source.id].push(creepName);
                     this.kernel.addProcess(MinerLifetimeProcess, "mlf-" + creepName, 49, {
                         creep: creepName,
-                        source: source.id,
-                        container: container.id
+                        source: source.id
                     });
                 }
 
@@ -242,7 +240,7 @@ export class EnergyManagementProcess extends Process
     }
 
     /**
-     * Create miners.
+     * Create couriers.
      * @returns Returns whether energy management should return early.
      */
     private couriers(generalContainers: StructureContainer[])

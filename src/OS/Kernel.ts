@@ -2,57 +2,59 @@
 import { Stats } from "Utils/Stats";
 
 // Building Processes
-import { LinkProcess } from "../ProcessTypes/BuildingProcesses/LinkProcess";
-import { TowerDefenseProcess } from "../ProcessTypes/BuildingProcesses/TowerDefense";
-import { TowerRepairProcess } from "../ProcessTypes/BuildingProcesses/TowerRepair";
+import { LinkProcess } from "ProcessTypes/BuildingProcesses/LinkProcess";
+import { TowerDefenseProcess } from "ProcessTypes/BuildingProcesses/TowerDefense";
+import { TowerRepairProcess } from "ProcessTypes/BuildingProcesses/TowerRepair";
 
 // Creep Action Processes
-import { BuildProcess } from "../ProcessTypes/CreepActions/Build";
-import { CollectProcess } from "../ProcessTypes/CreepActions/Collect";
-import { DeliverProcess } from "../ProcessTypes/CreepActions/Deliver";
-import { HarvestProcess } from "../ProcessTypes/CreepActions/Harvest";
-import { HoldProcess } from "../ProcessTypes/CreepActions/Hold";
-import { MineralHarvestProcess } from "../ProcessTypes/CreepActions/MineralHarvest";
-import { MoveProcess } from "../ProcessTypes/CreepActions/Move";
-import { RepairProcess } from "../ProcessTypes/CreepActions/Repair";
-import { UpgradeProcess } from "../ProcessTypes/CreepActions/Upgrade";
+import { BuildProcess } from "ProcessTypes/CreepActions/Build";
+import { CollectProcess } from "ProcessTypes/CreepActions/Collect";
+import { DeliverProcess } from "ProcessTypes/CreepActions/Deliver";
+import { HarvestProcess } from "ProcessTypes/CreepActions/Harvest";
+import { HoldProcess } from "ProcessTypes/CreepActions/Hold";
+import { MineralHarvestProcess } from "ProcessTypes/CreepActions/MineralHarvest";
+import { MoveProcess } from "ProcessTypes/CreepActions/Move";
+import { RepairProcess } from "ProcessTypes/CreepActions/Repair";
+import { UpgradeProcess } from "ProcessTypes/CreepActions/Upgrade";
 
 // Empire Action Processes
-import { ClaimProcess } from "../ProcessTypes/EmpireActions/Claim";
-import { HoldRoomProcess } from "../ProcessTypes/EmpireActions/HoldRoom";
+import { BuildSpawnProcess } from "ProcessTypes/EmpireActions/BuildSpawn";
+import { ClaimProcess } from "ProcessTypes/EmpireActions/Claim";
+import { HoldRoomProcess } from "ProcessTypes/EmpireActions/HoldRoom";
 
 // Lifetime Processes
-import { BrawlerLifetimeProcess } from "../ProcessTypes/Lifetimes/Brawler";
-import { BuilderLifetimeProcess } from "../ProcessTypes/Lifetimes/Builder";
-import { CourierLifetimeProcess } from "../ProcessTypes/Lifetimes/Courier";
-import { EscortLifetimeProcess } from "../ProcessTypes/Lifetimes/Escort";
-import { HarvesterLifetimeProcess } from "../ProcessTypes/Lifetimes/Harvester";
-import { MinerLifetimeProcess } from "../ProcessTypes/Lifetimes/Miner";
-import { MineralHarvesterLifetimeProcess } from "../ProcessTypes/Lifetimes/MineralHarvester";
-import { RangerLifetimeProcess } from "../ProcessTypes/Lifetimes/Ranger";
-import { RemoteBuilderLifetimeProcess } from "../ProcessTypes/Lifetimes/RemoteBuilder";
-import { RemoteMinerLifetimeProcess } from "../ProcessTypes/Lifetimes/RemoteMiner";
-import { RepairerLifetimeProcess } from "../ProcessTypes/Lifetimes/Repairer";
-import { StorageManagerLifetime } from "../ProcessTypes/Lifetimes/StorageManager";
-import { TransporterLifetimeProcess } from "../ProcessTypes/Lifetimes/Transporter";
-import { UpgraderLifetimeProcess } from "../ProcessTypes/Lifetimes/Upgrader";
+import { BrawlerLifetimeProcess } from "ProcessTypes/Lifetimes/Brawler";
+import { BuilderLifetimeProcess } from "ProcessTypes/Lifetimes/Builder";
+import { CourierLifetimeProcess } from "ProcessTypes/Lifetimes/Courier";
+import { EscortLifetimeProcess } from "ProcessTypes/Lifetimes/Escort";
+import { HarvesterLifetimeProcess } from "ProcessTypes/Lifetimes/Harvester";
+import { MinerLifetimeProcess } from "ProcessTypes/Lifetimes/Miner";
+import { MineralHarvesterLifetimeProcess } from "ProcessTypes/Lifetimes/MineralHarvester";
+import { RangerLifetimeProcess } from "ProcessTypes/Lifetimes/Ranger";
+import { RemoteBuilderLifetimeProcess } from "ProcessTypes/Lifetimes/RemoteBuilder";
+import { RemoteMinerLifetimeProcess } from "ProcessTypes/Lifetimes/RemoteMiner";
+import { RepairerLifetimeProcess } from "ProcessTypes/Lifetimes/Repairer";
+import { StorageManagerLifetime } from "ProcessTypes/Lifetimes/StorageManager";
+import { TransporterLifetimeProcess } from "ProcessTypes/Lifetimes/Transporter";
+import { UpgraderLifetimeProcess } from "ProcessTypes/Lifetimes/Upgrader";
 
 // Management Processes
-import { DefenseManagementProcess } from "../ProcessTypes/Management/DefenseManagement";
-import { EnergyManagementProcess } from "../ProcessTypes/Management/EnergyManagement";
-import { FlagManagementProcess } from "../ProcessTypes/Management/FlagManagement";
-import { InvasionManagementProcess } from "../ProcessTypes/Management/InvasionManagement";
-import { MineralManagementProcess } from "../ProcessTypes/Management/MineralManagement";
-import { RangerManagementProcess } from "../ProcessTypes/Management/RangerManagement";
-import { RemoteMiningManagementProcess } from "../ProcessTypes/Management/RemoteMiningManagement";
-import { RoomLayoutManagementProcess } from "../ProcessTypes/Management/RoomLayoutManagement";
-import { StructureManagementProcess } from "../ProcessTypes/Management/StructureManagement";
+import { DefenseManagementProcess } from "ProcessTypes/Management/DefenseManagement";
+import { EnergyManagementProcess } from "ProcessTypes/Management/EnergyManagement";
+import { ExpansionManagementProcess } from "ProcessTypes/Management/ExpansionManagement";
+import { FlagManagementProcess } from "ProcessTypes/Management/FlagManagement";
+import { InvasionManagementProcess } from "ProcessTypes/Management/InvasionManagement";
+import { MineralManagementProcess } from "ProcessTypes/Management/MineralManagement";
+import { RangerManagementProcess } from "ProcessTypes/Management/RangerManagement";
+import { RemoteMiningManagementProcess } from "ProcessTypes/Management/RemoteMiningManagement";
+import { RoomLayoutManagementProcess } from "ProcessTypes/Management/RoomLayoutManagement";
+import { StructureManagementProcess } from "ProcessTypes/Management/StructureManagement";
 
 // System Processes
-import { InitProcess } from "../ProcessTypes/System/Init";
-import { RoomDataProcess } from "../ProcessTypes/System/RoomData";
-import { SpawnRemoteBuilderProcess } from "../ProcessTypes/System/SpawnRemoteBuilder";
-import { SuspensionProcess } from "../ProcessTypes/System/Suspension";
+import { InitProcess } from "ProcessTypes/System/Init";
+import { RoomDataProcess } from "ProcessTypes/System/RoomData";
+import { SpawnRemoteBuilderProcess } from "ProcessTypes/System/SpawnRemoteBuilder";
+import { SuspensionProcess } from "ProcessTypes/System/Suspension";
 
 // Libs
 import { log } from "../Lib/Logger/Log";
@@ -64,6 +66,7 @@ const ProcessTypes = {
     build: BuildProcess,
     blf: BuilderLifetimeProcess,
     brawlerLifetime: BrawlerLifetimeProcess,
+    bsp: BuildSpawnProcess,
     claim: ClaimProcess,
     collect: CollectProcess,
     clf: CourierLifetimeProcess,
@@ -71,6 +74,7 @@ const ProcessTypes = {
     dm: DefenseManagementProcess,
     elf: EscortLifetimeProcess,
     em: EnergyManagementProcess,
+    exp: ExpansionManagementProcess,
     flag: FlagManagementProcess,
     harvest: HarvestProcess,
     hlf: HarvesterLifetimeProcess,
@@ -179,13 +183,16 @@ export class Kernel
         if (Game.cpu.bucket > bucketCeiling)
         {
             this.limit = Game.cpu.tickLimit - 10;
-        } else if (Game.cpu.bucket < 1000)
+        }
+        else if (Game.cpu.bucket < 1000)
         {
             this.limit = Game.cpu.limit * 0.4;
-        } else if (Game.cpu.bucket < bucketFloor)
+        }
+        else if (Game.cpu.bucket < bucketFloor)
         {
             this.limit = Game.cpu.limit * cpuMin;
-        } else
+        }
+        else
         {
             const bucketRange = bucketCeiling - bucketFloor;
             const depthInRange = (Game.cpu.bucket - bucketFloor) / bucketRange;

@@ -40,6 +40,6 @@
     },
     "dependencies": {
         "git-rev-sync": "^1.9.1",
-        "source-map": "^0.6.1"
+        "source-map": "^0.7.2"
     }
 }

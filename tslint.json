@@ -1,41 +1,21 @@
 {
-    "extends": [
-        "tslint:recommended"
-    ],
-    "rules": {
-        "align": false,
-        "forin": false,
-        "indent": [
-            true,
-            "spaces",
-            4
-        ],
-        "interface-name": [true, "never-prefix"],
-        "member-ordering": [false],
-        "no-conditional-assignment": false,
-        "no-console": [false],
-        "no-namespace": [true, "allow-declarations"],
-        "no-string-literal": false,
-        "object-literal-key-quotes": false,
-        "object-literal-shorthand": false,
-        "object-literal-sort-keys": false,
-        "one-line": false,
-        "ordered-imports": [
-            true,
-            {
-                "grouped-imports": true
-            }
-        ],
-        "trailing-comma": [true, {
-            "multiline": "never",
-            "singleline": "never"
-        }],
-        "variable-name": [
-            true,
-            "ban-keywords",
-            "check-format",
-            "allow-pascal-case",
-            "allow-leading-underscore"
-        ]
-    }
+  "rulesDirectory": "tslint-plugin-prettier",
+  "extends" : [
+    "tslint:recommended",
+    "tslint-config-prettier"
+  ],
+  "rules": {
+    "forin": false,
+    "interface-name": [true, "never-prefix"],
+    "member-ordering": [false],
+    "no-console": [false],
+    "no-namespace": [true, "allow-declarations"],
+    "variable-name": [
+      true,
+      "ban-keywords",
+      "check-format",
+      "allow-pascal-case",
+      "allow-leading-underscore"
+    ]
+  }
 }

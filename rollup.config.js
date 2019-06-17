@@ -1,43 +1,32 @@
 "use strict";
 
-import clean from "rollup-plugin-clean";
+import clear from "rollup-plugin-clear";
 import resolve from "rollup-plugin-node-resolve";
 import commonjs from "rollup-plugin-commonjs";
-import git from "git-rev-sync";
 import typescript from "rollup-plugin-typescript2";
-import replace from 'rollup-plugin-replace';
 import screeps from "rollup-plugin-screeps";
 
 let cfg;
-const i = process.argv.indexOf("--dest") + 1;
-if (i == 0) {
-    console.log("No destination specified - code will be compiled but not uploaded");
-} else if (i >= process.argv.length || (cfg = require("./screeps")[process.argv[i]]) == null) {
-    throw new Error("Invalid upload destination");
+const dest = process.env.DEST;
+if (!dest) {
+  console.log("No destination specified - code will be compiled but not uploaded");
+} else if ((cfg = require("./screeps.json")[dest]) == null) {
+  throw new Error("Invalid upload destination");
 }
 
 export default {
-    input: "src/Main.ts",
-    output: {
-        file: "dist/main.js",
-        format: "cjs",
-        name: "kuminet",
-        sourcemap: true
-    },
+  input: "src/main.ts",
+  output: {
+    file: "dist/main.js",
+    format: "cjs",
+    sourcemap: true
+  },
 
-    plugins: [
-        clean(),
-        resolve(),
-        commonjs(),
-        replace({
-            __REVISION__: JSON.stringify(git.short())
-        }),
-        typescript({
-            tsconfig: "./tsconfig.json"
-        }),
-        screeps({
-            config: cfg,
-            dryRun: cfg == null
-        })
-    ]
+  plugins: [
+    clear({ targets: ["dist"] }),
+    resolve(),
+    commonjs(),
+    typescript({tsconfig: "./tsconfig.json"}),
+    screeps({config: cfg, dryRun: cfg == null})
+  ]
 }

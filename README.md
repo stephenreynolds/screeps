@@ -3,8 +3,6 @@
 [![Build Status](https://travis-ci.org/stephenreynolds/kuminet.svg?branch=master)](https://travis-ci.org/stephenreynolds/kuminet)
 &nbsp;&nbsp;
 [![Maintainability](https://api.codeclimate.com/v1/badges/72ace084bfdc9b5f1604/maintainability)](https://codeclimate.com/github/stephenreynolds/kuminet/maintainability)
-&nbsp;&nbsp;
-[![Test Coverage](https://api.codeclimate.com/v1/badges/72ace084bfdc9b5f1604/test_coverage)](https://codeclimate.com/github/stephenreynolds/kuminet/test_coverage)
 
 # kumikill's Screeps AI
 > Uses [Screeps Typescript Starter v3.0](https://github.com/screepers/screeps-typescript-starter).

@@ -16,14 +16,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/screepers/screeps-typescript-starter.git"
+    "url": "git+https://github.com/stephenreynolds/kuminet.git"
   },
   "author": "",
-  "license": "Unlicense",
   "bugs": {
-    "url": "https://github.com/screepers/screeps-typescript-starter/issues"
+    "url": "https://github.com/stephenreynolds/kuminet/issues"
   },
-  "homepage": "https://github.com/screepers/screeps-typescript-starter#readme",
+  "homepage": "https://github.com/stephenreynolds/kuminet#readme",
   "devDependencies": {
     "@types/lodash": "^3.10.1",
     "@types/node": "^10.5.5",

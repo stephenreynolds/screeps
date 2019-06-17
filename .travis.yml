@@ -1,0 +1,32 @@
+language: node_js
+
+node_js:
+  - 'stable'
+  - 'lts/*'
+
+sudo: false
+
+env:
+  - workerCount=3
+
+matrix:
+  fast_finish: true
+
+branches:
+  only:
+  - master
+  - dev
+
+install:
+  - npm install
+
+script:
+  - rollup -c
+
+cache:
+  directories:
+    - node_modules
+    - .rpt2_cache
+
+git:
+  depth: 3

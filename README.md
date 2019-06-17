@@ -14,6 +14,6 @@ Follow the instructions in the [Screeps Typescript Starter readme](https://githu
 
 # Compiling and Deploying
 
-To build and deploy to a server, run `npm push-DESTINATION` to push to DESTINATION. Current destinations are main, pserver, and sim.
+To build and deploy to a server, run `npm run push-DESTINATION` to push to DESTINATION. Current destinations are main, pserver, and sim.
 
-To just build, run `npm build`. To build and deploy on save, run `npm watch-DESTINATION`.
+To just build, run `npm run build`. To build and deploy on save, run `npm run watch-DESTINATION`.

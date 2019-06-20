@@ -1,24 +1,77 @@
-// example declaration file - remove these and add your own custom typings
-
-// memory extension samples
-interface CreepMemory
-{
-    role: string;
-    room: string;
-    working: boolean;
-}
-
-interface Memory
-{
-    uuid: number;
-    log: any;
-}
-
-// `global` extension samples
 declare namespace NodeJS
 {
     interface Global
     {
-        log: any;
+        cc: any;
+        lastTick: number
+        lastMemory: Memory
+        Memory: Memory
+        roomData: { [key: string]: RoomData }
     }
+}
+
+interface CreepMemory { [name: string]: any }
+
+interface FlagMemory { [name: string]: any }
+
+interface SpawnMemory { [name: string]: any }
+
+interface RoomMemory { [name: string]: any }
+
+interface RawMemory
+{
+    _parsed: Memory;
+}
+
+interface Memory
+{
+    os: any;
+    stats: any;
+    remoteRoomStatus: any;
+    visualColor: any;
+}
+
+interface SerializedProcess
+{
+    name: string
+    priority: number
+    metaData: object
+    suspend: string | number | boolean
+    parent: string | undefined
+    type: string;
+}
+
+interface RoomData
+{
+    [name: string]: any
+    constructionSites: ConstructionSite[]
+    containers: StructureContainer[]
+    extensions: StructureExtension[]
+    extractor: StructureExtractor | undefined
+    generalContainers: StructureContainer[]
+    mineral: Mineral | undefined
+    labs: StructureLab[]
+    links: StructureLink[]
+    myStructures: Structure[]
+    ramparts: StructureRampart[]
+    roads: StructureRoad[]
+    spawns: StructureSpawn[]
+    sources: Source[]
+    sourceContainers: StructureContainer[]
+    sourceContainerMaps: { [id: string]: StructureContainer }
+    towers: StructureTower[]
+    walls: StructureWall[]
+}
+
+interface DeliveryTarget extends Structure
+{
+    energy: number
+    energyCapacity: number
+    store: { [resource: string]: number }
+    storeCapacity: number
+}
+
+interface CreepMetaData
+{
+    creep: string
 }

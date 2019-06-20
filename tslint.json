@@ -16,6 +16,11 @@
       "check-format",
       "allow-pascal-case",
       "allow-leading-underscore"
+    ],
+    "typedef": [
+      true,
+      "call-signature",
+      "property-declaration"
     ]
   }
 }

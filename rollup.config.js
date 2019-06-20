@@ -4,7 +4,9 @@ import clear from "rollup-plugin-clear";
 import resolve from "rollup-plugin-node-resolve";
 import commonjs from "rollup-plugin-commonjs";
 import typescript from "rollup-plugin-typescript2";
+import replace from "rollup-plugin-replace";
 import screeps from "rollup-plugin-screeps";
+import git from "git-rev-sync";
 
 let cfg;
 const dest = process.env.DEST;
@@ -23,10 +25,20 @@ export default {
   },
 
   plugins: [
-    clear({ targets: ["dist"] }),
+    clear({
+      targets: ["dist"]
+    }),
     resolve(),
     commonjs(),
-    typescript({tsconfig: "./tsconfig.json"}),
-    screeps({config: cfg, dryRun: cfg == null})
+    replace({
+      __REVISION__: JSON.stringify(git.short())
+    }),
+    typescript({
+      tsconfig: "./tsconfig.json"
+    }),
+    screeps({
+      config: cfg,
+      dryRun: cfg == null
+    })
   ]
 }

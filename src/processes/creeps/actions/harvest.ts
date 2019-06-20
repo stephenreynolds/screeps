@@ -15,14 +15,14 @@ export class HarvestProcess extends Process
     {
         const creep = Game.creeps[this.metaData.creep];
 
-        if (!creep || _.sum(creep.carry) === creep.carryCapacity)
+        const source = Game.getObjectById(this.metaData.source) as Source;
+
+        if (!creep || _.sum(creep.carry) === creep.carryCapacity || !source)
         {
             this.completed = true;
             this.resumeParent();
             return;
         }
-
-        const source = Game.getObjectById(this.metaData.source) as Source;
 
         if (!creep.pos.inRangeTo(source.pos, 1))
         {

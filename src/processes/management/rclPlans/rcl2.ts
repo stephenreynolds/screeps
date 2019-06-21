@@ -10,10 +10,20 @@ export class RCL2 extends RCLPlan
         this.room.memory.roomPlan.rcl[2].spawn = _.clone(this.room.memory.roomPlan.rcl[1].spawn);
 
         // Source containers
-        this.room.memory.roomPlan.rcl[2].container = [];
+        if (!this.room.memory.roomPlan.rcl[2].container)
+        {
+            this.room.memory.roomPlan.rcl[2].container = [];
+        }
         for (const source of this.scheduler.data.roomData[this.room.name].sources)
         {
-            this.room.memory.roomPlan.rcl[2].container.push(this.findEmptyInRange(source.pos, 1, this.baseSpawn.pos)!);
+            const containers = _.filter(source.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 1), (site: ConstructionSite) =>
+            {
+                return site.structureType === STRUCTURE_CONTAINER;
+            });
+            if (containers.length === 0)
+            {
+                this.room.memory.roomPlan.rcl[2].container.push(this.findEmptyInRange(source.pos, 1, this.baseSpawn.pos)!);
+            }
         }
 
         // Source roads

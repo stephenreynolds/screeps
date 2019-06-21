@@ -37,7 +37,8 @@ export class BrawlerCreepProcess extends CreepProcess
             return;
         }
 
-        const hostiles = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 20);
+        const range = creep.room.controller && creep.room.controller.my ? 25 : 20;
+        const hostiles = creep.pos.findInRange(FIND_HOSTILE_CREEPS, range);
 
         if (hostiles.length > 0)
         {

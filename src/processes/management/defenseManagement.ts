@@ -43,6 +43,15 @@ export class DefenseManagementProcess extends Process
             {
                 spawnRoom = Utils.nearestRoom(spawnRoom, 190);
                 spawned = Utils.spawn(this.scheduler, spawnRoom, "brawler", creepName, {});
+
+                if (spawned)
+                {
+                    this.metaData.brawlers.push(creepName);
+                    this.scheduler.addProcess(BrawlerCreepProcess, `brawlcreep-${creepName}`, 49, {
+                        creep: creepName,
+                        flag: `${this.metaData.roomName}-NAV`
+                    });
+                }
             }
             else
             {

@@ -1,19 +1,28 @@
-import { ErrorMapper } from "utils/errorMapper";
-import { Scheduler } from "scheduler";
 import { ConsoleCommands } from "utils/consoleCommands";
+import { CreepBuilder } from "utils/creepBuilder";
+import { ErrorMapper } from "utils/errorMapper";
+import { ProcessTypes } from "processes/processTypes";
+import { RoomPathFinder } from "utils/roomPathFinder";
+import { Scheduler } from "scheduler";
+import { Stats } from "utils/stats";
+import { Utils } from "utils/utils";
 import profiler from "screeps-profiler";
 
-profiler.enable();
+const enableProfiling = "dev".match(__SCRIPT_BRANCH__);
+setupProfiling();
 
-export const loop = ErrorMapper.wrapLoop(() => profiler.wrap(() =>
+export const loop = ErrorMapper.wrapLoop(() => enableProfiling ? profiler.wrap(() => main()) : main());
+
+function main()
 {
     global.cc = ConsoleCommands;
+    global.cc.profiler = Game.profiler;
 
     const scheduler = new Scheduler();
     scheduler.run();
 
     getStats();
-}));
+}
 
 function getStats()
 {
@@ -23,4 +32,26 @@ function getStats()
     Memory.stats["gcl.progress"] = Game.gcl.progress;
     Memory.stats["gcl.progressTotal"] = Game.gcl.progressTotal;
     Memory.stats["gcl.level"] = Game.gcl.level;
+}
+
+function setupProfiling()
+{
+    if (enableProfiling)
+    {
+        profiler.enable();
+
+        profiler.registerClass(ErrorMapper, "ErrorMapper");
+        profiler.registerClass(RoomPathFinder, "RoomPathFinder");
+        profiler.registerClass(Scheduler, "Scheduler");
+        profiler.registerClass(Stats, "Stats");
+        profiler.registerObject(ConsoleCommands, "ConsoleCommands");
+        profiler.registerObject(CreepBuilder, "CreepBuilder");
+        profiler.registerObject(Utils, "Utils");
+        profiler.registerFN(getStats, "getStats");
+
+        for (const processType in ProcessTypes)
+        {
+            profiler.registerClass(ProcessTypes[processType], ProcessTypes[processType].name);
+        }
+    }
 }

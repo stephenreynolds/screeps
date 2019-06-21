@@ -8,7 +8,7 @@ import { Stats } from "utils/stats";
 import { Utils } from "utils/utils";
 import profiler from "screeps-profiler";
 
-const enableProfiling = "dev".match(__SCRIPT_BRANCH__);
+const enableProfiling = __SCRIPT_BRANCH__.match("dev");
 setupProfiling();
 
 export const loop = ErrorMapper.wrapLoop(() => enableProfiling ? profiler.wrap(() => main()) : main());
@@ -51,7 +51,8 @@ function setupProfiling()
 
         for (const processType in ProcessTypes)
         {
-            profiler.registerClass(ProcessTypes[processType], ProcessTypes[processType].name);
+            const type = ProcessTypes[processType];
+            profiler.registerClass(type, type.name);
         }
     }
 }

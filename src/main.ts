@@ -16,7 +16,6 @@ export const loop = ErrorMapper.wrapLoop(() => enableProfiling ? profiler.wrap((
 function main()
 {
     global.cc = ConsoleCommands;
-    global.cc.profiler = Game.profiler;
 
     const scheduler = new Scheduler();
     scheduler.run();
@@ -54,5 +53,7 @@ function setupProfiling()
             const type = ProcessTypes[processType];
             profiler.registerClass(type, type.name);
         }
+
+        global.cc.profiler = Game.profiler;
     }
 }

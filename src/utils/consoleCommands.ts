@@ -145,6 +145,25 @@ export const ConsoleCommands = {
         return `Cleared visuals from ${count} creeps.`;
     },
 
+    printProcesses(type?: string, formatted = true): string
+    {
+        let processes: any;
+
+        if (type)
+        {
+            processes = _.filter(Memory.os.processTable, (process: any) =>
+            {
+                return process.type === type;
+            });
+        }
+        else
+        {
+            processes = Memory.os.processTable;
+        }
+
+        return JSON.stringify(processes, null, formatted ? "\t" : undefined);
+    },
+
     helpFlags(): string
     {
         const message =
@@ -172,6 +191,7 @@ export const ConsoleCommands = {
             "\tkillall(roomName?: string)\n\t\tKills all creeps, optionally only in the room given.\n" +
             "\tshowCreepPrefix(roomName: string, prefix: string)\n\t\tPrints creep names in room with the given prefix in their name.\n" +
             "PROCESSES\n" +
+            "\tprintProcesses(type?: string, formatted = true)\n\t\tPrint process memory. Optionally specify a process type and whether to format output.\n" +
             "\tresetProcesses(roomName?: string)\n\t\tKills all processes, optionally only in the given room.\n" +
             "STRUCTURES\n" +
             "\tdestroyall(roomName: string, structureType: StructureConstant)\n\t\tDestroys all of the given structure type in the room.\n" +

@@ -1,4 +1,4 @@
-import { Scheduler } from "os/scheduler";
+import { Scheduler } from "scheduler";
 
 import { BuildPriorities } from "./BuildPriorities";
 

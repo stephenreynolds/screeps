@@ -1,5 +1,5 @@
-import { Process } from "./process";
-import { ProcessTypes } from "./processTypes";
+import { Process } from "./processes/process";
+import { ProcessTypes } from "./processes/processTypes";
 import { InitProcess } from "processes/system/init";
 import { Stats } from "utils/stats";
 

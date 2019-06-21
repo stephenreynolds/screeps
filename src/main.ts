@@ -1,5 +1,5 @@
 import { ErrorMapper } from "utils/errorMapper";
-import { Scheduler } from "os/scheduler";
+import { Scheduler } from "scheduler";
 import { ConsoleCommands } from "utils/consoleCommands";
 
 export const loop = ErrorMapper.wrapLoop(() =>

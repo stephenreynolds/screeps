@@ -1,6 +1,6 @@
-import { Scheduler } from "os/scheduler";
+import { Scheduler } from "scheduler";
 import { CreepBuilder } from "./creepBuilder";
-import { Process } from "os/process";
+import { Process } from "processes/process";
 import { RoomPathFinder } from "./roomPathFinder";
 import { EscortCreepProcess } from "processes/creeps/escort";
 

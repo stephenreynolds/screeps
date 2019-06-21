@@ -1,5 +1,5 @@
-import { Scheduler } from "os/scheduler";
-import { ProcessTypes } from "os/processTypes";
+import { Scheduler } from "scheduler";
+import { ProcessTypes } from "processes/processTypes";
 import { Utils } from "./utils";
 
 export class Stats

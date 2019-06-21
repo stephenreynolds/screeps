@@ -1,4 +1,4 @@
-import { Process } from "os/process";
+import { Process } from "processes/process";
 import { MoveProcess } from "./move";
 
 interface DeliverProcessMetaData extends CreepMetaData

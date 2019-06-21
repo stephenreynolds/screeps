@@ -1,4 +1,4 @@
-import { Process } from "OS/Process";
+import { Process } from "processes/process";
 
 import { ClaimProcess } from "../empire/claim";
 import { HoldRoomProcess } from "../empire/holdRoom";

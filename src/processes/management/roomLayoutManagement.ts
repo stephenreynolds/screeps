@@ -1,4 +1,4 @@
-import { Process } from "os/process";
+import { Process } from "processes/process";
 
 import { BuildPriorities } from "./rclPlans/buildPriorities";
 import { RCL0 } from "./rclPlans/rcl0";

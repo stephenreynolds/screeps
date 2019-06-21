@@ -1,4 +1,4 @@
-import { Process } from "os/process";
+import { Process } from "processes/process";
 
 export abstract class CreepProcess extends Process
 {

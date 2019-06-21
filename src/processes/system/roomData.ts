@@ -1,4 +1,4 @@
-import { Process } from "os/process";
+import { Process } from "processes/process";
 import { RoomLayoutManagementProcess } from "processes/management/roomLayoutManagement";
 import { DefenseManagementProcess } from "processes/management/defenseManagement";
 import { TowerRepairProcess } from "processes/buildings/towerRepair";

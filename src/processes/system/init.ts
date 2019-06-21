@@ -1,4 +1,4 @@
-import { Process } from "OS/Process";
+import { Process } from "processes/process";
 import { SuspendProcess } from "./suspend";
 import { RoomDataProcess } from "./roomData";
 import { EnergyManagementProcess } from "processes/management/energyManagement";

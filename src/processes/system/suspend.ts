@@ -1,4 +1,4 @@
-import { Process } from "OS/Process";
+import { Process } from "processes/process";
 
 export class SuspendProcess extends Process
 {

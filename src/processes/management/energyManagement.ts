@@ -1,4 +1,4 @@
-import { Process } from "os/process";
+import { Process } from "processes/process";
 import { Utils } from "utils/utils";
 import { HarvesterCreepProcess } from "processes/creeps/harvester";
 import { MinerCreepProcess } from "processes/creeps/miner";

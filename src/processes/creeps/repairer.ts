@@ -1,5 +1,5 @@
 import { CreepProcess } from "./creepProcess";
-import { Utils } from "Utils/Utils";
+import { Utils } from "utils/utils";
 
 import { CollectProcess } from "./actions/collect";
 import { RepairProcess } from "./actions/repair";

@@ -161,7 +161,7 @@ export const ConsoleCommands = {
     {
         const message =
             "INFO\n" +
-            "\tAuthor:   Stephen Reynolds (screeps@stephenreynolds.me)\n" +
+            "\tAuthor:   Stephen Reynolds (kumikill) (screeps@stephenreynolds.me)\n" +
             "\tURL:      https://github.com/stephenreynolds/kuminet\n" +
             "\tRevision: " + __REVISION__ + "@" + __BRANCH__ + " on " + __DATE__ + "\n" +
             "\tMessage:  \"" + __MESSAGE__ + "\"\n" +

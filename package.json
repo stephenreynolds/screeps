@@ -1,7 +1,17 @@
 {
-  "name": "screeps-typescript-starter",
+  "name": "kuminet",
   "version": "3.0.0",
   "description": "",
+  "author": "Stephen Reynolds (screeps@stephenreynolds.me)",
+  "license": "MIT",
+  "homepage": "https://github.com/stephenreynolds/kuminet#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stephenreynolds/kuminet.git"
+  },
+  "bugs": {
+    "url": "https://github.com/stephenreynolds/kuminet/issues"
+  },
   "main": "index.js",
   "//": "If you add or change the names of destinations in screeps.json, make sure you update these scripts to reflect the changes",
   "scripts": {
@@ -15,19 +25,11 @@
     "watch-sim": "rollup -cw --environment DEST:sim",
     "gen-docs": "typedoc --out docs src"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/stephenreynolds/kuminet.git"
-  },
-  "author": "",
-  "bugs": {
-    "url": "https://github.com/stephenreynolds/kuminet/issues"
-  },
-  "homepage": "https://github.com/stephenreynolds/kuminet#readme",
   "devDependencies": {
     "@types/lodash": "^3.10.1",
     "@types/node": "^10.5.5",
     "@types/screeps": "^2.4.0",
+    "@types/screeps-profiler": "^1.2.2",
     "git-rev-sync": "^1.12.0",
     "lodash": "^4.17.11",
     "prettier": "^1.14.0",
@@ -41,6 +43,7 @@
     "rollup-plugin-replace": "^2.2.0",
     "rollup-plugin-screeps": "^0.1.2",
     "rollup-plugin-typescript2": "^0.16.1",
+    "screeps-profiler": "^2.0.1",
     "ts-node": "^7.0.1",
     "tslint": "^5.9.1",
     "tslint-config-prettier": "^1.14.0",

@@ -36,6 +36,7 @@ import { RemoteMiningManagementProcess } from "processes/management/remoteMining
 import { RangerManagementProcess } from "processes/management/rangerManagement";
 import { InvasionManagementProcess } from "processes/management/invasionManagement";
 import { RangerCreepProcess } from "processes/creeps/ranger";
+import { RepairerCreepProcess } from "processes/creeps/repairer";
 
 export const ProcessTypes = {
     bcreep: BuilderCreepProcess,
@@ -62,8 +63,9 @@ export const ProcessTypes = {
     move: MoveProcess,
     racreep: RangerCreepProcess,
     raman: RangerManagementProcess,
-    rcreep: RepairProcess,
+    rcreep: RepairerCreepProcess,
     rbcreep: RemoteBuilderCreepProcess,
+    repair: RepairProcess,
     rmcreep: RemoteMinerCreepProcess,
     rmman: RemoteMiningManagementProcess,
     roomdata: RoomDataProcess,

@@ -65,7 +65,7 @@ export class StructureManagementProcess extends Process
         {
             if (this.metaData.spareCreeps.length === 0)
             {
-                const creepName = "sman-" + this.metaData.roomName + "-" + Game.time;
+                const creepName = "sman-b-" + this.metaData.roomName + "-" + Game.time;
                 const spawned = Utils.spawn(this.scheduler, this.metaData.roomName, "worker", creepName, {});
                 if (spawned)
                 {
@@ -101,7 +101,7 @@ export class StructureManagementProcess extends Process
             {
                 if (this.metaData.spareCreeps.length === 0)
                 {
-                    const creepName = "sman-" + this.metaData.roomName + "-" + Game.time;
+                    const creepName = "sman-r-" + this.metaData.roomName + "-" + Game.time;
                     const spawned = Utils.spawn(this.scheduler, this.metaData.roomName, "worker", creepName, {});
                     if (spawned)
                     {

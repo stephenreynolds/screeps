@@ -3,6 +3,7 @@ import { SuspendProcess } from "./suspend";
 import { RoomDataProcess } from "./roomData";
 import { EnergyManagementProcess } from "processes/management/energyManagement";
 import { FlagManagementProcess } from "processes/management/flagManagement";
+import { StructureManagementProcess } from "processes/management/structureManagement";
 
 export class InitProcess extends Process
 {
@@ -40,7 +41,7 @@ export class InitProcess extends Process
                     roomName: room.name
                 });
 
-                this.scheduler.addProcessIfNotExist(EnergyManagementProcess, "sman-" + room.name, 48, {
+                this.scheduler.addProcessIfNotExist(StructureManagementProcess, "sman-" + room.name, 48, {
                     roomName: room.name
                 });
             }

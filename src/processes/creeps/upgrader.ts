@@ -6,7 +6,7 @@ import { UpgradeProcess } from "./actions/upgrade";
 
 export class UpgraderCreepProcess extends CreepProcess
 {
-    public type = "ulf";
+    public type = "ucreep";
 
     public run()
     {

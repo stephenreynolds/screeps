@@ -37,6 +37,8 @@ import { RangerManagementProcess } from "processes/management/rangerManagement";
 import { InvasionManagementProcess } from "processes/management/invasionManagement";
 import { RangerCreepProcess } from "processes/creeps/ranger";
 import { RepairerCreepProcess } from "processes/creeps/repairer";
+import { ClaimProcess } from "./empire/claim";
+import { UpgraderCreepProcess } from "./creeps/upgrader";
 
 export const ProcessTypes = {
     bcreep: BuilderCreepProcess,
@@ -44,6 +46,7 @@ export const ProcessTypes = {
     build: BuildProcess,
     collect: CollectProcess,
     ccreep: CourierCreepProcess,
+    claim: ClaimProcess,
     deliver: DeliverProcess,
     dman: DefenseManagementProcess,
     ecreep: EscortCreepProcess,
@@ -77,5 +80,6 @@ export const ProcessTypes = {
     towerdefense: TowerDefenseProcess,
     towerrepair: TowerRepairProcess,
     trcreep: TransporterCreepProcess,
+    ucreep: UpgraderCreepProcess,
     upgrade: UpgradeProcess
 } as { [type: string]: any };

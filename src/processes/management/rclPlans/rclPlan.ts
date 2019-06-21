@@ -1,6 +1,6 @@
 import { Scheduler } from "scheduler";
 
-import { BuildPriorities } from "./BuildPriorities";
+import { BuildPriorities } from "./buildPriorities";
 
 export abstract class RCLPlan
 {

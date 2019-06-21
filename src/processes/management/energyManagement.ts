@@ -138,7 +138,7 @@ export class EnergyManagementProcess extends Process
                 if (spawned)
                 {
                     this.metaData.miningCreeps[container.id].push(creepName);
-                    this.scheduler.addProcess(MinerCreepProcess, "mcreep" + creepName, 49, {
+                    this.scheduler.addProcess(MinerCreepProcess, "mcreep-" + creepName, 49, {
                         creep: creepName,
                         source: source.id,
                         container: container.id

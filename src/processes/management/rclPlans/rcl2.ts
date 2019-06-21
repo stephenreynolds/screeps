@@ -10,29 +10,18 @@ export class RCL2 extends RCLPlan
         this.room.memory.roomPlan.rcl[2].spawn = _.clone(this.room.memory.roomPlan.rcl[1].spawn);
 
         // Source containers
-        if (!this.room.memory.roomPlan.rcl[2].container)
-        {
-            this.room.memory.roomPlan.rcl[2].container = [];
-        }
-        for (const source of this.scheduler.data.roomData[this.room.name].sources)
-        {
-            const containers = _.filter(source.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 1), (site: ConstructionSite) =>
-            {
-                return site.structureType === STRUCTURE_CONTAINER;
-            });
-            if (containers.length === 0)
-            {
-                this.room.memory.roomPlan.rcl[2].container.push(this.findEmptyInRange(source.pos, 1, this.baseSpawn.pos)!);
-            }
-        }
-
-        // Source roads
+        this.room.memory.roomPlan.rcl[2].container = [];
         this.room.memory.roomPlan.rcl[2].road = [];
-        for (const s of this.scheduler.data.roomData[this.room.name].sources)
+        const sources = this.scheduler.data.roomData[this.room.name].sources;
+        for (let i = 0; i < sources.length; ++i)
         {
-            for (const pos of PathFinder.search(this.baseSpawn.pos, { pos: s.pos, range: 1 }).path)
+            this.room.memory.roomPlan.rcl[2].container.push(this.findEmptyInRange(sources[i].pos, 1, this.baseSpawn.pos)!);
+
+            // Source roads
+            const path = PathFinder.search(this.baseSpawn.pos, { pos: sources[i].pos, range: 1 }).path;
+            for (let j = 0; j < path.length; ++j)
             {
-                this.room.memory.roomPlan.rcl[2].road.push(pos);
+                this.room.memory.roomPlan.rcl[2].road.push(path[j]);
             }
         }
 

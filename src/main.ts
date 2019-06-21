@@ -1,8 +1,11 @@
 import { ErrorMapper } from "utils/errorMapper";
 import { Scheduler } from "scheduler";
 import { ConsoleCommands } from "utils/consoleCommands";
+import profiler from "screeps-profiler";
 
-export const loop = ErrorMapper.wrapLoop(() =>
+profiler.enable();
+
+export const loop = ErrorMapper.wrapLoop(() => profiler.wrap(() =>
 {
     global.cc = ConsoleCommands;
 
@@ -10,7 +13,7 @@ export const loop = ErrorMapper.wrapLoop(() =>
     scheduler.run();
 
     getStats();
-});
+}));
 
 function getStats()
 {

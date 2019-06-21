@@ -11,7 +11,39 @@ export class FlagManagementProcess extends Process
 {
     public type = "flagman";
 
-    public claimFlag(flag: Flag)
+    public run()
+    {
+        this.completed = true;
+
+        _.forEach(Game.flags, (flag: Flag) =>
+        {
+            switch (flag.color)
+            {
+                case COLOR_PURPLE:
+                    switch (flag.secondaryColor)
+                    {
+                        case COLOR_PURPLE:
+                            this.holdFlag(flag);
+                            break;
+                        case COLOR_RED:
+                            this.claimFlag(flag);
+                            break;
+                    }
+                    break;
+                case COLOR_YELLOW:
+                    this.remoteMiningFlag(flag);
+                    break;
+                case COLOR_BLUE:
+                    this.rangerFlag(flag);
+                    break;
+                case COLOR_RED:
+                    this.invasionFlag(flag);
+                    break;
+            }
+        });
+    }
+
+    private claimFlag(flag: Flag)
     {
         this.scheduler.addProcessIfNotExist(
             ClaimProcess,
@@ -24,7 +56,7 @@ export class FlagManagementProcess extends Process
         );
     }
 
-    public holdFlag(flag: Flag)
+    private holdFlag(flag: Flag)
     {
         this.scheduler.addProcessIfNotExist(
             HoldRoomProcess,
@@ -36,7 +68,7 @@ export class FlagManagementProcess extends Process
         );
     }
 
-    public remoteMiningFlag(flag: Flag)
+    private remoteMiningFlag(flag: Flag)
     {
         this.scheduler.addProcessIfNotExist(
             RemoteMiningManagementProcess,
@@ -48,7 +80,7 @@ export class FlagManagementProcess extends Process
         );
     }
 
-    public rangerFlag(flag: Flag)
+    private rangerFlag(flag: Flag)
     {
         const count = parseInt(flag.name.split(".")[1], undefined);
         this.scheduler.addProcessIfNotExist(RangerManagementProcess, flag.name + "-rangers", 70, {
@@ -58,44 +90,10 @@ export class FlagManagementProcess extends Process
         });
     }
 
-    public invasionFlag(flag: Flag)
+    private invasionFlag(flag: Flag)
     {
         this.scheduler.addProcessIfNotExist(InvasionManagementProcess, `${flag.name}-invasion`, 70, {
             flag: flag.name
-        });
-    }
-
-    public run()
-    {
-        this.completed = true;
-
-        const proc = this;
-
-        _.forEach(Game.flags, (flag: Flag) =>
-        {
-            switch (flag.color)
-            {
-                case COLOR_PURPLE:
-                    switch (flag.secondaryColor)
-                    {
-                        case COLOR_PURPLE:
-                            proc.holdFlag(flag);
-                            break;
-                        case COLOR_RED:
-                            proc.claimFlag(flag);
-                            break;
-                    }
-                    break;
-                case COLOR_YELLOW:
-                    proc.remoteMiningFlag(flag);
-                    break;
-                case COLOR_BLUE:
-                    proc.rangerFlag(flag);
-                    break;
-                case COLOR_RED:
-                    proc.invasionFlag(flag);
-                    break;
-            }
         });
     }
 }

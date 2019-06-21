@@ -15,21 +15,6 @@ export class FlagManagementProcess extends Process
     {
         this.completed = true;
 
-        if (Game.time % 100 === 0)
-        {
-            _.forEach(Game.rooms, (room: Room) =>
-            {
-                if (room.controller && room.controller.my)
-                {
-                    const flag = Game.flags[room.name + "-NAV"];
-                    if (!flag)
-                    {
-                        console.log(`Room ${room.name} is missing its NAV flag. Place a flag called \"${room.name}-NAV\" on its controller.`);
-                    }
-                }
-            });
-        }
-
         _.forEach(Game.flags, (flag: Flag) =>
         {
             switch (flag.color)

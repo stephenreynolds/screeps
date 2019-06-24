@@ -166,8 +166,8 @@ export class EnergyManagementProcess extends Process
             _.forEach(this.scheduler.data.roomData[this.metaData.roomName].sourceContainers,
                 (container: StructureContainer) =>
                 {
-                    // Delete transporters which do not exist or whose container does not exist.
-                    if (!Game.creeps[this.metaData.transportCreeps[container.id]] || !Game.getObjectById(container.id))
+                    // Delete transporters whose container does not exist.
+                    if (!Game.getObjectById(container.id))
                     {
                         delete this.metaData.transportCreeps[container.id];
                         return;
@@ -194,6 +194,12 @@ export class EnergyManagementProcess extends Process
                         }
 
                         ret = true;
+                    }
+                    else if (!Game.creeps[this.metaData.transportCreeps[container.id]])
+                    {
+                        // Delete transporters which do not exist.
+                        delete this.metaData.transportCreeps[container.id];
+                        return;
                     }
                 }
             );

@@ -166,25 +166,21 @@ export class EnergyManagementProcess extends Process
             _.forEach(this.scheduler.data.roomData[this.metaData.roomName].sourceContainers,
                 (container: StructureContainer) =>
                 {
-                    if (this.metaData.transportCreeps[container.id])
+                    // Delete transporters which do not exist or whose container does not exist.
+                    if (!Game.creeps[this.metaData.transportCreeps[container.id]] || !Game.getObjectById(container.id))
                     {
-                        const creep = Game.creeps[this.metaData.transportCreeps[container.id]];
-
-                        if (!creep)
-                        {
-                            delete this.metaData.transportCreeps[container.id];
-                            return;
-                        }
+                        delete this.metaData.transportCreeps[container.id];
+                        return;
                     }
-                    else if (Object.keys(this.metaData.transportCreeps).length < sourceContainers.length)
+
+                    if (!this.metaData.transportCreeps[container.id])
                     {
                         const creepName = "eman-tr-" + this.metaData.roomName + "-" + Game.time;
                         const spawned = Utils.spawn(
                             this.scheduler,
                             this.metaData.roomName,
                             "mover",
-                            creepName,
-                            {}
+                            creepName
                         );
 
                         if (spawned)

@@ -34,7 +34,8 @@ export default {
       __REVISION__: JSON.stringify(git.short()),
       __BRANCH__: JSON.stringify(git.branch()),
       __DATE__: JSON.stringify(git.date().toLocaleDateString()),
-      __MESSAGE__: JSON.stringify(git.message())
+      __MESSAGE__: JSON.stringify(git.message()),
+      __SCRIPT_BRANCH__: JSON.stringify(dest)
     }),
     typescript({
       tsconfig: "./tsconfig.json"

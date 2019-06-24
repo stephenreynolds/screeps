@@ -72,7 +72,7 @@ export class FlagManagementProcess extends Process
     {
         this.scheduler.addProcessIfNotExist(
             RemoteMiningManagementProcess,
-            "rmmp-" + flag.name,
+            "rmman-" + flag.name,
             40,
             {
                 flag: flag.name

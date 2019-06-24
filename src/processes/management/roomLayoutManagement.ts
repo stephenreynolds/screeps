@@ -22,7 +22,7 @@ export class RoomLayoutManagementProcess extends Process
     {
         const room = Game.rooms[this.metaData.roomName];
 
-        if (room.memory.roomPlan && room.memory.roomPlan.version === RCLPlan.version)
+        if (room.memory.generated)
         {
             const siteCount = room.memory.numSites;
 
@@ -52,6 +52,8 @@ export class RoomLayoutManagementProcess extends Process
         new RCL6(room, this.scheduler).generate();
         new RCL7(room, this.scheduler).generate();
         new RCL8(room, this.scheduler).generate();
+
+        room.memory.generated = true;
     }
 
     private createSites(room: Room)

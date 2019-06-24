@@ -7,8 +7,8 @@ import { Scheduler } from "scheduler";
 import { Utils } from "utils/utils";
 import profiler from "screeps-profiler";
 
-const enableProfiling = __SCRIPT_BRANCH__.match("dev");
-setupProfiling()!;
+const enableProfiling = __SCRIPT_BRANCH__!.match("dev");
+setupProfiling();
 
 export const loop = ErrorMapper.wrapLoop(() => enableProfiling ? profiler.wrap(() => main()) : main());
 

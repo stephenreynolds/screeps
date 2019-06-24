@@ -4,12 +4,11 @@ import { ErrorMapper } from "utils/errorMapper";
 import { ProcessTypes } from "processes/processTypes";
 import { RoomPathFinder } from "utils/roomPathFinder";
 import { Scheduler } from "scheduler";
-import { Stats } from "utils/stats";
 import { Utils } from "utils/utils";
 import profiler from "screeps-profiler";
 
 const enableProfiling = __SCRIPT_BRANCH__.match("dev");
-setupProfiling();
+setupProfiling()!;
 
 export const loop = ErrorMapper.wrapLoop(() => enableProfiling ? profiler.wrap(() => main()) : main());
 

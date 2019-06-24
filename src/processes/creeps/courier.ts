@@ -15,6 +15,13 @@ export class CourierCreepProcess extends CreepProcess
             return;
         }
 
+        // Check that there is somewhere to deliver energy to.
+        if (creep.room.energyAvailable == creep.room.energyCapacityAvailable)
+        {
+            this.suspend = 10;
+            return;
+        }
+
         // Prefer collecting energy from storage, fallback to containers.
         let collectTarget: Structure;
         if (creep.room.storage)
@@ -26,17 +33,12 @@ export class CourierCreepProcess extends CreepProcess
             const generalContainers = this.scheduler.data.roomData[this.metaData.roomName].generalContainers;
             collectTarget = creep.pos.findClosestByPath(_.filter(generalContainers, (c: StructureContainer) =>
             {
-                return _.sum(c.store) < c.storeCapacity;
+                return _.sum(c.store) > 0;
             })) as Structure;
         }
 
-        if (!collectTarget)
-        {
-            this.suspend = 10;
-            return;
-        }
-
-        if (_.sum(creep.carry) === 0)
+        // Collect from target if one exists, suspend if not.
+        if (collectTarget)
         {
             this.fork(CollectProcess, "collect-" + creep.name, this.priority - 1, {
                 target: collectTarget.id,
@@ -44,6 +46,11 @@ export class CourierCreepProcess extends CreepProcess
                 resource: RESOURCE_ENERGY
             });
 
+            return;
+        }
+        else if (_.sum(creep.carry) === 0)
+        {
+            this.suspend = 10;
             return;
         }
 

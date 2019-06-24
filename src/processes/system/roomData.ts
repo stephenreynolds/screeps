@@ -73,7 +73,7 @@ export class RoomDataProcess extends Process
             });
         }
 
-        if (this.scheduler.data.roomData[this.metaData.roomName].ramparts.length > 0)
+        if (this.scheduler.data.roomData[this.metaData.roomName].towers.length > 0)
         {
             this.scheduler.addProcessIfNotExist(TowerRepairProcess, "tower-repair-" + room.name, 20, {
                 roomName: room.name

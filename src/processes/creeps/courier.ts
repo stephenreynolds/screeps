@@ -1,6 +1,7 @@
 import { CreepProcess } from "./creepProcess";
 import { CollectProcess } from "./actions/collect";
 import { DeliverProcess } from "./actions/deliver";
+import { MoveProcess } from "./actions/move";
 
 export class CourierCreepProcess extends CreepProcess
 {
@@ -15,13 +16,18 @@ export class CourierCreepProcess extends CreepProcess
             return;
         }
 
-        // Check that there is somewhere to deliver energy to.
-        if (creep.room.energyAvailable == creep.room.energyCapacityAvailable)
+        if (_.sum(creep.carry) === creep.carryCapacity)
         {
-            this.suspend = 10;
-            return;
+            this.deliverEnergy(creep);
         }
+        else
+        {
+            this.collectEnergy(creep);
+        }
+    }
 
+    private collectEnergy(creep: Creep)
+    {
         // Prefer collecting energy from storage, fallback to containers.
         let collectTarget: Structure;
         if (creep.room.storage)
@@ -53,7 +59,10 @@ export class CourierCreepProcess extends CreepProcess
             this.suspend = 10;
             return;
         }
+    }
 
+    private deliverEnergy(creep: Creep)
+    {
         /**
          * Transfer energy to spawns or extensions.
          * If spawns and extensions are full, transfer to towers.
@@ -66,11 +75,12 @@ export class CourierCreepProcess extends CreepProcess
 
         let deliverTargets = _.filter(targets, (t: DeliveryTarget) =>
         {
-            return (t.energy < t.energyCapacity);
+            return t.energy < t.energyCapacity;
         });
 
         if (deliverTargets.length === 0)
         {
+            console.log("wat");
             const targs = [].concat(
                 this.scheduler.data.roomData[creep.room.name].towers as never[]
             );

@@ -77,9 +77,15 @@ export class EnergyManagementProcess extends Process
 
         _.forEach(sources, (source: Source) =>
         {
+            const sourceContainer = this.scheduler.data.roomData.sourceContainerMaps[source.id];
             if (!this.metaData.harvestCreeps[source.id])
             {
                 this.metaData.harvestCreeps[source.id] = [];
+            }
+            else if (this.metaData.courierCreeps.length > 0 && this.metaData.transportCreeps[sourceContainer].length > 0)
+            {
+                // Do not spawn harvesters if there is both a courier, and a transporter for each source container.
+                return;
             }
 
             const creepNames = Utils.getLiveCreeps(this.metaData.harvestCreeps[source.id]);

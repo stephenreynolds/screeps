@@ -12,6 +12,8 @@ export class RCL4 extends RCLPlan
         this.room.memory.roomPlan.rcl[4].container = _.clone(this.room.memory.roomPlan.rcl[3].container);
         this.room.memory.roomPlan.rcl[4].extension = _.clone(this.room.memory.roomPlan.rcl[3].extension);
         this.room.memory.roomPlan.rcl[4].tower = _.clone(this.room.memory.roomPlan.rcl[3].tower);
+        this.room.memory.roomPlan.rcl[4].constructedWall = _.clone(this.room.memory.roomPlan.rcl[3].constructedWall);
+        this.room.memory.roomPlan.rcl[4].rampart = _.clone(this.room.memory.roomPlan.rcl[3].rampart);
 
         // Storage
         this.room.memory.roomPlan.rcl[4].storage = [
@@ -46,7 +48,6 @@ export class RCL4 extends RCLPlan
         ]);
 
         // Ramparts
-        this.room.memory.roomPlan.rcl[4].rampart = [];
         for (let x = -5; x <= 5; x++)
         {
             // Top

@@ -51,7 +51,6 @@ export class StructureManagementProcess extends Process
         }
 
         const numBuilders = _.min([
-            Math.ceil(this.scheduler.data.roomData[this.metaData.roomName].constructionSites.length / 10),
             3,
             this.scheduler.data.roomData[this.metaData.roomName].constructionSites.length,
             this.room().controller!.level - 1

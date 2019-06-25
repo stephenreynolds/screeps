@@ -15,6 +15,7 @@ export class RCL6 extends RCLPlan
         this.room.memory.roomPlan.rcl[6].rampart = _.clone(this.room.memory.roomPlan.rcl[5].rampart);
         this.room.memory.roomPlan.rcl[6].storage = _.clone(this.room.memory.roomPlan.rcl[5].storage);
         this.room.memory.roomPlan.rcl[6].link = _.clone(this.room.memory.roomPlan.rcl[5].link);
+        this.room.memory.roomPlan.rcl[6].constructedWall = _.clone(this.room.memory.roomPlan.rcl[5].constructedWall);
 
         // Terminal
         this.room.memory.roomPlan.rcl[6].terminal = [

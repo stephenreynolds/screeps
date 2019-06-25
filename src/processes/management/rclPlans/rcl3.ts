@@ -36,6 +36,84 @@ export class RCL3 extends RCLPlan
             new RoomPosition(this.baseSpawn.pos.x, this.baseSpawn.pos.y + 1, this.room.name)
         ];
 
+        // Walls
+        this.room.memory.roomPlan.rcl[3].constructedWall = [];
+        const exitPositions = this.room.find(FIND_EXIT);
+        for (const pos of exitPositions)
+        {
+            let x = 0;
+            let y = 0;
+
+            if (pos.x === 0)
+            {
+                x = pos.x + 2;
+            }
+            else if (pos.x === 49)
+            {
+                x = pos.x - 2;
+            }
+            else
+            {
+                x = pos.x;
+            }
+
+            if (pos.y === 0)
+            {
+                y = pos.y + 2;
+            }
+            else if (pos.y === 49)
+            {
+                y = pos.y - 2;
+            }
+            else
+            {
+                y = pos.y;
+            }
+
+            this.room.memory.roomPlan.rcl[3].constructedWall.push(new RoomPosition(x, y, this.room.name));
+        }
+
+        // Ramparts
+        this.room.memory.roomPlan.rcl[3].rampart = [];
+        for (let i = 0; i < 3; ++i)
+        {
+            this.rampartPass(exitPositions);
+        }
+
         this.finished(3);
+    }
+
+    private rampartPass(exitPositions: RoomPosition[])
+    {
+        for (const pos of exitPositions)
+        {
+            const path = PathFinder.search(this.midpoint, pos,
+                {
+                    swampCost: 1,
+                    roomCallback: (roomName: string) =>
+                    {
+                        const costs = new PathFinder.CostMatrix;
+
+                        for (const wallPos of this.room.memory.roomPlan.rcl[3].constructedWall)
+                        {
+                            costs.set(wallPos.x, wallPos.y, 255);
+                        }
+                        for (const rampartPos of this.room.memory.roomPlan.rcl[3].rampart)
+                        {
+                            costs.set(rampartPos.x, rampartPos.y, 255);
+                        }
+
+                        return costs;
+                    }
+                });
+
+            for (const pathPos of path.path)
+            {
+                if (pathPos.inRangeTo(pos, 2))
+                {
+                    this.room.memory.roomPlan.rcl[3].rampart.push(pathPos);
+                }
+            }
+        }
     }
 }

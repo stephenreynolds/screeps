@@ -188,10 +188,9 @@ export class RoomDataProcess extends Process
 
         room.memory.cache = {};
 
-        const proc = this;
         _.forEach(this.fields, (field: string) =>
         {
-            room.memory.cache[field] = proc.deflate(roomData[field]);
+            room.memory.cache[field] = this.deflate(roomData[field]);
         });
 
         _.forEach(this.mapFields, (field: string) =>
@@ -284,7 +283,6 @@ export class RoomDataProcess extends Process
 
         run = true;
         i = 0;
-        const proc = this;
         while (run)
         {
             const field = this.mapFields[i];
@@ -303,7 +301,7 @@ export class RoomDataProcess extends Process
                     else
                     {
                         run = false;
-                        proc.build(room);
+                        this.build(room);
                         return;
                     }
                 });

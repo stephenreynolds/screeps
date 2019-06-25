@@ -20,8 +20,7 @@ export class MineralManagementProcess extends Process
                         this.scheduler,
                         this.metaData.roomName,
                         "worker",
-                        "min-" + this.metaData.roomName + "-" + Game.time,
-                        {}
+                        "min-" + this.metaData.roomName + "-" + Game.time
                     );
 
                     if (spawned)

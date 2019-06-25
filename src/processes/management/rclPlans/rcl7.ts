@@ -18,6 +18,7 @@ export class RCL7 extends RCLPlan
         this.room.memory.roomPlan.rcl[7].terminal = _.clone(this.room.memory.roomPlan.rcl[6].terminal);
         this.room.memory.roomPlan.rcl[7].extractor = _.clone(this.room.memory.roomPlan.rcl[6].extractor);
         this.room.memory.roomPlan.rcl[7].lab = _.clone(this.room.memory.roomPlan.rcl[6].lab);
+        this.room.memory.roomPlan.rcl[7].constructedWall = _.clone(this.room.memory.roomPlan.rcl[6].constructedWall);
 
         // Spawn
         this.room.memory.roomPlan.rcl[7].spawn[1] =

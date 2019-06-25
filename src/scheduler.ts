@@ -37,6 +37,12 @@ export class Scheduler
             Memory.os = {};
         }
 
+        if (!Memory.stats)
+        {
+            Memory.stats = {};
+            Memory.stats.enabled = false;
+        }
+
         this.limit = this.calculateCPULimit();
 
         this.loadProcessTable();
@@ -117,7 +123,7 @@ export class Scheduler
             process.ticked = true;
         }
 
-        this.save(stats);
+        this.save();
     }
 
     private calculateCPULimit(): number
@@ -199,7 +205,7 @@ export class Scheduler
         }
     }
 
-    private save(stats = true)
+    private save()
     {
         // Save processes still running to memory.
         const list: SerializedProcess[] = [];
@@ -213,7 +219,7 @@ export class Scheduler
         Memory.os.processTable = list;
 
         // Build stats.
-        if (stats)
+        if (Memory.stats.enabled)
         {
             Stats.build(this);
         }

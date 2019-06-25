@@ -22,6 +22,13 @@ export class RoomLayoutManagementProcess extends Process
     {
         const room = Game.rooms[this.metaData.roomName];
 
+        if (!room)
+        {
+            delete Memory.rooms[this.metaData.roomName];
+            this.completed = true;
+            return;
+        }
+
         if (room.memory.generated)
         {
             const siteCount = room.memory.numSites;

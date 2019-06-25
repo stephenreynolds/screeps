@@ -80,7 +80,6 @@ export class CourierCreepProcess extends CreepProcess
 
         if (deliverTargets.length === 0)
         {
-            console.log("wat");
             const targs = [].concat(
                 this.scheduler.data.roomData[creep.room.name].towers as never[]
             );

@@ -54,6 +54,20 @@ export const ConsoleCommands = {
         return `Reset ${count} processes.`;
     },
 
+    toggleStats(): string
+    {
+        Memory.stats.enabled = !Memory.stats.enabled;
+
+        if (Memory.stats.enabled)
+        {
+            return "Enabled stats.";
+        }
+        else
+        {
+            return "Disabled stats."
+        }
+    },
+
     killall(roomName?: string): string
     {
         let count = 0;
@@ -164,6 +178,13 @@ export const ConsoleCommands = {
         return JSON.stringify(processes, null, formatted ? "\t" : undefined);
     },
 
+    rebuildRoomLayout(roomName: string): string
+    {
+        Memory.rooms[roomName].generated = false;
+
+        return `${roomName}'s layout will be regenerated.`;
+    },
+
     helpFlags(): string
     {
         const message =
@@ -193,6 +214,7 @@ export const ConsoleCommands = {
             "PROCESSES\n" +
             "\tprintProcesses(type?: string, formatted = true)\n\t\tPrint process memory. Optionally specify a process type and whether to format output.\n" +
             "\tresetProcesses(roomName?: string)\n\t\tKills all processes, optionally only in the given room.\n" +
+            "\ttoggleStats()\n\t\tToggles whether statistics will be collected in [Memory.stats].\n" +
             "PROFILER\n" +
             "\tprofiler.profile(ticks: number, functionFilter?: string)\n\t\tWill run for the given number of ticks, then will output the gather information.\n" +
             "\tprofiler.stream(ticks: number, functionFilter?: string)\n\t\tWill run for the given number of ticks, and will output the gathered information each tick.\n" +
@@ -204,7 +226,8 @@ export const ConsoleCommands = {
             "STRUCTURES\n" +
             "\tdestroyall(roomName: string, structureType: StructureConstant)\n\t\tDestroys all of the given structure type in the room.\n" +
             "\tremoveConstructionSites(roomName: string, leaveProgressStarted = true, structureType?: string)\n\t\tRemoves construction sites in a room. Does not remove sites already started by default. Optionally specify a StructureConstant.\n" +
-            "\trc(roomName: string, leaveProfessStarted = true, structureType?: string)\n\t\tAlias of removeConstructionSites.";
+            "\trc(roomName: string, leaveProfessStarted = true, structureType?: string)\n\t\tAlias of removeConstructionSites.\n" +
+            "\trebuildRoomLayout(roomName: string)\n\t\tRegenerate a room's structure layout.";
 
         return message;
     }

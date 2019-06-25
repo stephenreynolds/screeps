@@ -39,45 +39,20 @@ export class RepairerCreepProcess extends CreepProcess
         }
 
         // If the creep has been refilled
-        let repairableObjects = [].concat(
-            this.scheduler.data.roomData[this.metaData.roomName].containers as never[],
-            this.roomData().ramparts as never[]
-        ) as Array<StructureRoad | StructureRampart | StructureContainer>;
-
+        let repairTargets: Structure[];
         let shortestDecay = 100;
 
-        const proc = this;
-
-        let repairTargets = _.filter(repairableObjects,
-            (object: StructureRoad | StructureRampart | StructureContainer) =>
-            {
-                if (object.ticksToDecay < shortestDecay) { shortestDecay = object.ticksToDecay; }
-
-                if (object.structureType !== STRUCTURE_RAMPART)
-                {
-                    return (object.hits < object.hitsMax);
-                }
-                else
-                {
-                    return (object.hits < Utils.rampartHealth(proc.scheduler, proc.metaData.roomName));
-                }
-            });
-
-        if (repairTargets.length === 0)
+        if (this.roomData().towers.length === 0)
         {
-            repairableObjects = [].concat(
-                this.scheduler.data.roomData[this.metaData.roomName].roads as never[]
-            ) as StructureRoad[];
-
-            shortestDecay = 100;
+            let repairableObjects = [].concat(
+                this.scheduler.data.roomData[this.metaData.roomName].containers as never[],
+                this.roomData().ramparts as never[]
+            ) as Array<StructureRoad | StructureRampart | StructureContainer>;
 
             repairTargets = _.filter(repairableObjects,
                 (object: StructureRoad | StructureRampart | StructureContainer) =>
                 {
-                    if (object.ticksToDecay < shortestDecay)
-                    {
-                        shortestDecay = object.ticksToDecay;
-                    }
+                    if (object.ticksToDecay < shortestDecay) { shortestDecay = object.ticksToDecay; }
 
                     if (object.structureType !== STRUCTURE_RAMPART)
                     {
@@ -85,9 +60,63 @@ export class RepairerCreepProcess extends CreepProcess
                     }
                     else
                     {
-                        return (object.hits < Utils.rampartHealth(proc.scheduler, proc.metaData.roomName));
+                        return (object.hits < Utils.rampartHealth(this.scheduler, this.metaData.roomName));
                     }
                 });
+
+            if (repairTargets.length === 0)
+            {
+                repairableObjects = [].concat(
+                    this.scheduler.data.roomData[this.metaData.roomName].roads as never[]
+                ) as StructureRoad[];
+
+                shortestDecay = 100;
+
+                repairTargets = _.filter(repairableObjects,
+                    (object: StructureRoad | StructureRampart | StructureContainer) =>
+                    {
+                        if (object.ticksToDecay < shortestDecay)
+                        {
+                            shortestDecay = object.ticksToDecay;
+                        }
+
+                        if (object.structureType !== STRUCTURE_RAMPART)
+                        {
+                            return (object.hits < object.hitsMax);
+                        }
+                        else
+                        {
+                            return (object.hits < Utils.rampartHealth(this.scheduler, this.metaData.roomName));
+                        }
+                    });
+            }
+        }
+        else
+        {
+            let repairableObjects = [].concat(
+                this.roomData().walls as never[]
+            ) as Array<StructureWall>;
+
+            const walls = _.filter(repairableObjects, (wall: StructureWall) =>
+            {
+                return wall.hits < wall.hitsMax;
+            });
+
+            repairTargets = walls.sort((a, b) =>
+            {
+                if (a.hits < b.hits)
+                {
+                    return -1;
+                }
+                else if (a.hits > b.hits)
+                {
+                    return 1;
+                }
+                else
+                {
+                    return 0;
+                }
+            });
         }
 
         if (repairTargets.length > 0)

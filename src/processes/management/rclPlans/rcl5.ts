@@ -14,6 +14,7 @@ export class RCL5 extends RCLPlan
         this.room.memory.roomPlan.rcl[5].storage = _.clone(this.room.memory.roomPlan.rcl[4].storage);
         this.room.memory.roomPlan.rcl[5].tower = _.clone(this.room.memory.roomPlan.rcl[4].tower);
         this.room.memory.roomPlan.rcl[5].rampart = _.clone(this.room.memory.roomPlan.rcl[4].rampart);
+        this.room.memory.roomPlan.rcl[5].constructedWall = _.clone(this.room.memory.roomPlan.rcl[4].constructedWall);
 
         // Storage link and first source link
         const storageLinkPos = new RoomPosition(this.baseSpawn.pos.x + 2, this.baseSpawn.pos.y + 4, this.room.name);

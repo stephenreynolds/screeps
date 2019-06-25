@@ -67,13 +67,15 @@ export class RemoteMinerCreepProcess extends CreepProcess
 
                 return;
             }
+            else
+            {
+                this.fork(HarvestProcess, "harvest-" + creep.name, this.priority - 1, {
+                    creep: creep.name,
+                    source: flag.pos.lookFor(LOOK_SOURCES)[0].id
+                });
 
-            this.fork(HarvestProcess, "harvest-" + creep.name, this.priority - 1, {
-                creep: creep.name,
-                source: flag.memory.source
-            });
-
-            return;
+                return;
+            }
         }
 
         // Deliver energy to room.

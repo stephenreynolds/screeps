@@ -263,8 +263,6 @@ export class EnergyManagementProcess extends Process
      */
     private storageManagers()
     {
-        let ret = false;
-
         this.metaData.storageCreep = Utils.getLiveCreeps([this.metaData.storageCreep as string])[0];
         if (!this.metaData.storageCreep && this.room().storage)
         {
@@ -294,11 +292,11 @@ export class EnergyManagementProcess extends Process
                     });
                 }
 
-                ret = true;
+                return true;
             }
         }
 
-        return ret;
+        return false;
     }
 
     private upgraders()

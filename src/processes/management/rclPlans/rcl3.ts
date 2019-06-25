@@ -80,6 +80,12 @@ export class RCL3 extends RCLPlan
             this.rampartPass(exitPositions);
         }
 
+        // Replace the wall nearest to the center with a rampart.
+        this.replaceNearestWall(TOP);
+        this.replaceNearestWall(BOTTOM);
+        this.replaceNearestWall(LEFT);
+        this.replaceNearestWall(RIGHT);
+
         this.finished(3);
     }
 
@@ -114,6 +120,35 @@ export class RCL3 extends RCLPlan
                     this.room.memory.roomPlan.rcl[3].rampart.push(pathPos);
                 }
             }
+        }
+    }
+
+    private replaceNearestWall(direction: DirectionConstant)
+    {
+        let closest: number = -1;
+        let distance: number = 99;
+        for (let i = 0; i < this.room.memory.roomPlan.rcl[3].constructedWall.length; ++i)
+        {
+            const wall = this.room.memory.roomPlan.rcl[3].constructedWall[i];
+
+            if (direction === TOP && wall.y !== 2) continue;
+            if (direction === BOTTOM && wall.y !== 47) continue;
+            if (direction === LEFT && wall.x !== 2) continue;
+            if (direction === RIGHT && wall.x !== 47) continue;
+
+            const a = wall.x - this.baseSpawn.pos.x;
+            const b = wall.y - this.baseSpawn.pos.y;
+            const c = Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
+            if (c < distance)
+            {
+                distance = c;
+                closest = i;
+            }
+        }
+        if (closest !== -1)
+        {
+            this.room.memory.roomPlan.rcl[3].rampart.push(this.room.memory.roomPlan.rcl[3].constructedWall[closest]);
+            this.room.memory.roomPlan.rcl[3].constructedWall.splice(closest, 1);
         }
     }
 }

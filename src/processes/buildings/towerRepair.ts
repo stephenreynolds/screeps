@@ -39,7 +39,7 @@ export class TowerRepairProcess extends Process
 
         const walls = _.filter(this.roomData().walls, (w: StructureWall) =>
         {
-            return w.hits < w.hitsMax;
+            return w.hits < 100_000;
         });
 
         const sortedRamparts = _.sortBy([].concat(

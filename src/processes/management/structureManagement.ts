@@ -84,41 +84,44 @@ export class StructureManagementProcess extends Process
             }
         }
 
-        const repairableObjects = [].concat(
-            this.scheduler.data.roomData[this.metaData.roomName].containers as never[],
-            this.scheduler.data.roomData[this.metaData.roomName].roads as never[]
-        ) as Structure[];
-
-        const repairTargets = _.filter(repairableObjects, (object: Structure) =>
+        if (this.roomData().walls.length > 0 || this.roomData().towers.length === 0)
         {
-            return (object.hits < object.hitsMax);
-        });
+            const repairableObjects = [].concat(
+                this.scheduler.data.roomData[this.metaData.roomName].containers as never[],
+                this.scheduler.data.roomData[this.metaData.roomName].roads as never[]
+            ) as Structure[];
 
-        if (repairTargets.length > 0)
-        {
-            if (this.metaData.repairCreeps.length === 0)
+            const repairTargets = _.filter(repairableObjects, (object: Structure) =>
             {
-                if (this.metaData.spareCreeps.length === 0)
+                return object.hits < object.hitsMax;
+            });
+
+            if (repairTargets.length > 0)
+            {
+                if (this.metaData.repairCreeps.length === 0)
                 {
-                    const creepName = "sman-r-" + this.metaData.roomName + "-" + Game.time;
-                    const spawned = Utils.spawn(this.scheduler, this.metaData.roomName, "worker", creepName, {});
-                    if (spawned)
+                    if (this.metaData.spareCreeps.length === 0)
                     {
+                        const creepName = "sman-r-" + this.metaData.roomName + "-" + Game.time;
+                        const spawned = Utils.spawn(this.scheduler, this.metaData.roomName, "worker", creepName, {});
+                        if (spawned)
+                        {
+                            this.metaData.repairCreeps.push(creepName);
+                            this.scheduler.addProcess(RepairerCreepProcess, "rcreep-" + creepName, 29, {
+                                creep: creepName,
+                                roomName: this.metaData.roomName
+                            });
+                        }
+                    }
+                    else
+                    {
+                        const creepName = this.metaData.spareCreeps.pop() as string;
                         this.metaData.repairCreeps.push(creepName);
                         this.scheduler.addProcess(RepairerCreepProcess, "rcreep-" + creepName, 29, {
                             creep: creepName,
                             roomName: this.metaData.roomName
                         });
                     }
-                }
-                else
-                {
-                    const creepName = this.metaData.spareCreeps.pop() as string;
-                    this.metaData.repairCreeps.push(creepName);
-                    this.scheduler.addProcess(RepairerCreepProcess, "rcreep-" + creepName, 29, {
-                        creep: creepName,
-                        roomName: this.metaData.roomName
-                    });
                 }
             }
         }

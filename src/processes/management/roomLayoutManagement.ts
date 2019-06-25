@@ -47,7 +47,6 @@ export class RoomLayoutManagementProcess extends Process
     private generateRoomPlan(room: Room)
     {
         room.memory.roomPlan = {};
-        room.memory.roomPlan.version = RCLPlan.version;
         room.memory.roomPlan.rcl = [];
 
         new RCL0(room, this.scheduler).generate();

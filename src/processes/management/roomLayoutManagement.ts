@@ -29,7 +29,7 @@ export class RoomLayoutManagementProcess extends Process
             return;
         }
 
-        if (room.memory.generated)
+        if (room.memory.roomPlan)
         {
             const siteCount = room.memory.numSites;
 
@@ -59,7 +59,7 @@ export class RoomLayoutManagementProcess extends Process
         new RCL7(room, this.scheduler).generate();
         new RCL8(room, this.scheduler).generate();
 
-        room.memory.generated = true;
+        room.memory.roomPlan.generated = true;
     }
 
     private createSites(room: Room)

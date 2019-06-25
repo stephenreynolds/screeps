@@ -180,7 +180,7 @@ export const ConsoleCommands = {
 
     rebuildRoomLayout(roomName: string): string
     {
-        Memory.rooms[roomName].generated = false;
+        delete Memory.rooms[roomName].roomPlan;
 
         return `${roomName}'s layout will be regenerated.`;
     },

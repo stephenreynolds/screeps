@@ -18,7 +18,14 @@ export class RCL2 extends RCLPlan
             this.room.memory.roomPlan.rcl[2].container.push(this.findEmptyInRange(sources[i].pos, 1, this.baseSpawn.pos)!);
 
             // Source roads
-            const path = PathFinder.search(this.baseSpawn.pos, { pos: sources[i].pos, range: 1 }).path;
+            let path = PathFinder.search(this.baseSpawn.pos, { pos: sources[i].pos, range: 1 }).path;
+            for (let j = 0; j < path.length; ++j)
+            {
+                this.room.memory.roomPlan.rcl[2].road.push(path[j]);
+            }
+
+            // Source to controller
+            path = PathFinder.search(sources[i].pos, { pos: this.controller.pos, range: 3 }).path;
             for (let j = 0; j < path.length; ++j)
             {
                 this.room.memory.roomPlan.rcl[2].road.push(path[j]);

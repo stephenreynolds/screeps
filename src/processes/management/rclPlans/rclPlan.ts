@@ -9,6 +9,7 @@ export abstract class RCLPlan
     protected baseSpawn: StructureSpawn;
     protected controller: StructureController;
     protected midpoint: RoomPosition;
+    protected terrain: RoomTerrain;
 
     public constructor(room: Room, scheduler: Scheduler)
     {
@@ -25,6 +26,8 @@ export abstract class RCLPlan
         this.midpoint = new RoomPosition(
             Math.round((this.baseSpawn.pos.x + this.controller.pos.x) / 2),
             Math.round((this.baseSpawn.pos.y + this.controller.pos.y) / 2), this.room.name);
+
+        this.terrain = new Room.Terrain(this.room.name);
     }
 
     public abstract generate(): void;
@@ -61,6 +64,7 @@ export abstract class RCLPlan
 
     protected finished(rcl: number)
     {
+        this.removeUnbuildablePositions(rcl);
         this.removeRoadsUnderStructures(rcl);
         console.log(`Plan for ${this.room.name} RCL ${rcl} generated successfully.`);
     }
@@ -125,7 +129,7 @@ export abstract class RCLPlan
         return undefined;
     }
 
-    protected removeRoadsUnderStructures(rcl: number)
+    private removeRoadsUnderStructures(rcl: number)
     {
         const roomPlan = this.room.memory.roomPlan.rcl[rcl];
 
@@ -151,5 +155,33 @@ export abstract class RCLPlan
                 this.room.memory.roomPlan.rcl[rcl][STRUCTURE_ROAD] = roads;
             }
         }
+    }
+
+    private removeUnbuildablePositions(rcl: number)
+    {
+        const roomPlan = this.room.memory.roomPlan.rcl[rcl];
+
+        for (const key of BuildPriorities)
+        {
+            if (!roomPlan.hasOwnProperty(key))
+            {
+                continue;
+            }
+
+            _.remove(roomPlan[key], (p: any) => !this.isBuildablePos(p.x, p.y));
+        }
+    }
+
+    private isBuildablePos(x: number, y: number): boolean
+    {
+        if (this.terrain.get(x, y) !== TERRAIN_MASK_WALL)
+        {
+            if (x > 1 && x < 48 && y > 1 && y < 48)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

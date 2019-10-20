@@ -19,7 +19,7 @@ export class TowerRepairProcess extends Process
 
         const ramparts = _.filter(this.roomData().ramparts, (rampart: StructureRampart) =>
         {
-            return rampart.hits < 50000;
+            return rampart.hits < 50_000;
         });
 
         const containers = _.filter(this.roomData().generalContainers, (container: StructureContainer) =>
@@ -39,7 +39,7 @@ export class TowerRepairProcess extends Process
 
         const walls = _.filter(this.roomData().walls, (w: StructureWall) =>
         {
-            return w.hits < 100_000;
+            return w.hits < 50_000;
         });
 
         const sortedRamparts = _.sortBy([].concat(

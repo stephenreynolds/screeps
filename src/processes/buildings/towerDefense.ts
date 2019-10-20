@@ -31,7 +31,7 @@ export class TowerDefenseProcess extends Process
             }
             else
             {
-                this.metaData.runTime += 1;
+                this.metaData.runTime++;
             }
         }
         else

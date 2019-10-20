@@ -49,6 +49,11 @@ export class MinerCreepProcess extends CreepProcess
 
             this.transfer(creep, container);
         }
+        else
+        {
+            // Suicide if miner's container no longer exists.
+            creep.suicide();
+        }
     }
 
     private transfer(creep: Creep, container: StructureContainer)

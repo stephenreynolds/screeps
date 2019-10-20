@@ -1,7 +1,6 @@
 import { CreepProcess } from "./creepProcess";
 import { CollectProcess } from "./actions/collect";
 import { DeliverProcess } from "./actions/deliver";
-import { MoveProcess } from "./actions/move";
 
 export class CourierCreepProcess extends CreepProcess
 {

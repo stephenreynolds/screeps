@@ -33,8 +33,20 @@ export class RoomLayoutManagementProcess extends Process
         {
             const siteCount = room.memory.numSites;
 
-            if (siteCount < this.maxSites)
+            if (siteCount < this.maxSites && !RCLPlan.isFinished(room, room.controller!.level))
             {
+                // Periodically remove non-started sites so higher priority sites can be created.
+                if (Game.time % 100 === 0)
+                {
+                    Game.rooms[this.metaData.roomName].find(FIND_MY_CONSTRUCTION_SITES).forEach((site) =>
+                    {
+                        if ((site as ConstructionSite).progress === 0)
+                        {
+                            (site as ConstructionSite).remove();
+                        }
+                    });
+                }
+
                 this.createSites(room);
             }
         }
@@ -58,8 +70,6 @@ export class RoomLayoutManagementProcess extends Process
         new RCL6(room, this.scheduler).generate();
         new RCL7(room, this.scheduler).generate();
         new RCL8(room, this.scheduler).generate();
-
-        room.memory.roomPlan.generated = true;
     }
 
     private createSites(room: Room)

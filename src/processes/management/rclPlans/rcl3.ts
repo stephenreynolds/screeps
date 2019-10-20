@@ -115,7 +115,7 @@ export class RCL3 extends RCLPlan
 
             for (const pathPos of path.path)
             {
-                if (pathPos.inRangeTo(pos, 2))
+                if (pathPos.inRangeTo(pos, 3))
                 {
                     this.room.memory.roomPlan.rcl[3].rampart.push(pathPos);
                 }

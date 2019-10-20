@@ -97,31 +97,33 @@ export class RepairerCreepProcess extends CreepProcess
                 this.roomData().walls as never[]
             ) as Array<StructureWall>;
 
-            const walls = _.filter(repairableObjects, (wall: StructureWall) =>
+            repairTargets = _.filter(repairableObjects, (wall: StructureWall) =>
             {
                 return wall.hits < wall.hitsMax;
             });
 
-            repairTargets = walls.sort((a, b) =>
-            {
-                if (a.hits < b.hits)
-                {
-                    return -1;
-                }
-                else if (a.hits > b.hits)
-                {
-                    return 1;
-                }
-                else
-                {
-                    return 0;
-                }
-            });
+
         }
+
+        repairTargets = repairTargets.sort((a, b) =>
+        {
+            if (a.hits < b.hits)
+            {
+                return -1;
+            }
+            else if (a.hits > b.hits)
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        });
 
         if (repairTargets.length > 0)
         {
-            const target = creep.pos.findClosestByPath<Structure>(repairTargets);
+            const target = repairTargets[0];
 
             this.fork(RepairProcess, "repair-" + creep.name, this.priority - 1, {
                 creep: creep.name,

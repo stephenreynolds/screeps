@@ -6,7 +6,7 @@ export class RCL4 extends RCLPlan
     {
         this.room.memory.roomPlan.rcl[4] = {};
 
-        // Copy RCL 4
+        // Copy RCL 3
         this.room.memory.roomPlan.rcl[4].spawn = _.clone(this.room.memory.roomPlan.rcl[3].spawn);
         this.room.memory.roomPlan.rcl[4].road = _.clone(this.room.memory.roomPlan.rcl[3].road);
         this.room.memory.roomPlan.rcl[4].container = _.clone(this.room.memory.roomPlan.rcl[3].container);

@@ -9,6 +9,19 @@ export class RCL2 extends RCLPlan
         // Copy RCL 1
         this.room.memory.roomPlan.rcl[2].spawn = _.clone(this.room.memory.roomPlan.rcl[1].spawn);
 
+        const baseToController = PathFinder.search(
+            this.baseSpawn.pos, { pos: this.controller.pos, range: 3 }).path;
+
+        // Controller roads
+        for (const pos of baseToController)
+        {
+            this.room.memory.roomPlan.rcl[2].road.push(pos);
+        }
+
+        // General container
+        const generalContainerPos = baseToController[Math.floor(baseToController.length / 2)];
+        this.room.memory.roomPlan.rcl[2].container.push(generalContainerPos);
+
         // Source containers
         this.room.memory.roomPlan.rcl[2].container = [];
         this.room.memory.roomPlan.rcl[2].road = [];
@@ -58,15 +71,13 @@ export class RCL2 extends RCLPlan
             {
                 this.room.memory.roomPlan.rcl[2].road.push(path[j]);
             }
-        }
 
-        const baseToController = PathFinder.search(
-            this.baseSpawn.pos, { pos: this.controller.pos, range: 3 }).path;
-
-        // Controller roads
-        for (const pos of baseToController)
-        {
-            this.room.memory.roomPlan.rcl[2].road.push(pos);
+            // Source to general container
+            path = PathFinder.search(sources[i].pos, { pos: generalContainerPos, range: 1 }).path;
+            for (let j = 0; j < path.length; ++j)
+            {
+                this.room.memory.roomPlan.rcl[2].road.push(path[j]);
+            }
         }
 
         // General container

@@ -23,18 +23,14 @@ export const CreepBuilder = {
 
             const nextPart = CreepBuilder.typeExtends[creepType][extendIndex];
 
-            if (
-                creepCost + BODYPART_COST[nextPart] > spendCap
-                ||
-                body.length === CreepBuilder.typeLengths[creepType]
-            )
+            if (creepCost + BODYPART_COST[nextPart] > spendCap || body.length === CreepBuilder.typeLengths[creepType])
             {
                 add = false;
             }
             else
             {
                 body.push(CreepBuilder.typeExtends[creepType][extendIndex]);
-                extendIndex += 1;
+                extendIndex++;
                 if (extendIndex === CreepBuilder.typeExtends[creepType].length)
                 {
                     extendIndex = 0;

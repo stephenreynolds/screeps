@@ -20,6 +20,7 @@
     "push-main": "rollup -c --environment DEST:main",
     "push-sim": "rollup -c --environment DEST:sim",
     "push-dev": "rollup -c --environment DEST:dev",
+    "push-private": "rollup -c --environment DEST:private",
     "watch-main": "rollup -cw --environment DEST:main",
     "watch-pserver": "rollup -cw --environment DEST:pserver",
     "watch-sim": "rollup -cw --environment DEST:sim",

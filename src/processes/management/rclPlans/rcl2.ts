@@ -15,7 +15,35 @@ export class RCL2 extends RCLPlan
         const sources = this.scheduler.data.roomData[this.room.name].sources;
         for (let i = 0; i < sources.length; ++i)
         {
-            this.room.memory.roomPlan.rcl[2].container.push(this.findEmptyInRange(sources[i].pos, 1, this.baseSpawn.pos)!);
+            let containerPos: RoomPosition;
+            const nearContainers = sources[i].pos.findInRange(FIND_STRUCTURES, 1, {
+                filter: (s: Structure) =>
+                {
+                    return s.structureType === STRUCTURE_CONTAINER;
+                }
+            });
+            if (nearContainers.length > 0)
+            {
+                containerPos = nearContainers[0].pos;
+            }
+            else
+            {
+                const nearContainerSites = sources[i].pos.findInRange(FIND_CONSTRUCTION_SITES, 1, {
+                    filter: (s: ConstructionSite) =>
+                    {
+                        return s.structureType === STRUCTURE_CONTAINER;
+                    }
+                });
+                if (nearContainerSites.length > 0)
+                {
+                    containerPos = nearContainerSites[0].pos;
+                }
+                else
+                {
+                    containerPos = this.findEmptyInRange(sources[i].pos, 1, this.baseSpawn.pos, ["wall"], ["container"])!;
+                }
+            }
+            this.room.memory.roomPlan.rcl[2].container.push(containerPos);
 
             // Source roads
             let path = PathFinder.search(this.baseSpawn.pos, { pos: sources[i].pos, range: 1 }).path;
@@ -44,6 +72,16 @@ export class RCL2 extends RCLPlan
         // General container
         const generalContainerPos = baseToController[Math.floor(baseToController.length / 2)];
         this.room.memory.roomPlan.rcl[2].container.push(generalContainerPos);
+
+        // Sources to general container roads
+        for (let i = 0; i < sources.length; ++i)
+        {
+            const path = PathFinder.search(sources[i].pos, { pos: generalContainerPos, range: 1 }).path;
+            for (let j = 0; j < path.length; ++j)
+            {
+                this.room.memory.roomPlan.rcl[2].road.push(path[j]);
+            }
+        }
 
         // Base roads
         this.room.memory.roomPlan.rcl[2].road = this.room.memory.roomPlan.rcl[2].road.concat([  // Base roads

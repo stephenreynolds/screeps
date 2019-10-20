@@ -17,11 +17,6 @@ export class BuildProcess extends Process
         const creep = Game.creeps[this.metaData.creep];
         const site = Game.getObjectById(this.metaData.site) as ConstructionSite;
 
-        if (creep && !site)
-        {
-            Memory.rooms[creep.room.name] = {};
-        }
-
         if (!site || !creep || _.sum(creep.carry) === 0)
         {
             this.completed = true;

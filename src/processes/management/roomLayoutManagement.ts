@@ -29,7 +29,7 @@ export class RoomLayoutManagementProcess extends Process
             return;
         }
 
-        if (room.memory.roomPlan)
+        if (room.memory.roomPlan && room.memory.roomPlan.rcl.length === 9)
         {
             const siteCount = room.memory.numSites;
 

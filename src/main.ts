@@ -6,6 +6,7 @@ import { RoomPathFinder } from "utils/roomPathFinder";
 import { Scheduler } from "scheduler";
 import { Utils } from "utils/utils";
 import profiler from "screeps-profiler";
+import { RCLPlan } from "processes/management/rclPlans/rclPlan";
 
 const enableProfiling = __SCRIPT_BRANCH__!.match("dev");
 setupProfiling();
@@ -27,6 +28,7 @@ function setupProfiling()
     {
         profiler.enable();
 
+        profiler.registerClass(RCLPlan, "RCLPlan");
         profiler.registerClass(RoomPathFinder, "RoomPathFinder");
         profiler.registerObject(CreepBuilder, "CreepBuilder");
         profiler.registerObject(Utils, "Utils");

@@ -40,7 +40,7 @@ export class RCL2 extends RCLPlan
                 }
                 else
                 {
-                    containerPos = this.findEmptyInRange(sources[i].pos, 1, this.baseSpawn.pos, ["wall"], ["container"])!;
+                    containerPos = this.findEmptyInRange(sources[i].pos, 1, this.baseSpawn.pos, ["wall"])!;
                 }
             }
             this.room.memory.roomPlan.rcl[2].container.push(containerPos);

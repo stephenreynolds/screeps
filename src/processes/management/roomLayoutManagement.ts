@@ -35,18 +35,6 @@ export class RoomLayoutManagementProcess extends Process
 
             if (siteCount < this.maxSites && !RCLPlan.isFinished(room, room.controller!.level))
             {
-                // Periodically remove non-started sites so higher priority sites can be created.
-                if (Game.time % 100 === 0)
-                {
-                    Game.rooms[this.metaData.roomName].find(FIND_MY_CONSTRUCTION_SITES).forEach((site) =>
-                    {
-                        if ((site as ConstructionSite).progress === 0)
-                        {
-                            (site as ConstructionSite).remove();
-                        }
-                    });
-                }
-
                 this.createSites(room);
             }
         }

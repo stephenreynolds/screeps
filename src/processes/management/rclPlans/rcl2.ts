@@ -80,20 +80,6 @@ export class RCL2 extends RCLPlan
             }
         }
 
-        // General container
-        const generalContainerPos = baseToController[Math.floor(baseToController.length / 2)];
-        this.room.memory.roomPlan.rcl[2].container.push(generalContainerPos);
-
-        // Sources to general container roads
-        for (let i = 0; i < sources.length; ++i)
-        {
-            const path = PathFinder.search(sources[i].pos, { pos: generalContainerPos, range: 1 }).path;
-            for (let j = 0; j < path.length; ++j)
-            {
-                this.room.memory.roomPlan.rcl[2].road.push(path[j]);
-            }
-        }
-
         // Base roads
         this.room.memory.roomPlan.rcl[2].road = this.room.memory.roomPlan.rcl[2].road.concat([  // Base roads
             // Top to right

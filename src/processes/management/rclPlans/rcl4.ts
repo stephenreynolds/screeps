@@ -28,55 +28,32 @@ export class RCL4 extends RCLPlan
             }
         }
         // Find storage pos nearest to nearest source.
-        nearestRange = 99;
-        let nearest: RoomPosition;
-
-        let y = -6;
-        for (let x = -8; x <= 8; x++)
+        // Top
+        let nearest = new RoomPosition(this.baseSpawn.pos.x, this.baseSpawn.pos.y - 6, this.room.name);
+        nearestRange = nearest.getRangeTo(nearestSource!.pos);
+        // Bottom
+        let newPos = new RoomPosition(this.baseSpawn.pos.x, this.baseSpawn.pos.y + 10, this.room.name);
+        let newRange = newPos.getRangeTo(nearestSource!.pos);
+        if (newRange < nearestRange)
         {
-            const pos = new RoomPosition(this.baseSpawn.pos.x + x, this.baseSpawn.pos.y + y, this.room.name);
-            const range = pos.getRangeTo(nearestSource!.pos);
-            if (range < nearestRange && this.isBuildablePos(pos.x, pos.y))
-            {
-                nearestRange = range;
-                nearest = pos;
-            }
+            nearestRange = newRange;
+            nearest = newPos;
         }
-
-        y = 10;
-        for (let x = -8; x <= 8; x++)
+        // Left
+        newPos = new RoomPosition(this.baseSpawn.pos.x - 8, this.baseSpawn.pos.y + 2, this.room.name);
+        newRange = newPos.getRangeTo(nearestSource!.pos);
+        if (newRange < nearestRange)
         {
-            const pos = new RoomPosition(this.baseSpawn.pos.x + x, this.baseSpawn.pos.y + y, this.room.name);
-            const range = pos.getRangeTo(nearestSource!.pos);
-            if (range < nearestRange && this.isBuildablePos(pos.x, pos.y))
-            {
-                nearestRange = range;
-                nearest = pos;
-            }
+            nearestRange = newRange;
+            nearest = newPos;
         }
-
-        let x = -8;
-        for (let y = -6; y <= 10; y++)
+        // Right
+        newPos = new RoomPosition(this.baseSpawn.pos.x + 8, this.baseSpawn.pos.y + 2, this.room.name);
+        newRange = newPos.getRangeTo(nearestSource!.pos);
+        if (newRange < nearestRange)
         {
-            const pos = new RoomPosition(this.baseSpawn.pos.x + x, this.baseSpawn.pos.y + y, this.room.name);
-            const range = pos.getRangeTo(nearestSource!.pos);
-            if (range < nearestRange && this.isBuildablePos(pos.x, pos.y))
-            {
-                nearestRange = range;
-                nearest = pos;
-            }
-        }
-
-        x = 8;
-        for (let y = -6; y <= 10; y++)
-        {
-            const pos = new RoomPosition(this.baseSpawn.pos.x + x, this.baseSpawn.pos.y + y, this.room.name);
-            const range = pos.getRangeTo(nearestSource!.pos);
-            if (range < nearestRange && this.isBuildablePos(pos.x, pos.y))
-            {
-                nearestRange = range;
-                nearest = pos;
-            }
+            nearestRange = newRange;
+            nearest = newPos;
         }
 
         this.room.memory.roomPlan.rcl[4].storage = [nearest!];

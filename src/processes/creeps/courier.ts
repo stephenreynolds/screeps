@@ -29,7 +29,7 @@ export class CourierCreepProcess extends CreepProcess
     {
         // Prefer collecting energy from storage, fallback to containers.
         let collectTarget: Structure;
-        if (creep.room.storage)
+        if (creep.room.storage && _.sum(creep.room.storage.store) > 0)
         {
             collectTarget = creep.room.storage;
         }
@@ -69,7 +69,7 @@ export class CourierCreepProcess extends CreepProcess
          */
         let targets = [].concat(
             this.scheduler.data.roomData[creep.room.name].spawns as never[],
-            this.scheduler.data.roomData[creep.room.name].extensions as never[]
+            _.filter(this.scheduler.data.roomData[creep.room.name].extensions, (e) => e.isActive()) as never[]
         );
 
         let deliverTargets = _.filter(targets, (t: DeliveryTarget) =>

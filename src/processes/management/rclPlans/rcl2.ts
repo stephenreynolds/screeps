@@ -26,7 +26,6 @@ export class RCL2 extends RCLPlan
         this.room.memory.roomPlan.rcl[2].container.push(generalContainerPos);
 
         // Source containers
-        this.room.memory.roomPlan.rcl[2].container = [];
         this.room.memory.roomPlan.rcl[2].road = [];
         const sources = this.scheduler.data.roomData[this.room.name].sources;
         for (let i = 0; i < sources.length; ++i)

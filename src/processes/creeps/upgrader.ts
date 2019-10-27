@@ -20,10 +20,12 @@ export class UpgraderCreepProcess extends CreepProcess
         // Collect energy.
         if (_.sum(creep.carry) === 0)
         {
+            let target: Structure | undefined;
+
             const links = this.scheduler.data.roomData[creep.room.name].links;
             const generalContainers = this.scheduler.data.roomData[creep.room.name].generalContainers;
 
-            if (generalContainers[0] || creep.room.storage || links[0])
+            if (generalContainers[0] || (creep.room.storage && creep.room.storage.isActive()) || links[0])
             {
                 // Collect from upgrade link if it exists.
                 const link = _.find(links, (l: StructureLink) =>
@@ -33,11 +35,7 @@ export class UpgraderCreepProcess extends CreepProcess
 
                 if (link && link.energy > 0)
                 {
-                    this.fork(CollectProcess, "collect-" + creep.name, this.priority - 1, {
-                        target: link.id,
-                        creep: creep.name,
-                        resource: RESOURCE_ENERGY
-                    });
+                    target = link;
 
                     return;
                 }
@@ -58,48 +56,41 @@ export class UpgraderCreepProcess extends CreepProcess
 
                     if (targets.length > 0)
                     {
-                        const target = creep.pos.findClosestByPath(targets);
-
-                        this.fork(CollectProcess, "collect-" + creep.name, this.priority - 1, {
-                            target: target!.id,
-                            creep: creep.name,
-                            resource: RESOURCE_ENERGY
+                        target = creep.pos.findClosestByPath(targets) as Structure;
+                    }
+                    else
+                    {
+                        // Collect from source containers if no storage or general containers.
+                        const sourceContainers = this.scheduler.data.roomData[creep.room.name].sourceContainers;
+                        const targets = _.filter(sourceContainers, (c: StructureContainer) =>
+                        {
+                            return c.store[RESOURCE_ENERGY] > 0;
                         });
 
-                        return;
+                        if (targets)
+                        {
+                            target = creep.pos.findClosestByPath(targets) as Structure;
+                        }
                     }
                 }
             }
+
+            if (target)
+            {
+                this.fork(CollectProcess, "collect-" + creep.name, this.priority - 1, {
+                    target: target.id,
+                    creep: creep.name,
+                    resource: RESOURCE_ENERGY
+                });
+            }
             else
             {
-                // Collect from source containers if no storage or general containers.
-                const sourceContainers = this.scheduler.data.roomData[creep.room.name].sourceContainers;
-                const targets = _.filter(sourceContainers, (c: StructureContainer) =>
-                {
-                    return c.store[RESOURCE_ENERGY] > 0;
+                // Harvest from source if nothing to collect from.
+                const source = creep.pos.findClosestByPath(this.scheduler.data.roomData[creep.room.name].sources);
+                this.fork(HarvestProcess, `harvest-${creep.name}`, this.priority - 1, {
+                    source: source,
+                    creep: creep.name
                 });
-
-                if (targets)
-                {
-                    const target = creep.pos.findClosestByPath(targets) as Structure;
-
-                    this.fork(CollectProcess, "collect-" + creep.name, this.priority - 1, {
-                        target: target.id,
-                        creep: creep.name,
-                        resource: RESOURCE_ENERGY
-                    });
-
-                    return;
-                }
-                else
-                {
-                    // Harvest from source if nothing to collect from.
-                    const source = creep.pos.findClosestByPath(this.scheduler.data.roomData[creep.room.name].sources);
-                    this.fork(HarvestProcess, `harvest-${creep.name}`, this.priority - 1, {
-                        source: source,
-                        creep: creep.name
-                    });
-                }
             }
         }
 

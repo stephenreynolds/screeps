@@ -302,7 +302,7 @@ export class EnergyManagementProcess extends Process
     private upgraders()
     {
         this.metaData.upgradeCreeps = Utils.getLiveCreeps(this.metaData.upgradeCreeps);
-        if (this.metaData.upgradeCreeps.length < 3 &&
+        if (this.metaData.upgradeCreeps.length < 1 &&
             (this.scheduler.data.roomData[this.metaData.roomName].generalContainers.length > 0 ||
                 this.room().storage || this.scheduler.data.roomData[this.metaData.roomName].links.length >= 2))
         {

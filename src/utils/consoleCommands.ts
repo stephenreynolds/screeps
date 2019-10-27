@@ -199,6 +199,16 @@ export const ConsoleCommands = {
 
     help(): string
     {
+        const profilingMessage = __SCRIPT_BRANCH__!.match("dev") ?
+            "PROFILER\n" +
+            "\tprofiler.profile(ticks: number, functionFilter?: string)\n\t\tWill run for the given number of ticks, then will output the gather information.\n" +
+            "\tprofiler.stream(ticks: number, functionFilter?: string)\n\t\tWill run for the given number of ticks, and will output the gathered information each tick.\n" +
+            "\tprofiler.email(ticks: number, functionFilter?: string)\n\t\tWill run for the given number of ticks, then will email the output to your registered Screeps email address.\n" +
+            "\tprofiler.background(functionFilter?: string)\n\t\tWill run indefinitely, and will only output date when the profiler.output command is run.\n" +
+            "\tprofiler.output(lineCount?: number)\n\t\tPrint a report based on the current tick. The profiler will continue to operate normally.\n" +
+            "\tprofiler.reset()\n\t\tStops the profiler and resets its memory.\n" +
+            "\tprofiler.restart()\n\t\tRestarts the profiler using the same options previously used to start it.\n" : "";
+
         const message =
             "INFO\n" +
             "\tAuthor:   Stephen Reynolds (kumikill) (screeps@stephenreynolds.me)\n" +
@@ -215,14 +225,7 @@ export const ConsoleCommands = {
             "\tprintProcesses(type?: string, formatted = true)\n\t\tPrint process memory. Optionally specify a process type and whether to format output.\n" +
             "\tresetProcesses(roomName?: string)\n\t\tKills all processes, optionally only in the given room.\n" +
             "\ttoggleStats()\n\t\tToggles whether statistics will be collected in [Memory.stats].\n" +
-            "PROFILER\n" +
-            "\tprofiler.profile(ticks: number, functionFilter?: string)\n\t\tWill run for the given number of ticks, then will output the gather information.\n" +
-            "\tprofiler.stream(ticks: number, functionFilter?: string)\n\t\tWill run for the given number of ticks, and will output the gathered information each tick.\n" +
-            "\tprofiler.email(ticks: number, functionFilter?: string)\n\t\tWill run for the given number of ticks, then will email the output to your registered Screeps email address.\n" +
-            "\tprofiler.background(functionFilter?: string)\n\t\tWill run indefinitely, and will only output date when the profiler.output command is run.\n" +
-            "\tprofiler.output(lineCount?: number)\n\t\tPrint a report based on the current tick. The profiler will continue to operate normally.\n" +
-            "\tprofiler.reset()\n\t\tStops the profiler and resets its memory.\n" +
-            "\tprofiler.restart()\n\t\tRestarts the profiler using the same options previously used to start it.\n" +
+            profilingMessage +
             "STRUCTURES\n" +
             "\tdestroyall(roomName: string, structureType: StructureConstant)\n\t\tDestroys all of the given structure type in the room.\n" +
             "\tremoveConstructionSites(roomName: string, leaveProgressStarted = true, structureType?: string)\n\t\tRemoves construction sites in a room. Does not remove sites already started by default. Optionally specify a StructureConstant.\n" +

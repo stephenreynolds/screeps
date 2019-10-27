@@ -12,6 +12,9 @@ export class RCL2 extends RCLPlan
         const baseToController = PathFinder.search(
             this.baseSpawn.pos, { pos: this.controller.pos, range: 3 }).path;
 
+        this.room.memory.roomPlan.rcl[2].road = [];
+        this.room.memory.roomPlan.rcl[2].container = [];
+
         // Controller roads
         for (const pos of baseToController)
         {
@@ -23,7 +26,6 @@ export class RCL2 extends RCLPlan
         this.room.memory.roomPlan.rcl[2].container.push(generalContainerPos);
 
         // Source containers
-        this.room.memory.roomPlan.rcl[2].container = [];
         this.room.memory.roomPlan.rcl[2].road = [];
         const sources = this.scheduler.data.roomData[this.room.name].sources;
         for (let i = 0; i < sources.length; ++i)

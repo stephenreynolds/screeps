@@ -36,7 +36,8 @@ export class RepairerCreepProcess extends CreepProcess {
         let repairTargets: Structure[];
         let shortestDecay = 100;
 
-        const useableTowers = _.filter(this.roomData().towers, (tower: StructureTower) => {
+        const useableTowers = _.filter(this.roomData().towers, (tower: StructureTower) =>
+        {
             return tower.energy >= 500;
         });
 

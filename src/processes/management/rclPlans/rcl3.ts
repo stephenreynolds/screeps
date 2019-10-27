@@ -39,88 +39,65 @@ export class RCL3 extends RCLPlan
         // Walls
         this.room.memory.roomPlan.rcl[3].constructedWall = [];
         const exitPositions = this.room.find(FIND_EXIT);
+        const costs = new PathFinder.CostMatrix;
+        _.forEach(this.room.find(FIND_STRUCTURES), (s: Structure) =>
+        {
+            costs.set(s.pos.x, s.pos.y, 255);
+        });
         for (const pos of exitPositions)
         {
-            let x = 0;
-            let y = 0;
+            let path: PathFinderPath | undefined;
+            do
+            {
+                // path = this.room.findPath(pos, this.baseSpawn.pos, {
+                //     ignoreCreeps: true,
+                //     swampCost: 1,
+                //     costCallback: () => costs
+                // });
 
-            if (pos.x === 0)
-            {
-                x = pos.x + 2;
-            }
-            else if (pos.x === 49)
-            {
-                x = pos.x - 2;
-            }
-            else
-            {
-                x = pos.x;
-            }
+                // if (path.length !== 0)
+                // {
+                //     for (const p of path)
+                //     {
+                //         if (p.x === 2 || p.y === 2 || p.x === 47 || p.y === 47)
+                //         {
+                //             this.room.memory.roomPlan.rcl[3].constructedWall.push(new RoomPosition(p.x, p.y, this.room.name));
+                //             costs.set(p.x, p.y, 255);
+                //             break;
+                //         }
+                //     }
+                // }
 
-            if (pos.y === 0)
-            {
-                y = pos.y + 2;
-            }
-            else if (pos.y === 49)
-            {
-                y = pos.y - 2;
-            }
-            else
-            {
-                y = pos.y;
-            }
+                const path = PathFinder.search(pos, this.baseSpawn.pos,
+                    {
+                        maxRooms: 1,
+                        swampCost: 1,
+                        roomCallback: () => costs
+                    });
 
-            this.room.memory.roomPlan.rcl[3].constructedWall.push(new RoomPosition(x, y, this.room.name));
-        }
-
-        // Ramparts
-        this.room.memory.roomPlan.rcl[3].rampart = [];
-        for (let i = 0; i < 3; ++i)
-        {
-            this.rampartPass(exitPositions);
+                if (!path.incomplete)
+                {
+                    for (const p of path.path)
+                    {
+                        if (p.x === 2 || p.y === 2 || p.x === 47 || p.y === 47)
+                        {
+                            this.room.memory.roomPlan.rcl[3].constructedWall.push(new RoomPosition(p.x, p.y, this.room.name));
+                            costs.set(p.x, p.y, 255);
+                            break;
+                        }
+                    }
+                }
+            } while (path && !path.incomplete);
         }
 
         // Replace the wall nearest to the center with a rampart.
+        this.room.memory.roomPlan.rcl[3].rampart = [];
         this.replaceNearestWall(TOP);
         this.replaceNearestWall(BOTTOM);
         this.replaceNearestWall(LEFT);
         this.replaceNearestWall(RIGHT);
 
         this.finished(3);
-    }
-
-    private rampartPass(exitPositions: RoomPosition[])
-    {
-        for (const pos of exitPositions)
-        {
-            const path = PathFinder.search(this.midpoint, pos,
-                {
-                    swampCost: 1,
-                    roomCallback: (roomName: string) =>
-                    {
-                        const costs = new PathFinder.CostMatrix;
-
-                        for (const wallPos of this.room.memory.roomPlan.rcl[3].constructedWall)
-                        {
-                            costs.set(wallPos.x, wallPos.y, 255);
-                        }
-                        for (const rampartPos of this.room.memory.roomPlan.rcl[3].rampart)
-                        {
-                            costs.set(rampartPos.x, rampartPos.y, 255);
-                        }
-
-                        return costs;
-                    }
-                });
-
-            for (const pathPos of path.path)
-            {
-                if (pathPos.inRangeTo(pos, 2))
-                {
-                    this.room.memory.roomPlan.rcl[3].rampart.push(pathPos);
-                }
-            }
-        }
     }
 
     private replaceNearestWall(direction: DirectionConstant)

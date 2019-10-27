@@ -6,7 +6,7 @@ export class RCL4 extends RCLPlan
     {
         this.room.memory.roomPlan.rcl[4] = {};
 
-        // Copy RCL 4
+        // Copy RCL 3
         this.room.memory.roomPlan.rcl[4].spawn = _.clone(this.room.memory.roomPlan.rcl[3].spawn);
         this.room.memory.roomPlan.rcl[4].road = _.clone(this.room.memory.roomPlan.rcl[3].road);
         this.room.memory.roomPlan.rcl[4].container = _.clone(this.room.memory.roomPlan.rcl[3].container);
@@ -16,9 +16,70 @@ export class RCL4 extends RCLPlan
         this.room.memory.roomPlan.rcl[4].rampart = _.clone(this.room.memory.roomPlan.rcl[3].rampart);
 
         // Storage
-        this.room.memory.roomPlan.rcl[4].storage = [
-            new RoomPosition(this.baseSpawn.pos.x, this.baseSpawn.pos.y - 6, this.room.name)
-        ];
+        // Find source nearest to the controller.
+        let nearestSource: Source;
+        let nearestRange: number = 99;
+        for (const source of this.scheduler.data.roomData[this.room.name].sources)
+        {
+            const range = source.pos.getRangeTo(this.room.controller!.pos);
+            if (range < nearestRange)
+            {
+                nearestSource = source;
+            }
+        }
+        // Find storage pos nearest to nearest source.
+        nearestRange = 99;
+        let nearest: RoomPosition;
+
+        let y = -6;
+        for (let x = -8; x <= 8; x++)
+        {
+            const pos = new RoomPosition(this.baseSpawn.pos.x + x, this.baseSpawn.pos.y + y, this.room.name);
+            const range = pos.getRangeTo(nearestSource!.pos);
+            if (range < nearestRange && this.isBuildablePos(pos.x, pos.y))
+            {
+                nearestRange = range;
+                nearest = pos;
+            }
+        }
+
+        y = 10;
+        for (let x = -8; x <= 8; x++)
+        {
+            const pos = new RoomPosition(this.baseSpawn.pos.x + x, this.baseSpawn.pos.y + y, this.room.name);
+            const range = pos.getRangeTo(nearestSource!.pos);
+            if (range < nearestRange && this.isBuildablePos(pos.x, pos.y))
+            {
+                nearestRange = range;
+                nearest = pos;
+            }
+        }
+
+        let x = -8;
+        for (let y = -6; y <= 10; y++)
+        {
+            const pos = new RoomPosition(this.baseSpawn.pos.x + x, this.baseSpawn.pos.y + y, this.room.name);
+            const range = pos.getRangeTo(nearestSource!.pos);
+            if (range < nearestRange && this.isBuildablePos(pos.x, pos.y))
+            {
+                nearestRange = range;
+                nearest = pos;
+            }
+        }
+
+        x = 8;
+        for (let y = -6; y <= 10; y++)
+        {
+            const pos = new RoomPosition(this.baseSpawn.pos.x + x, this.baseSpawn.pos.y + y, this.room.name);
+            const range = pos.getRangeTo(nearestSource!.pos);
+            if (range < nearestRange && this.isBuildablePos(pos.x, pos.y))
+            {
+                nearestRange = range;
+                nearest = pos;
+            }
+        }
+
+        this.room.memory.roomPlan.rcl[4].storage = [nearest!];
 
         // Extensions
         this.room.memory.roomPlan.rcl[4].extension = this.room.memory.roomPlan.rcl[4].extension.concat([

@@ -129,6 +129,19 @@ export abstract class RCLPlan
         return undefined;
     }
 
+    protected isBuildablePos(x: number, y: number): boolean
+    {
+        if (this.terrain.get(x, y) !== TERRAIN_MASK_WALL)
+        {
+            if (x > 1 && x < 48 && y > 1 && y < 48)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private removeRoadsUnderStructures(rcl: number)
     {
         const roomPlan = this.room.memory.roomPlan.rcl[rcl];
@@ -170,18 +183,5 @@ export abstract class RCLPlan
 
             _.remove(roomPlan[key], (p: any) => !this.isBuildablePos(p.x, p.y));
         }
-    }
-
-    private isBuildablePos(x: number, y: number): boolean
-    {
-        if (this.terrain.get(x, y) !== TERRAIN_MASK_WALL)
-        {
-            if (x > 1 && x < 48 && y > 1 && y < 48)
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

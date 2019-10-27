@@ -50,7 +50,7 @@ export class RCL4 extends RCLPlan
         // Bottom
         let newPos = new RoomPosition(this.baseSpawn.pos.x, this.baseSpawn.pos.y + 10, this.room.name);
         let newRange = newPos.getRangeTo(nearestSource!.pos);
-        if (newRange < nearestRange)
+        if (newRange < nearestRange && this.isBuildablePos(newPos.x, newPos.y))
         {
             nearestRange = newRange;
             nearest = newPos;
@@ -58,7 +58,7 @@ export class RCL4 extends RCLPlan
         // Left
         newPos = new RoomPosition(this.baseSpawn.pos.x - 8, this.baseSpawn.pos.y + 2, this.room.name);
         newRange = newPos.getRangeTo(nearestSource!.pos);
-        if (newRange < nearestRange)
+        if (newRange < nearestRange && this.isBuildablePos(newPos.x, newPos.y))
         {
             nearestRange = newRange;
             nearest = newPos;
@@ -66,7 +66,7 @@ export class RCL4 extends RCLPlan
         // Right
         newPos = new RoomPosition(this.baseSpawn.pos.x + 8, this.baseSpawn.pos.y + 2, this.room.name);
         newRange = newPos.getRangeTo(nearestSource!.pos);
-        if (newRange < nearestRange)
+        if (newRange < nearestRange && this.isBuildablePos(newPos.x, newPos.y))
         {
             nearestRange = newRange;
             nearest = newPos;

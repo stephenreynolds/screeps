@@ -2,31 +2,55 @@ import { RCLPlan } from "./rclPlan";
 
 export class RCL2 extends RCLPlan
 {
+    protected rcl: number = 2;
+
     public generate()
     {
-        this.room.memory.roomPlan.rcl[2] = {};
-
-        // Copy RCL 1
-        this.room.memory.roomPlan.rcl[2].spawn = _.clone(this.room.memory.roomPlan.rcl[1].spawn);
+        this.init();
 
         const baseToController = PathFinder.search(
             this.baseSpawn.pos, { pos: this.controller.pos, range: 3 }).path;
 
-        this.room.memory.roomPlan.rcl[2].road = [];
-        this.room.memory.roomPlan.rcl[2].container = [];
+        this.addControllerRoads(baseToController);
+        const generalContainerPos = this.addGeneralContainer(baseToController);
+        this.addSourceContainer(generalContainerPos);
+        this.addBaseRoads();
+        this.addExtensions();
+        this.addExtensionRoads();
 
-        // Controller roads
+        this.finished();
+    }
+
+    protected init(): void
+    {
+        this.room.memory.roomPlan.rcl[this.rcl] = {};
+
+        // Copy RCL 1
+        this.room.memory.roomPlan.rcl[this.rcl].spawn = _.clone(this.room.memory.roomPlan.rcl[this.rcl - 1].spawn);
+
+        // Initialize arrays
+        this.room.memory.roomPlan.rcl[this.rcl].road = [];
+        this.room.memory.roomPlan.rcl[this.rcl].container = [];
+    }
+
+    private addControllerRoads(baseToController: RoomPosition[])
+    {
         for (const pos of baseToController)
         {
-            this.room.memory.roomPlan.rcl[2].road.push(pos);
+            this.room.memory.roomPlan.rcl[this.rcl].road.push(pos);
         }
+    }
 
-        // General container
+    private addGeneralContainer(baseToController: RoomPosition[]): RoomPosition
+    {
         const generalContainerPos = baseToController[Math.floor(baseToController.length / 2)];
-        this.room.memory.roomPlan.rcl[2].container.push(generalContainerPos);
+        this.room.memory.roomPlan.rcl[this.rcl].container.push(generalContainerPos);
 
-        // Source containers
-        this.room.memory.roomPlan.rcl[2].road = [];
+        return generalContainerPos;
+    }
+
+    private addSourceContainer(generalContainerPos: RoomPosition)
+    {
         const sources = this.scheduler.data.roomData[this.room.name].sources;
         for (let i = 0; i < sources.length; ++i)
         {
@@ -58,32 +82,34 @@ export class RCL2 extends RCLPlan
                     containerPos = this.findEmptyInRange(sources[i].pos, 1, this.baseSpawn.pos, ["wall"])!;
                 }
             }
-            this.room.memory.roomPlan.rcl[2].container.push(containerPos);
+            this.room.memory.roomPlan.rcl[this.rcl].container.push(containerPos);
 
             // Source roads
             let path = PathFinder.search(this.baseSpawn.pos, { pos: sources[i].pos, range: 1 }).path;
             for (let j = 0; j < path.length; ++j)
             {
-                this.room.memory.roomPlan.rcl[2].road.push(path[j]);
+                this.room.memory.roomPlan.rcl[this.rcl].road.push(path[j]);
             }
 
             // Source to controller
             path = PathFinder.search(sources[i].pos, { pos: this.controller.pos, range: 3 }).path;
             for (let j = 0; j < path.length; ++j)
             {
-                this.room.memory.roomPlan.rcl[2].road.push(path[j]);
+                this.room.memory.roomPlan.rcl[this.rcl].road.push(path[j]);
             }
 
             // Source to general container
             path = PathFinder.search(sources[i].pos, { pos: generalContainerPos, range: 1 }).path;
             for (let j = 0; j < path.length; ++j)
             {
-                this.room.memory.roomPlan.rcl[2].road.push(path[j]);
+                this.room.memory.roomPlan.rcl[this.rcl].road.push(path[j]);
             }
         }
+    }
 
-        // Base roads
-        this.room.memory.roomPlan.rcl[2].road = this.room.memory.roomPlan.rcl[2].road.concat([  // Base roads
+    private addBaseRoads()
+    {
+        this.room.memory.roomPlan.rcl[this.rcl].road = this.room.memory.roomPlan.rcl[this.rcl].road.concat([
             // Top to right
             new RoomPosition(this.baseSpawn.pos.x, this.baseSpawn.pos.y - 1, this.room.name),
             new RoomPosition(this.baseSpawn.pos.x + 1, this.baseSpawn.pos.y, this.room.name),
@@ -101,18 +127,22 @@ export class RCL2 extends RCLPlan
             new RoomPosition(this.baseSpawn.pos.x - 2, this.baseSpawn.pos.y + 1, this.room.name),
             new RoomPosition(this.baseSpawn.pos.x - 1, this.baseSpawn.pos.y, this.room.name)
         ]);
+    }
 
-        // Extensions
-        this.room.memory.roomPlan.rcl[2].extension = [
+    private addExtensions()
+    {
+        this.room.memory.roomPlan.rcl[this.rcl].extension = [
             new RoomPosition(this.baseSpawn.pos.x - 2, this.baseSpawn.pos.y - 1, this.room.name),
             new RoomPosition(this.baseSpawn.pos.x - 2, this.baseSpawn.pos.y - 2, this.room.name),
             new RoomPosition(this.baseSpawn.pos.x - 1, this.baseSpawn.pos.y - 1, this.room.name),
             new RoomPosition(this.baseSpawn.pos.x - 2, this.baseSpawn.pos.y, this.room.name),
             new RoomPosition(this.baseSpawn.pos.x - 3, this.baseSpawn.pos.y - 1, this.room.name)
         ];
+    }
 
-        // Extension roads
-        this.room.memory.roomPlan.rcl[2].road = this.room.memory.roomPlan.rcl[2].road.concat([
+    private addExtensionRoads()
+    {
+        this.room.memory.roomPlan.rcl[this.rcl].road = this.room.memory.roomPlan.rcl[this.rcl].road.concat([
             new RoomPosition(this.baseSpawn.pos.x - 1, this.baseSpawn.pos.y - 2, this.room.name),
             new RoomPosition(this.baseSpawn.pos.x - 2, this.baseSpawn.pos.y - 3, this.room.name),
             new RoomPosition(this.baseSpawn.pos.x - 3, this.baseSpawn.pos.y - 2, this.room.name),
@@ -120,7 +150,5 @@ export class RCL2 extends RCLPlan
             new RoomPosition(this.baseSpawn.pos.x - 5, this.baseSpawn.pos.y, this.room.name),
             new RoomPosition(this.baseSpawn.pos.x - 4, this.baseSpawn.pos.y + 1, this.room.name)
         ]);
-
-        this.finished(2);
     }
 }

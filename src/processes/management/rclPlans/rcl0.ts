@@ -2,10 +2,17 @@ import { RCLPlan } from "./rclPlan";
 
 export class RCL0 extends RCLPlan
 {
+    protected rcl: number = 0;
+
     public generate()
     {
-        this.room.memory.roomPlan.rcl[0] = {};
+        this.init();
 
-        this.finished(0);
+        this.finished();
+    }
+
+    protected init()
+    {
+        this.room.memory.roomPlan.rcl[this.rcl] = {};
     }
 }

@@ -2,27 +2,49 @@ import { RCLPlan } from "./rclPlan";
 
 export class RCL3 extends RCLPlan
 {
+    protected rcl: number = 3;
+
     public generate()
     {
-        this.room.memory.roomPlan.rcl[3] = {};
+        this.init();
+
+        this.addExtensions();
+        this.addExtensionRoads();
+        this.addTower();
+        this.addWalls();
+        this.addRamparts();
+
+        this.finished();
+    }
+
+    protected init(): void
+    {
+        this.room.memory.roomPlan.rcl[this.rcl] = {};
 
         // Copy RCL 2
-        this.room.memory.roomPlan.rcl[3].spawn = _.clone(this.room.memory.roomPlan.rcl[2].spawn);
-        this.room.memory.roomPlan.rcl[3].road = _.clone(this.room.memory.roomPlan.rcl[2].road);
-        this.room.memory.roomPlan.rcl[3].container = _.clone(this.room.memory.roomPlan.rcl[2].container);
-        this.room.memory.roomPlan.rcl[3].extension = _.clone(this.room.memory.roomPlan.rcl[2].extension);
+        this.room.memory.roomPlan.rcl[this.rcl].spawn = _.clone(this.room.memory.roomPlan.rcl[this.rcl - 1].spawn);
+        this.room.memory.roomPlan.rcl[this.rcl].road = _.clone(this.room.memory.roomPlan.rcl[this.rcl - 1].road);
+        this.room.memory.roomPlan.rcl[this.rcl].container = _.clone(this.room.memory.roomPlan.rcl[this.rcl - 1].container);
+        this.room.memory.roomPlan.rcl[this.rcl].extension = _.clone(this.room.memory.roomPlan.rcl[this.rcl - 1].extension);
 
-        // Extensions
-        this.room.memory.roomPlan.rcl[3].extension = this.room.memory.roomPlan.rcl[3].extension.concat([
+        // Initialize arrays
+        this.room.memory.roomPlan.rcl[this.rcl].rampart = [];
+    }
+
+    private addExtensions()
+    {
+        this.room.memory.roomPlan.rcl[this.rcl].extension = this.room.memory.roomPlan.rcl[this.rcl].extension.concat([
             new RoomPosition(this.baseSpawn.pos.x - 3, this.baseSpawn.pos.y, this.room.name),
             new RoomPosition(this.baseSpawn.pos.x - 4, this.baseSpawn.pos.y, this.room.name),
             new RoomPosition(this.baseSpawn.pos.x - 3, this.baseSpawn.pos.y + 1, this.room.name),
             new RoomPosition(this.baseSpawn.pos.x - 1, this.baseSpawn.pos.y + 3, this.room.name),
             new RoomPosition(this.baseSpawn.pos.x - 3, this.baseSpawn.pos.y + 3, this.room.name)
         ]);
+    }
 
-        // Extension roads
-        this.room.memory.roomPlan.rcl[3].road = this.room.memory.roomPlan.rcl[3].road.concat([
+    private addExtensionRoads()
+    {
+        this.room.memory.roomPlan.rcl[this.rcl].road = this.room.memory.roomPlan.rcl[this.rcl].road.concat([
             new RoomPosition(this.baseSpawn.pos.x - 4, this.baseSpawn.pos.y + 3, this.room.name),
             new RoomPosition(this.baseSpawn.pos.x - 5, this.baseSpawn.pos.y + 4, this.room.name),
             new RoomPosition(this.baseSpawn.pos.x - 4, this.baseSpawn.pos.y + 5, this.room.name),
@@ -30,14 +52,18 @@ export class RCL3 extends RCLPlan
             new RoomPosition(this.baseSpawn.pos.x - 2, this.baseSpawn.pos.y + 7, this.room.name),
             new RoomPosition(this.baseSpawn.pos.x - 1, this.baseSpawn.pos.y + 6, this.room.name)
         ]);
+    }
 
-        // Tower
-        this.room.memory.roomPlan.rcl[3].tower = [
+    private addTower()
+    {
+        this.room.memory.roomPlan.rcl[this.rcl].tower = [
             new RoomPosition(this.baseSpawn.pos.x, this.baseSpawn.pos.y + 1, this.room.name)
         ];
+    }
 
-        // Walls
-        this.room.memory.roomPlan.rcl[3].constructedWall = [];
+    private addWalls()
+    {
+        this.room.memory.roomPlan.rcl[this.rcl].constructedWall = [];
         const exitPositions = this.room.find(FIND_EXIT);
         const costs = new PathFinder.CostMatrix;
         _.forEach(this.room.find(FIND_STRUCTURES), (s: Structure) =>
@@ -81,7 +107,7 @@ export class RCL3 extends RCLPlan
                     {
                         if (p.x === 2 || p.y === 2 || p.x === 47 || p.y === 47)
                         {
-                            this.room.memory.roomPlan.rcl[3].constructedWall.push(new RoomPosition(p.x, p.y, this.room.name));
+                            this.room.memory.roomPlan.rcl[this.rcl].constructedWall.push(new RoomPosition(p.x, p.y, this.room.name));
                             costs.set(p.x, p.y, 255);
                             break;
                         }
@@ -89,24 +115,23 @@ export class RCL3 extends RCLPlan
                 }
             } while (path && !path.incomplete);
         }
+    }
 
-        // Replace the wall nearest to the center with a rampart.
-        this.room.memory.roomPlan.rcl[3].rampart = [];
+    private addRamparts()
+    {
         this.replaceNearestWall(TOP);
         this.replaceNearestWall(BOTTOM);
         this.replaceNearestWall(LEFT);
         this.replaceNearestWall(RIGHT);
-
-        this.finished(3);
     }
 
     private replaceNearestWall(direction: DirectionConstant)
     {
         let closest: number = -1;
         let distance: number = 99;
-        for (let i = 0; i < this.room.memory.roomPlan.rcl[3].constructedWall.length; ++i)
+        for (let i = 0; i < this.room.memory.roomPlan.rcl[this.rcl].constructedWall.length; ++i)
         {
-            const wall = this.room.memory.roomPlan.rcl[3].constructedWall[i];
+            const wall = this.room.memory.roomPlan.rcl[this.rcl].constructedWall[i];
 
             if (direction === TOP && wall.y !== 2) continue;
             if (direction === BOTTOM && wall.y !== 47) continue;
@@ -124,8 +149,8 @@ export class RCL3 extends RCLPlan
         }
         if (closest !== -1)
         {
-            this.room.memory.roomPlan.rcl[3].rampart.push(this.room.memory.roomPlan.rcl[3].constructedWall[closest]);
-            this.room.memory.roomPlan.rcl[3].constructedWall.splice(closest, 1);
+            this.room.memory.roomPlan.rcl[this.rcl].rampart.push(this.room.memory.roomPlan.rcl[this.rcl].constructedWall[closest]);
+            this.room.memory.roomPlan.rcl[this.rcl].constructedWall.splice(closest, 1);
         }
     }
 }

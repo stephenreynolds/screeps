@@ -4,6 +4,8 @@ import { BuildPriorities } from "./buildPriorities";
 
 export abstract class RCLPlan
 {
+    protected abstract rcl: number;
+
     protected room: Room;
     protected scheduler: Scheduler;
     protected baseSpawn: StructureSpawn;
@@ -62,11 +64,13 @@ export abstract class RCLPlan
         return true;
     }
 
-    protected finished(rcl: number)
+    protected abstract init(): void;
+
+    protected finished()
     {
-        this.removeUnbuildablePositions(rcl);
-        this.removeRoadsUnderStructures(rcl);
-        console.log(`Plan for ${this.room.name} RCL ${rcl} generated successfully.`);
+        this.removeUnbuildablePositions(this.rcl);
+        this.removeRoadsUnderStructures(this.rcl);
+        console.log(`Plan for ${this.room.name} RCL ${this.rcl} generated successfully.`);
     }
 
     protected findEmptyInRange(origin: RoomPosition, range: number,

@@ -2,28 +2,48 @@ import { RCLPlan } from "./rclPlan";
 
 export class RCL6 extends RCLPlan
 {
+    protected rcl: number = 6;
+
     public generate()
     {
-        this.room.memory.roomPlan.rcl[6] = {};
+        this.init();
+
+        this.addTerminal()
+        this.addExtensions();
+        this.addExtensionRoads();
+        this.addExtractor();
+        this.addLabs();
+        this.addLink();
+
+        this.finished();
+    }
+
+    protected init(): void
+    {
+        this.room.memory.roomPlan.rcl[this.rcl] = {};
 
         // Copy RCL 5
-        this.room.memory.roomPlan.rcl[6].spawn = _.clone(this.room.memory.roomPlan.rcl[5].spawn);
-        this.room.memory.roomPlan.rcl[6].road = _.clone(this.room.memory.roomPlan.rcl[5].road);
-        this.room.memory.roomPlan.rcl[6].container = _.clone(this.room.memory.roomPlan.rcl[5].container);
-        this.room.memory.roomPlan.rcl[6].extension = _.clone(this.room.memory.roomPlan.rcl[5].extension);
-        this.room.memory.roomPlan.rcl[6].tower = _.clone(this.room.memory.roomPlan.rcl[5].tower);
-        this.room.memory.roomPlan.rcl[6].rampart = _.clone(this.room.memory.roomPlan.rcl[5].rampart);
-        this.room.memory.roomPlan.rcl[6].storage = _.clone(this.room.memory.roomPlan.rcl[5].storage);
-        this.room.memory.roomPlan.rcl[6].link = _.clone(this.room.memory.roomPlan.rcl[5].link);
-        this.room.memory.roomPlan.rcl[6].constructedWall = _.clone(this.room.memory.roomPlan.rcl[5].constructedWall);
+        this.room.memory.roomPlan.rcl[this.rcl].spawn = _.clone(this.room.memory.roomPlan.rcl[this.rcl - 1].spawn);
+        this.room.memory.roomPlan.rcl[this.rcl].road = _.clone(this.room.memory.roomPlan.rcl[this.rcl - 1].road);
+        this.room.memory.roomPlan.rcl[this.rcl].container = _.clone(this.room.memory.roomPlan.rcl[this.rcl - 1].container);
+        this.room.memory.roomPlan.rcl[this.rcl].extension = _.clone(this.room.memory.roomPlan.rcl[this.rcl - 1].extension);
+        this.room.memory.roomPlan.rcl[this.rcl].tower = _.clone(this.room.memory.roomPlan.rcl[this.rcl - 1].tower);
+        this.room.memory.roomPlan.rcl[this.rcl].rampart = _.clone(this.room.memory.roomPlan.rcl[this.rcl - 1].rampart);
+        this.room.memory.roomPlan.rcl[this.rcl].storage = _.clone(this.room.memory.roomPlan.rcl[this.rcl - 1].storage);
+        this.room.memory.roomPlan.rcl[this.rcl].link = _.clone(this.room.memory.roomPlan.rcl[this.rcl - 1].link);
+        this.room.memory.roomPlan.rcl[this.rcl].constructedWall = _.clone(this.room.memory.roomPlan.rcl[this.rcl - 1].constructedWall);
+    }
 
-        // Terminal
-        this.room.memory.roomPlan.rcl[6].terminal = [
+    private addTerminal()
+    {
+        this.room.memory.roomPlan.rcl[this.rcl].terminal = [
             new RoomPosition(this.baseSpawn.pos.x - 2, this.baseSpawn.pos.y + 4, this.room.name)
         ];
+    }
 
-        // Extensions
-        this.room.memory.roomPlan.rcl[6].extension = this.room.memory.roomPlan.rcl[6].extension.concat([
+    private addExtensions()
+    {
+        this.room.memory.roomPlan.rcl[this.rcl].extension = this.room.memory.roomPlan.rcl[this.rcl].extension.concat([
             new RoomPosition(this.baseSpawn.pos.x + 2, this.baseSpawn.pos.y + 5, this.room.name),
             new RoomPosition(this.baseSpawn.pos.x + 2, this.baseSpawn.pos.y + 6, this.room.name),
             new RoomPosition(this.baseSpawn.pos.x - 4, this.baseSpawn.pos.y + 2, this.room.name),
@@ -35,9 +55,11 @@ export class RCL6 extends RCLPlan
             new RoomPosition(this.baseSpawn.pos.x - 5, this.baseSpawn.pos.y - 3, this.room.name),
             new RoomPosition(this.baseSpawn.pos.x - 4, this.baseSpawn.pos.y - 2, this.room.name)
         ]);
+    }
 
-        // Extension Roads
-        this.room.memory.roomPlan.rcl[6].road = this.room.memory.roomPlan.rcl[6].road.concat([
+    private addExtensionRoads()
+    {
+        this.room.memory.roomPlan.rcl[this.rcl].road = this.room.memory.roomPlan.rcl[this.rcl].road.concat([
             new RoomPosition(this.baseSpawn.pos.x - 6, this.baseSpawn.pos.y + 3, this.room.name),
             new RoomPosition(this.baseSpawn.pos.x - 6, this.baseSpawn.pos.y + 2, this.room.name),
             new RoomPosition(this.baseSpawn.pos.x - 6, this.baseSpawn.pos.y + 1, this.room.name),
@@ -48,32 +70,38 @@ export class RCL6 extends RCLPlan
             new RoomPosition(this.baseSpawn.pos.x - 4, this.baseSpawn.pos.y - 4, this.room.name),
             new RoomPosition(this.baseSpawn.pos.x - 3, this.baseSpawn.pos.y - 4, this.room.name)
         ]);
+    }
 
-        // Extractor
+    private addExtractor()
+    {
         const mineral = this.scheduler.data.roomData[this.room.name].mineral;
         if (mineral)
         {
-            this.room.memory.roomPlan.rcl[6].extractor = [mineral.pos];
+            this.room.memory.roomPlan.rcl[this.rcl].extractor = [mineral.pos];
 
             // Extractor container
             const extractorContainerPos = this.findEmptyInRange(mineral.pos, 1, this.baseSpawn.pos)!;
-            this.room.memory.roomPlan.rcl[6].container.push(extractorContainerPos);
+            this.room.memory.roomPlan.rcl[this.rcl].container.push(extractorContainerPos);
 
             // Extractor container roads
             for (const pos of PathFinder.search(this.baseSpawn.pos, { pos: extractorContainerPos, range: 1 }).path)
             {
-                this.room.memory.roomPlan.rcl[6].road.push(pos);
+                this.room.memory.roomPlan.rcl[this.rcl].road.push(pos);
             }
         }
+    }
 
-        // Labs
+    private addLabs()
+    {
         this.room.memory.roomPlan.rcl[6].lab = [
             new RoomPosition(this.baseSpawn.pos.x - 3, this.baseSpawn.pos.y + 4, this.room.name),
             new RoomPosition(this.baseSpawn.pos.x - 3, this.baseSpawn.pos.y + 5, this.room.name),
             new RoomPosition(this.baseSpawn.pos.x - 2, this.baseSpawn.pos.y + 5, this.room.name)
         ];
+    }
 
-        // Second source link
+    private addLink()
+    {
         const sourceContainers = _.filter(this.room.memory.roomPlan.rcl[6].container, (c: RoomPosition) =>
         {
             return c.findInRange(this.scheduler.data.roomData[this.room.name].sources, 1) &&
@@ -85,7 +113,5 @@ export class RCL6 extends RCLPlan
                 this.findEmptyInRange(this.baseSpawn.pos.findClosestByRange(sourceContainers)!, 1, this.baseSpawn.pos)
             ]);
         }
-
-        this.finished(6);
     }
 }

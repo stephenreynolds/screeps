@@ -60,11 +60,11 @@ export class RCL5 extends RCLPlan
         }
         const sourceContainers = _.filter(this.room.memory.roomPlan.rcl[this.rcl].container, (c: RoomPosition) =>
         {
-            return c.findInRange(this.scheduler.data.roomData[this.room.name].sources, 1);
+            return c.findInRange(this.scheduler.data.roomData[this.room.name].sources, 1).length > 0;
         }) as RoomPosition[];
         this.room.memory.roomPlan.rcl[this.rcl].link = [
             storageLinkPos,
-            this.findEmptyInRange(this.baseSpawn.pos.findClosestByRange(sourceContainers)!, 1, this.baseSpawn.pos)
+            this.findEmptyInRange(storageLinkPos.findClosestByRange(sourceContainers)!, 1, storageLinkPos)
         ];
     }
 
@@ -110,7 +110,7 @@ export class RCL5 extends RCLPlan
     {
         for (let y = this.controller.pos.y - 1; y <= this.controller.pos.y + 1; y++)
         {
-            for (let x = this.controller.pos.x - this.controller.pos.x; x <= this.controller.pos.x + 1; x++)
+            for (let x = this.controller.pos.x - 1; x <= this.controller.pos.x + 1; x++)
             {
                 if (this.room.lookForAt(LOOK_TERRAIN, x, y).indexOf("wall") === -1)
                 {

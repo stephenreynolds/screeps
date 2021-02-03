@@ -77,7 +77,8 @@ export const CreepBuilder = {
         bunkerMover: [MOVE, CARRY],
         ranger: [RANGED_ATTACK, TOUGH, MOVE, MOVE],
         worker: [WORK, CARRY, MOVE, MOVE],
-        miner: [WORK, WORK, CARRY, MOVE]
+        miner: [WORK, WORK, CARRY, MOVE],
+        signer: [MOVE]
     } as PartList,
 
     typeExtends: {
@@ -89,7 +90,8 @@ export const CreepBuilder = {
         bunkerMover: [CARRY],
         ranger: [RANGED_ATTACK, TOUGH, MOVE, MOVE],
         worker: [WORK, CARRY, MOVE, MOVE],
-        miner: [WORK]
+        miner: [WORK],
+        signer: []
     } as PartList,
 
     typeLengths: {
@@ -101,6 +103,7 @@ export const CreepBuilder = {
         bunkerMover: 17,
         ranger: 20,
         worker: 16,
-        miner: 7
+        miner: 7,
+        signer: 1
     } as { [name: string]: number }
 };

@@ -80,9 +80,9 @@ export class RoomLayoutManagementProcess extends Process
             }
 
             // Get each position...
-            for (const structure in roomPlan)
+            for (const structure of roomPlan[key])
             {
-                const position = new RoomPosition(roomPlan[structure].x, roomPlan[structure].y, room.name);
+                const position = new RoomPosition(structure.x, structure.y, room.name);
 
                 // Check if structure or construction site already exists here.
                 // Check if structure or construction site already exists here.
@@ -105,10 +105,15 @@ export class RoomLayoutManagementProcess extends Process
                 // Create construction site if nothing is here.
                 if (structures.length === 0)
                 {
-                    if (position.createConstructionSite(key as BuildableStructureConstant) === OK)
+                    const result = position.createConstructionSite(key as BuildableStructureConstant);
+                    if (result === OK)
                     {
                         console.log(`Site created for ${key} at ${position} `);
                         siteCount++;
+                    }
+                    else
+                    {
+                        console.log(`Failed to create ${key} at ${position}. Error: ${result}`);
                     }
 
                     if (siteCount >= this.maxSites)

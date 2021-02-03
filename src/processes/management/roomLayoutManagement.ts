@@ -80,9 +80,9 @@ export class RoomLayoutManagementProcess extends Process
             }
 
             // Get each position...
-            for (const structure of roomPlan)
+            for (const structure in roomPlan)
             {
-                const position = new RoomPosition(structure.x, structure.y, room.name);
+                const position = new RoomPosition(roomPlan[structure].x, roomPlan[structure].y, room.name);
 
                 // Check if structure or construction site already exists here.
                 // Check if structure or construction site already exists here.

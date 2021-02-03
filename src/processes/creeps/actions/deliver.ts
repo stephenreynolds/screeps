@@ -1,5 +1,5 @@
-import { Process } from "processes/process";
 import { MoveProcess } from "./move";
+import { Process } from "processes/process";
 
 interface DeliverProcessMetaData extends CreepMetaData
 {
@@ -12,12 +12,12 @@ export class DeliverProcess extends Process
     public metaData!: DeliverProcessMetaData;
     public type = "deliver";
 
-    public run()
+    public run(): void
     {
         const creep = Game.creeps[this.metaData.creep];
         const target = Game.getObjectById(this.metaData.target) as Structure;
 
-        if (!target || !creep || _.sum(creep.carry) === 0)
+        if (!target || !creep || creep.store.getUsedCapacity() === 0)
         {
             this.completed = true;
             this.resumeParent();

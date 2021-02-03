@@ -1,14 +1,14 @@
+import { CreepProcess } from "./creepProcess";
 import { DeliverProcess } from "./actions/deliver";
 import { HarvestProcess } from "./actions/harvest";
 import { MoveProcess } from "./actions/move";
 import { UpgradeProcess } from "./actions/upgrade";
-import { CreepProcess } from "./creepProcess";
 
 export class MinerCreepProcess extends CreepProcess
 {
     public type = "mcreep";
 
-    public run()
+    public run(): void
     {
         const creep = this.getCreep();
 
@@ -37,7 +37,7 @@ export class MinerCreepProcess extends CreepProcess
             }
 
             // Harvest energy from source.
-            if (_.sum(creep.carry) === 0)
+            if (creep.store.getUsedCapacity() === 0)
             {
                 this.fork(HarvestProcess, `harvest-${creep.name}`, this.priority - 1, {
                     source: this.metaData.source,
@@ -56,12 +56,12 @@ export class MinerCreepProcess extends CreepProcess
         }
     }
 
-    private transfer(creep: Creep, container: StructureContainer)
+    private transfer(creep: Creep, container: StructureContainer): void
     {
         const links = creep.pos.findInRange(this.scheduler.data.roomData[creep.room.name].links, 1);
         const link = _.find(links, (l: StructureLink) =>
         {
-            return l.energy < l.energyCapacity;
+            return l.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
         });
 
         if (creep.memory.linked === undefined)
@@ -70,13 +70,13 @@ export class MinerCreepProcess extends CreepProcess
         }
 
         // Transfer energy to link if it exists, otherwise drop it into container.
-        if (link && link.energy < link.energyCapacity && creep.memory.linked === false)
+        if (link && link.store.getFreeCapacity(RESOURCE_ENERGY) > 0 && creep.memory.linked === false)
         {
             // Transfer amount equal to 2.5% of what's in container.
-            creep.transfer(link, RESOURCE_ENERGY, Math.max(_.sum(container.store) * 0.025, 10));
+            creep.transfer(link, RESOURCE_ENERGY, Math.max(container.store.getUsedCapacity() * 0.025, 10));
             creep.memory.linked = true;
         }
-        else if (_.sum(container.store) < container.storeCapacity)
+        else if (container.store.getFreeCapacity() > 0)
         {
             creep.drop(RESOURCE_ENERGY);
             creep.memory.linked = false;

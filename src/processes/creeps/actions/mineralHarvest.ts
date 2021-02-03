@@ -1,15 +1,15 @@
-import { Process } from "processes/process";
 import { MoveProcess } from "./move";
+import { Process } from "processes/process";
 
 export class MineralHarvestProcess extends Process
 {
     public type = "mh";
 
-    public run()
+    public run(): void
     {
         const creep = Game.creeps[this.metaData.creep];
 
-        if (!creep || _.sum(creep.carry) === creep.carryCapacity)
+        if (!creep || creep.store.getFreeCapacity() === 0)
         {
             this.completed = true;
             this.resumeParent();

@@ -1,6 +1,5 @@
-import { Scheduler } from "scheduler";
-
 import { BuildPriorities } from "./buildPriorities";
+import { Scheduler } from "scheduler";
 
 export abstract class RCLPlan
 {
@@ -15,15 +14,27 @@ export abstract class RCLPlan
 
     public constructor(room: Room, scheduler: Scheduler)
     {
+        if (!room.controller)
+        {
+            throw new Error("Room controller not found.");
+        }
+
         this.room = room;
         this.scheduler = scheduler;
 
-        this.baseSpawn = _.find(this.scheduler.data.roomData[this.room.name].spawns, (s: StructureSpawn) =>
+        const baseSpawn = _.find(this.scheduler.data.roomData[this.room.name].spawns, (s: StructureSpawn) =>
         {
             return s.name === "base-" + this.room.name;
-        })!;
+        });
 
-        this.controller = room.controller!;
+        if (!baseSpawn)
+        {
+            throw new Error("Base spawn not found.");
+        }
+
+        this.baseSpawn = baseSpawn;
+
+        this.controller = room.controller;
 
         this.midpoint = new RoomPosition(
             Math.round((this.baseSpawn.pos.x + this.controller.pos.x) / 2),
@@ -40,7 +51,7 @@ export abstract class RCLPlan
 
         for (const key of BuildPriorities)
         {
-            if (!roomPlan.hasOwnProperty(key))
+            if (!Object.prototype.hasOwnProperty.call(roomPlan, key))
             {
                 continue;
             }
@@ -66,7 +77,7 @@ export abstract class RCLPlan
 
     protected abstract init(): void;
 
-    protected finished()
+    protected finished(): void
     {
         this.removeUnbuildablePositions(this.rcl);
         this.removeRoadsUnderStructures(this.rcl);
@@ -74,7 +85,7 @@ export abstract class RCLPlan
     }
 
     protected findEmptyInRange(origin: RoomPosition, range: number,
-        nearestTo?: RoomPosition, objects: Array<StructureConstant | Terrain> = ["wall"]): RoomPosition | undefined
+        nearestTo?: RoomPosition, objects: (StructureConstant | Terrain)[] = ["wall"]): RoomPosition | undefined
     {
         const empties: RoomPosition[] = [];
         for (let y = origin.y - range; y <= origin.y + range; y++)
@@ -98,7 +109,7 @@ export abstract class RCLPlan
                     }
                     else
                     {
-                        const structures = this.room.lookForAt(LOOK_STRUCTURES, pos) as Structure[];
+                        const structures = this.room.lookForAt(LOOK_STRUCTURES, pos);
 
                         for (const structure of structures)
                         {
@@ -127,7 +138,14 @@ export abstract class RCLPlan
 
         if (empties.length > 0 && nearestTo)
         {
-            return nearestTo.findClosestByPath(empties)!;
+            const emptyResult = nearestTo.findClosestByPath(empties);
+
+            if (!emptyResult)
+            {
+                return undefined;
+            }
+
+            return emptyResult;
         }
 
         return undefined;
@@ -146,13 +164,13 @@ export abstract class RCLPlan
         return false;
     }
 
-    private removeRoadsUnderStructures(rcl: number)
+    private removeRoadsUnderStructures(rcl: number): void
     {
         const roomPlan = this.room.memory.roomPlan.rcl[rcl];
 
         for (const key of BuildPriorities)
         {
-            if (!roomPlan.hasOwnProperty(key) || key === STRUCTURE_ROAD ||
+            if (!Object.prototype.hasOwnProperty.call(roomPlan, key) || key === STRUCTURE_ROAD ||
                 key === STRUCTURE_CONTAINER || key === STRUCTURE_RAMPART)
             {
                 continue;
@@ -174,13 +192,13 @@ export abstract class RCLPlan
         }
     }
 
-    private removeUnbuildablePositions(rcl: number)
+    private removeUnbuildablePositions(rcl: number): void
     {
         const roomPlan = this.room.memory.roomPlan.rcl[rcl];
 
         for (const key of BuildPriorities)
         {
-            if (!roomPlan.hasOwnProperty(key))
+            if (!Object.prototype.hasOwnProperty.call(roomPlan, key))
             {
                 continue;
             }

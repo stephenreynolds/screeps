@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import { SourceMapConsumer } from "source-map";
 
 export class ErrorMapper
@@ -30,15 +31,16 @@ export class ErrorMapper
     public static sourceMappedStackTrace(error: Error | string): string
     {
         const stack: string = error instanceof Error ? error.stack as string : error;
-        if (this.cache.hasOwnProperty(stack))
+        if (Object.prototype.hasOwnProperty.call(this.cache, stack))
         {
             return this.cache[stack];
         }
 
-        const re = /^\s+at\s+(.+?\s+)?\(?([0-z._\-\\\/]+):(\d+):(\d+)\)?$/gm;
+        const re = /^\s+at\s+(.+?\s+)?\(?([0-z._\-\\/]+):(\d+):(\d+)\)?$/gm;
         let match: RegExpExecArray | null;
         let outStack = error.toString();
 
+        // eslint-disable-next-line no-cond-assign
         while (match = re.exec(stack))
         {
             if (match[2] === "main")
@@ -87,7 +89,7 @@ export class ErrorMapper
 
     public static wrapLoop(loop: () => void): () => void
     {
-        return () =>
+        return (): void =>
         {
             try
             {

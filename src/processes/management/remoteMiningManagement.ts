@@ -1,12 +1,12 @@
 import { Process } from "processes/process";
-import { Utils } from "utils/utils";
 import { RemoteMinerCreepProcess } from "processes/creeps/remoteMiner";
+import { Utils } from "utils/utils";
 
 export class RemoteMiningManagementProcess extends Process
 {
     public type = "rmman";
 
-    public run()
+    public run(): void
     {
         const flag = Game.flags[this.metaData.flag];
 
@@ -31,12 +31,12 @@ export class RemoteMiningManagementProcess extends Process
                 this.scheduler,
                 deliverRoom,
                 "worker",
-                "rm-" + flag.pos.roomName + "-" + Game.time
+                `rm-${flag.pos.roomName}-${Game.time}`
             );
 
             if (spawned)
             {
-                this.metaData.miningCreep = "rm-" + flag.pos.roomName + "-" + Game.time;
+                this.metaData.miningCreep = `rm-${flag.pos.roomName}-${Game.time}`;
             }
         }
         else
@@ -44,7 +44,7 @@ export class RemoteMiningManagementProcess extends Process
             this.scheduler.addProcessIfNotExist(RemoteMinerCreepProcess, "rmcreep-" + miningCreep.name, this.priority, {
                 creep: miningCreep.name,
                 flag: flag.name,
-                deliverRoom: deliverRoom
+                deliverRoom
             });
         }
     }

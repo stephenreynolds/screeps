@@ -29,7 +29,7 @@ export abstract class Process
     public messages: { [name: string]: any } = {};
 
     /** Creates a new Process from the entry supplied */
-    constructor(entry: SerializedProcess, scheduler: Scheduler)
+    public constructor(entry: SerializedProcess, scheduler: Scheduler)
     {
         this.priority = entry.priority;
         this.name = entry.name;
@@ -47,7 +47,7 @@ export abstract class Process
     public abstract run(): void;
 
     /** Serialize this process */
-    public serialize()
+    public serialize(): SerializedProcess
     {
         let parent;
         if (this.parent)
@@ -61,14 +61,14 @@ export abstract class Process
             metaData: this.metaData,
             type: this.type,
             suspend: this.suspend,
-            parent: parent
+            parent
         } as SerializedProcess;
     }
 
     /** Create a new process on the scheduler with this process as its parent and
      * suspend the current process until it completes
      */
-    public fork(processType: any, name: string, priority: number, meta: any)
+    public fork(processType: any, name: string, priority: number, meta: any): void
     {
         this.scheduler.addProcess(processType, name, priority, meta, this.name);
 
@@ -76,21 +76,24 @@ export abstract class Process
     }
 
     /** Send the process a message */
-    public sendMessage(name: string, data: any)
+    public sendMessage(name: string, data: any): void
     {
         this.messages[name] = data;
     }
 
     /** Resume the process */
-    public resume(thisTick = false)
+    public resume(thisTick = false): void
     {
         this.suspend = false;
 
-        if (thisTick) { this.ticked = false; }
+        if (thisTick)
+        {
+            this.ticked = false;
+        }
     }
 
     /** Resume the parent if the process has a parent */
-    public resumeParent(thisTick = false)
+    public resumeParent(thisTick = false): void
     {
         if (this.parent)
         {
@@ -99,25 +102,25 @@ export abstract class Process
     }
 
     /** Returns the room Data */
-    public roomData()
+    public roomData(): RoomData
     {
         return this.scheduler.data.roomData[this.metaData.roomName];
     }
 
     /** Returns the room instance */
-    public room()
+    public room(): Room
     {
         return Game.rooms[this.metaData.roomName];
     }
 
     /** Returns the flag for this process */
-    public flag()
+    public flag(): Flag
     {
         return Game.flags[this.metaData.flag];
     }
 
     /** Use the Schedulers Logger */
-    public log(message: string)
+    public log(message: string): void
     {
         this.scheduler.log(this, message);
     }

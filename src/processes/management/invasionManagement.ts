@@ -1,13 +1,13 @@
-import { Process } from "processes/process";
-import { Utils } from "utils/utils";
-import { RangerCreepProcess } from "processes/creeps/ranger";
 import { BrawlerCreepProcess } from "processes/creeps/brawler";
+import { Process } from "processes/process";
+import { RangerCreepProcess } from "processes/creeps/ranger";
+import { Utils } from "utils/utils";
 
 export class InvasionManagementProcess extends Process
 {
     public type = "invman";
 
-    public ensureMetaData()
+    public ensureMetaData(): void
     {
         if (!this.metaData.brawlers)
         {
@@ -25,7 +25,7 @@ export class InvasionManagementProcess extends Process
         }
     }
 
-    public run()
+    public run(): void
     {
         const flag = Game.flags[this.metaData.flag];
 
@@ -61,7 +61,7 @@ export class InvasionManagementProcess extends Process
                 this.metaData.brawlers.push(creepName);
                 this.scheduler.addProcess(BrawlerCreepProcess, `bcreep-${creepName}`, 49, {
                     creep: creepName,
-                    flag: flag
+                    flag
                 });
             }
 
@@ -88,7 +88,7 @@ export class InvasionManagementProcess extends Process
                 this.metaData.rangers.push(creepName);
                 this.scheduler.addProcess(RangerCreepProcess, `racreep-${creepName}`, 49, {
                     creep: creepName,
-                    flag: flag
+                    flag
                 });
             }
 

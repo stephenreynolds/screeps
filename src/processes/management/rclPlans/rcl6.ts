@@ -2,9 +2,9 @@ import { RCLPlan } from "./rclPlan";
 
 export class RCL6 extends RCLPlan
 {
-    protected rcl: number = 6;
+    protected rcl = 6;
 
-    public generate()
+    public generate(): void
     {
         this.init();
 
@@ -34,14 +34,14 @@ export class RCL6 extends RCLPlan
         this.room.memory.roomPlan.rcl[this.rcl].constructedWall = _.clone(this.room.memory.roomPlan.rcl[this.rcl - 1].constructedWall);
     }
 
-    private addTerminal()
+    private addTerminal(): void
     {
         this.room.memory.roomPlan.rcl[this.rcl].terminal = [
             new RoomPosition(this.baseSpawn.pos.x - 2, this.baseSpawn.pos.y + 4, this.room.name)
         ];
     }
 
-    private addExtensions()
+    private addExtensions(): void
     {
         this.room.memory.roomPlan.rcl[this.rcl].extension = this.room.memory.roomPlan.rcl[this.rcl].extension.concat([
             new RoomPosition(this.baseSpawn.pos.x + 2, this.baseSpawn.pos.y + 5, this.room.name),
@@ -57,7 +57,7 @@ export class RCL6 extends RCLPlan
         ]);
     }
 
-    private addExtensionRoads()
+    private addExtensionRoads(): void
     {
         this.room.memory.roomPlan.rcl[this.rcl].road = this.room.memory.roomPlan.rcl[this.rcl].road.concat([
             new RoomPosition(this.baseSpawn.pos.x - 6, this.baseSpawn.pos.y + 3, this.room.name),
@@ -72,7 +72,7 @@ export class RCL6 extends RCLPlan
         ]);
     }
 
-    private addExtractor()
+    private addExtractor(): void
     {
         const mineral = this.scheduler.data.roomData[this.room.name].mineral;
         if (mineral)
@@ -80,7 +80,13 @@ export class RCL6 extends RCLPlan
             this.room.memory.roomPlan.rcl[this.rcl].extractor = [mineral.pos];
 
             // Extractor container
-            const extractorContainerPos = this.findEmptyInRange(mineral.pos, 1, this.baseSpawn.pos)!;
+            const emptyPos = this.findEmptyInRange(mineral.pos, 1, this.baseSpawn.pos);
+            if (!emptyPos)
+            {
+                console.log("Mineral inaccessible. No empty positions.");
+                return;
+            }
+            const extractorContainerPos = emptyPos;
             this.room.memory.roomPlan.rcl[this.rcl].container.push(extractorContainerPos);
 
             // Extractor container roads
@@ -91,7 +97,7 @@ export class RCL6 extends RCLPlan
         }
     }
 
-    private addLabs()
+    private addLabs(): void
     {
         this.room.memory.roomPlan.rcl[6].lab = [
             new RoomPosition(this.baseSpawn.pos.x - 3, this.baseSpawn.pos.y + 4, this.room.name),
@@ -100,17 +106,24 @@ export class RCL6 extends RCLPlan
         ];
     }
 
-    private addLink()
+    private addLink(): void
     {
         const sourceContainers = _.filter(this.room.memory.roomPlan.rcl[6].container, (c: RoomPosition) =>
         {
             return c.findInRange(this.scheduler.data.roomData[this.room.name].sources, 1) &&
                 !c.findInRange(this.scheduler.data.roomData[this.room.name].links, 1);
-        }) as RoomPosition[];
+        });
         if (sourceContainers[0])
         {
+            const closest = this.baseSpawn.pos.findClosestByRange(sourceContainers);
+            if (!closest)
+            {
+                console.log("A source container exists, but could not be found.");
+                return;
+            }
+
             this.room.memory.roomPlan.rcl[6].link = this.room.memory.roomPlan.rcl[6].link.concat([
-                this.findEmptyInRange(this.baseSpawn.pos.findClosestByRange(sourceContainers)!, 1, this.baseSpawn.pos)
+                this.findEmptyInRange(closest, 1, this.baseSpawn.pos)
             ]);
         }
     }

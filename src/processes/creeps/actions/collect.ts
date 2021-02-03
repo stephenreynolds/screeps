@@ -1,6 +1,5 @@
-import { Process } from "processes/process";
-
 import { MoveProcess } from "./move";
+import { Process } from "processes/process";
 
 interface CollectProcessMetaData extends CreepMetaData
 {
@@ -13,7 +12,7 @@ export class CollectProcess extends Process
     public metaData!: CollectProcessMetaData;
     public type = "collect";
 
-    public run()
+    public run(): void
     {
         const creep = Game.creeps[this.metaData.creep];
 

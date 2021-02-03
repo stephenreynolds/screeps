@@ -4,7 +4,7 @@ export class TowerRepairProcess extends Process
 {
     public type = "towerrepair";
 
-    public run()
+    public run(): void
     {
         if (!Game.rooms[this.metaData.roomName])
         {
@@ -65,7 +65,11 @@ export class TowerRepairProcess extends Process
 
             if (towers.length > 0)
             {
-                const tower = rampart.pos.findClosestByRange<StructureTower>(towers)!;
+                const tower = rampart.pos.findClosestByRange<StructureTower>(towers);
+                if (!tower)
+                {
+                    return;
+                }
 
                 tower.repair(rampart);
 

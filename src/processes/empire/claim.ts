@@ -1,7 +1,6 @@
+import { MoveProcess } from "../creeps/actions/move";
 import { Process } from "processes/process";
 import { Utils } from "utils/utils";
-
-import { MoveProcess } from "../creeps/actions/move";
 
 interface ClaimProcessMetaData
 {
@@ -15,13 +14,13 @@ export class ClaimProcess extends Process
     public metaData!: ClaimProcessMetaData;
     public type = "claim";
 
-    public run()
+    public run(): void
     {
         const creep = Game.creeps[this.metaData.creep];
-
         const flag = Game.flags[this.metaData.flagName];
+        const controller = creep.room.controller;
 
-        if (!flag)
+        if (!(controller && flag))
         {
             this.completed = true;
             return;
@@ -29,7 +28,7 @@ export class ClaimProcess extends Process
 
         if (!creep)
         {
-            const creepName = "claim-" + this.metaData.targetRoom + "-" + Game.time;
+            const creepName = `claim-${this.metaData.targetRoom}-${Game.time}`;
             const spawned = Utils.spawn(
                 this.scheduler,
                 Utils.nearestRoom(this.metaData.targetRoom, 550),
@@ -60,7 +59,7 @@ export class ClaimProcess extends Process
         }
         else
         {
-            creep.claimController(creep.room.controller!);
+            creep.claimController(controller);
             this.completed = true;
             flag.remove();
         }

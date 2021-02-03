@@ -1,13 +1,12 @@
+import { HoldProcess } from "../creeps/actions/hold";
 import { Process } from "processes/process";
 import { Utils } from "utils/utils";
-
-import { HoldProcess } from "../creeps/actions/hold";
 
 export class HoldRoomProcess extends Process
 {
     public type = "holdroom";
 
-    public run()
+    public run(): void
     {
         const flag = Game.flags[this.metaData.flag];
 
@@ -26,13 +25,13 @@ export class HoldRoomProcess extends Process
                 this.scheduler,
                 Utils.nearestRoom(flag.pos.roomName, 1300),
                 "hold",
-                "h-" + flag.pos.roomName + "-" + Game.time,
+                `h-${flag.pos.roomName}-${Game.time}`,
                 {}
             );
 
             if (spawned)
             {
-                this.metaData.creep = "h-" + flag.pos.roomName + "-" + Game.time;
+                this.metaData.creep = `h-${flag.pos.roomName}-${Game.time}`;
             }
         }
         else

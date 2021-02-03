@@ -4,7 +4,7 @@ export class LinkProcess extends Process
 {
     public type = "link";
 
-    public run()
+    public run(): void
     {
         const links = this.scheduler.data.roomData[this.metaData.roomName].links;
 
@@ -17,8 +17,11 @@ export class LinkProcess extends Process
         // Find link needing energy
         const needingEnergy = _.find(links, (l: StructureLink) =>
         {
-            return l.energy < l.energyCapacity &&
-                (l.pos.inRangeTo(l.room.controller!.pos, 3) || l.pos.inRangeTo(l.room.storage!, 2));
+            const controller = l.room.controller;
+            const storage = l.room.storage;
+
+            return l.store.getFreeCapacity(RESOURCE_ENERGY) > 0 && controller && storage &&
+                (l.pos.inRangeTo(controller.pos, 3) || l.pos.inRangeTo(storage, 2));
         });
 
         if (!needingEnergy)

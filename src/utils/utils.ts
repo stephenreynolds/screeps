@@ -1,8 +1,8 @@
-import { Scheduler } from "scheduler";
 import { CreepBuilder } from "./creepBuilder";
+import { EscortCreepProcess } from "processes/creeps/escort";
 import { Process } from "processes/process";
 import { RoomPathFinder } from "./roomPathFinder";
-import { EscortCreepProcess } from "processes/creeps/escort";
+import { Scheduler } from "scheduler";
 
 export const Utils = {
     getLiveCreeps(list: string[]): string[]
@@ -22,7 +22,7 @@ export const Utils = {
     },
 
     /** Returns the room closest to the source room with the required spawn energy */
-    nearestRoom(sourceRoom: string, minSpawnEnergy = 0)
+    nearestRoom(sourceRoom: string, minSpawnEnergy = 0): string
     {
         let bestRoom = "";
         let bestDistance = 999;
@@ -48,17 +48,17 @@ export const Utils = {
     },
 
     /** Calculate the maximum rampart health for the given room */
-    rampartHealth(scheduler: Scheduler, roomName: string)
+    rampartHealth(scheduler: Scheduler, roomName: string): number
     {
-        const room = Game.rooms[roomName];
+        const controller = Game.rooms[roomName].controller;
 
-        if (room.controller!.level < 3)
+        if (!controller || controller.level < 3)
         {
             return 0;
         }
         else
         {
-            const max = room.controller!.level * 100000;
+            const max = controller.level * 100000;
 
             const average = Math.ceil(_.sum(scheduler.data.roomData[roomName].ramparts as never[], "hits") /
                 scheduler.data.roomData[roomName].ramparts.length);
@@ -88,7 +88,7 @@ export const Utils = {
         return spawned;
     },
 
-    spawnEscort(process: Process, creep: Creep)
+    spawnEscort(process: Process, creep: Creep): void
     {
         if (!process.metaData.escortCreep)
         {
@@ -116,7 +116,7 @@ export const Utils = {
         }
     },
 
-    withdrawTarget(creep: Creep, proc: Process)
+    withdrawTarget(creep: Creep, proc: Process): Structure | undefined
     {
         let withdraws = [].concat(
             proc.scheduler.data.roomData[creep.room.name].containers as never[]
@@ -141,10 +141,17 @@ export const Utils = {
 
         withdraws = _.filter(withdraws, (w: StructureStorage | StructureContainer) =>
         {
-            return _.sum(w.store) > 0;
+            return w.store.getUsedCapacity() > 0;
         }) as never[];
 
-        return creep.pos.findClosestByRange(withdraws)! as Structure;
+        const structure = creep.pos.findClosestByRange(withdraws);
+
+        if (!structure)
+        {
+            return undefined;
+        }
+
+        return structure as Structure;
     },
 
     workRate(creeps: Creep[], perWorkPart: number): number

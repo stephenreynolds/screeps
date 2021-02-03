@@ -1,17 +1,17 @@
-import { Process } from "processes/process";
-
 import { MoveProcess } from "./move";
+import { Process } from "processes/process";
 
 export class HoldProcess extends Process
 {
     public type = "hold";
 
-    public run()
+    public run(): void
     {
         const creep = Game.creeps[this.metaData.creep];
         const flag = Game.flags[this.metaData.flag];
+        const controller = creep.room.controller;
 
-        if (!creep || !flag)
+        if (!(creep && flag && controller))
         {
             this.completed = true;
             return;
@@ -50,8 +50,8 @@ export class HoldProcess extends Process
         }
         else
         {
-            creep.reserveController(creep.room.controller!);
-            creep.signController(creep.room.controller!, "Colony of kumikill. Attempt no spawning here.");
+            creep.reserveController(controller);
+            creep.signController(controller, "Colony of kumikill. Attempt no spawning here.");
         }
     }
 }

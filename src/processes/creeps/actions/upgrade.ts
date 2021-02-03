@@ -1,33 +1,32 @@
-import { Process } from "processes/process";
 import { MoveProcess } from "./move";
+import { Process } from "processes/process";
 
-interface UpgradeProcessMetaData extends CreepMetaData
-{
-}
+type UpgradeProcessMetaData = CreepMetaData
 
 export class UpgradeProcess extends Process
 {
     public metaData!: UpgradeProcessMetaData;
     public type = "upgrade";
 
-    public run()
+    public run(): void
     {
         const creep = Game.creeps[this.metaData.creep];
+        const controller = creep.room.controller;
 
-        if (!creep || _.sum(creep.carry) === 0)
+        if (!creep || creep.store.getUsedCapacity() === 0 || !controller)
         {
             this.completed = true;
             this.resumeParent();
             return;
         }
 
-        if (!creep.pos.inRangeTo(creep.room.controller!, 3))
+        if (!creep.pos.inRangeTo(controller, 3))
         {
             this.scheduler.addProcess(MoveProcess, creep.name + "-upgrade-move", this.priority + 1, {
                 creep: creep.name,
                 pos: {
-                    x: creep.room.controller!.pos.x,
-                    y: creep.room.controller!.pos.y,
+                    x: controller.pos.x,
+                    y: controller.pos.y,
                     roomName: creep.room.name
                 },
                 range: 3
@@ -36,7 +35,7 @@ export class UpgradeProcess extends Process
         }
         else
         {
-            creep.upgradeController(creep.room.controller!);
+            creep.upgradeController(controller);
         }
     }
 }

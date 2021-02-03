@@ -1,22 +1,22 @@
-import { CreepProcess } from "./creepProcess";
-import { Utils } from "utils/utils";
-import { CollectProcess } from "./actions/collect";
-import { HarvestProcess } from "./actions/harvest";
-import { DeliverProcess } from "./actions/deliver";
-import { UpgradeProcess } from "./actions/upgrade";
 import { BuildProcess } from "./actions/build";
+import { CollectProcess } from "./actions/collect";
+import { CreepProcess } from "./creepProcess";
+import { DeliverProcess } from "./actions/deliver";
+import { HarvestProcess } from "./actions/harvest";
+import { UpgradeProcess } from "./actions/upgrade";
+import { Utils } from "utils/utils";
 
 export class HarvesterCreepProcess extends CreepProcess
 {
     public type = "hcreep";
 
-    public run()
+    public run(): void
     {
         const creep = this.getCreep();
 
         if (creep)
         {
-            if (_.sum(creep.carry) === 0)
+            if (creep.store.getUsedCapacity() === 0)
             {
                 this.onCarryEmpty(creep);
             }
@@ -27,7 +27,7 @@ export class HarvesterCreepProcess extends CreepProcess
         }
     }
 
-    private onCarryEmpty(creep: Creep)
+    private onCarryEmpty(creep: Creep): void
     {
         const withdrawTarget = Utils.withdrawTarget(creep, this);
 
@@ -48,12 +48,12 @@ export class HarvesterCreepProcess extends CreepProcess
         }
     }
 
-    private onCarryFull(creep: Creep)
+    private onCarryFull(creep: Creep): void
     {
         const source = Game.getObjectById(this.metaData.source) as Source;
 
         // Construct sites in immediate vicinity.
-        const constructionSites = source.pos.findInRange(FIND_CONSTRUCTION_SITES, 1) as ConstructionSite[];
+        const constructionSites = source.pos.findInRange(FIND_CONSTRUCTION_SITES, 1);
         if (constructionSites.length > 0)
         {
             this.fork(BuildProcess, "build-" + creep.name, this.priority - 1, {

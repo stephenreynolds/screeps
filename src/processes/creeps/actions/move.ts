@@ -15,7 +15,7 @@ export class MoveProcess extends Process
     public metaData!: MoveMetaData;
     public type = "move";
 
-    public run()
+    public run(): void
     {
         const creep = Game.creeps[this.metaData.creep];
 

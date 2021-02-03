@@ -2,9 +2,9 @@ import { RCLPlan } from "./rclPlan";
 
 export class RCL7 extends RCLPlan
 {
-    protected rcl: number = 7;
+    protected rcl = 7;
 
-    public generate()
+    public generate(): void
     {
         this.init();
 
@@ -38,13 +38,13 @@ export class RCL7 extends RCLPlan
         this.room.memory.roomPlan.rcl[this.rcl].constructedWall = _.clone(this.room.memory.roomPlan.rcl[this.rcl - 1].constructedWall);
     }
 
-    private addSpawn()
+    private addSpawn(): void
     {
         this.room.memory.roomPlan.rcl[this.rcl].spawn[1] =
             new RoomPosition(this.baseSpawn.pos.x + 2, this.baseSpawn.pos.y + 2, this.room.name);
     }
 
-    private addExtensions()
+    private addExtensions(): void
     {
         this.room.memory.roomPlan.rcl[this.rcl].extension = this.room.memory.roomPlan.rcl[this.rcl].extension.concat([
             new RoomPosition(this.baseSpawn.pos.x - 4, this.baseSpawn.pos.y - 3, this.room.name),
@@ -60,7 +60,7 @@ export class RCL7 extends RCLPlan
         ]);
     }
 
-    private addExtensionRoads()
+    private addExtensionRoads(): void
     {
         this.room.memory.roomPlan.rcl[this.rcl].road = this.room.memory.roomPlan.rcl[this.rcl].road.concat([
             new RoomPosition(this.baseSpawn.pos.x + 3, this.baseSpawn.pos.y + 8, this.room.name),
@@ -78,14 +78,14 @@ export class RCL7 extends RCLPlan
         ]);
     }
 
-    private addTower()
+    private addTower(): void
     {
         this.room.memory.roomPlan.rcl[this.rcl].tower = this.room.memory.roomPlan.rcl[this.rcl].tower.concat([
             new RoomPosition(this.baseSpawn.pos.x + 1, this.baseSpawn.pos.y + 1, this.room.name)
         ]);
     }
 
-    private addLabs()
+    private addLabs(): void
     {
         this.room.memory.roomPlan.rcl[this.rcl].lab = this.room.memory.roomPlan.rcl[this.rcl].lab.concat([
             new RoomPosition(this.baseSpawn.pos.x - 5, this.baseSpawn.pos.y + 6, this.room.name),
@@ -94,7 +94,7 @@ export class RCL7 extends RCLPlan
         ]);
     }
 
-    private addLabRoads()
+    private addLabRoads(): void
     {
         this.room.memory.roomPlan.rcl[this.rcl].road = this.room.memory.roomPlan.rcl[this.rcl].road.concat([
             new RoomPosition(this.baseSpawn.pos.x - 6, this.baseSpawn.pos.y + 5, this.room.name),
@@ -106,7 +106,7 @@ export class RCL7 extends RCLPlan
         ]);
     }
 
-    private addControllerLink()
+    private addControllerLink(): void
     {
         this.room.memory.roomPlan.rcl[this.rcl].link = this.room.memory.roomPlan.rcl[this.rcl].link.concat([
             this.findEmptyInRange(this.controller.pos, 3, this.baseSpawn.pos)

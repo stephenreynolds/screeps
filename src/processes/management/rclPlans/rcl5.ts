@@ -2,9 +2,9 @@ import { RCLPlan } from "./rclPlan";
 
 export class RCL5 extends RCLPlan
 {
-    protected rcl: number = 5;
+    protected rcl = 5;
 
-    public generate()
+    public generate(): void
     {
         this.init();
 
@@ -32,11 +32,11 @@ export class RCL5 extends RCLPlan
         this.room.memory.roomPlan.rcl[this.rcl].constructedWall = _.clone(this.room.memory.roomPlan.rcl[this.rcl - 1].constructedWall);
     }
 
-    private addLinks()
+    private addLinks(): void
     {
         let storageLinkPos: RoomPosition;
         const storagePos = this.room.memory.roomPlan.rcl[this.rcl].storage[0];
-        if (storagePos.x == this.baseSpawn.pos.x)
+        if (storagePos.x === this.baseSpawn.pos.x)
         {
             if (storagePos.y < this.baseSpawn.pos.y)
             {
@@ -61,14 +61,20 @@ export class RCL5 extends RCLPlan
         const sourceContainers = _.filter(this.room.memory.roomPlan.rcl[this.rcl].container, (c: RoomPosition) =>
         {
             return c.findInRange(this.scheduler.data.roomData[this.room.name].sources, 1).length > 0;
-        }) as RoomPosition[];
+        });
+        const closest = storageLinkPos.findClosestByRange(sourceContainers);
+        if (!closest)
+        {
+            console.log("A source container exists, but could not be found.");
+            return;
+        }
         this.room.memory.roomPlan.rcl[this.rcl].link = [
             storageLinkPos,
-            this.findEmptyInRange(storageLinkPos.findClosestByRange(sourceContainers)!, 1, storageLinkPos)
+            this.findEmptyInRange(closest, 1, storageLinkPos)
         ];
     }
 
-    private addExtensions()
+    private addExtensions(): void
     {
         this.room.memory.roomPlan.rcl[this.rcl].extension = this.room.memory.roomPlan.rcl[this.rcl].extension.concat([
             new RoomPosition(this.baseSpawn.pos.x, this.baseSpawn.pos.y - 3, this.room.name),
@@ -84,7 +90,7 @@ export class RCL5 extends RCLPlan
         ]);
     }
 
-    private addExtensionRoads()
+    private addExtensionRoads(): void
     {
         this.room.memory.roomPlan.rcl[this.rcl].road = this.room.memory.roomPlan.rcl[this.rcl].road.concat([
             new RoomPosition(this.baseSpawn.pos.x + 6, this.baseSpawn.pos.y + 1, this.room.name),
@@ -99,14 +105,14 @@ export class RCL5 extends RCLPlan
         ]);
     }
 
-    private addTower()
+    private addTower(): void
     {
         this.room.memory.roomPlan.rcl[this.rcl].tower = this.room.memory.roomPlan.rcl[this.rcl].tower.concat([
             new RoomPosition(this.baseSpawn.pos.x, this.baseSpawn.pos.y + 3, this.room.name)
         ]);
     }
 
-    private addRamparts()
+    private addRamparts(): void
     {
         for (let y = this.controller.pos.y - 1; y <= this.controller.pos.y + 1; y++)
         {

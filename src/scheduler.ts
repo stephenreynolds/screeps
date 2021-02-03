@@ -1,6 +1,6 @@
+import { InitProcess } from "processes/system/init";
 import { Process } from "./processes/process";
 import { ProcessTypes } from "./processes/processTypes";
-import { InitProcess } from "processes/system/init";
 import { Stats } from "utils/stats";
 
 interface SchedulerData
@@ -18,19 +18,21 @@ interface ProcessTable
 
 export class Scheduler
 {
-    public execOrder: Array<{}> = [];
+    // TODO: Try to fix the below rule
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    public execOrder: {}[] = [];
     public limit: number;
     public processTable: ProcessTable = {};
     public toRunProcesses?: string[];
-    public schedulerUsage: number = 0;
-    public suspendCount: number = 0;
+    public schedulerUsage = 0;
+    public suspendCount = 0;
 
     public data = {
         roomData: {},
         usedSpawns: []
     } as SchedulerData;
 
-    constructor()
+    public constructor()
     {
         if (!Memory.os)
         {
@@ -50,21 +52,21 @@ export class Scheduler
         this.addProcess(InitProcess, "init", 99);
     }
 
-    public addProcess(processClass: any, name: string, priority: number, meta = {}, parent?: string | undefined)
+    public addProcess(processClass: any, name: string, priority: number, meta = {}, parent?: string | undefined): void
     {
         const process = new processClass({
-            name: name,
-            priority: priority,
-            metaData: meta,
+            name,
+            priority,
+            meta,
             suspend: false,
-            parent: parent
+            parent
         }, this);
 
         this.processTable[name] = process;
         this.toRunProcesses = [];
     }
 
-    public addProcessIfNotExist(processClass: any, name: string, priority: number, meta = {})
+    public addProcessIfNotExist(processClass: any, name: string, priority: number, meta = {}): void
     {
         if (!this.hasProcess(name))
         {
@@ -90,16 +92,22 @@ export class Scheduler
         return !!this.getProcessByName(name);
     }
 
-    public log(process: Process, message: any)
+    public log(process: Process, message: any): void
     {
         console.log(`{${Game.time}}[${process.name}] ${message}`);
     }
 
-    public run(stats = true)
+    public run(): void
     {
         while (this.underLimit() && this.needsToRun())
         {
             const process = this.getHighestProcess();
+            if (!process)
+            {
+                console.log("Process needs to run but no process found. \"wat.\"");
+                break;
+            }
+
             const cpuUsed = Game.cpu.getUsed();
             let faulted = false;
 
@@ -117,13 +125,19 @@ export class Scheduler
                 name: process.name,
                 cpu: Game.cpu.getUsed() - cpuUsed,
                 type: process.type,
-                faulted: faulted
+                faulted
             });
 
             process.ticked = true;
         }
 
         this.save();
+
+        // Build stats.
+        if (Memory.stats.enabled)
+        {
+            Stats.build(this);
+        }
     }
 
     private calculateCPULimit(): number
@@ -160,7 +174,7 @@ export class Scheduler
         }
     }
 
-    private getHighestProcess(): Process
+    private getHighestProcess(): Process | undefined
     {
         const cpu = Game.cpu.getUsed();
 
@@ -175,14 +189,14 @@ export class Scheduler
             this.toRunProcesses = _.map(sorted, "name");
         }
 
-        const name = this.toRunProcesses!.shift();
+        const name = this.toRunProcesses.shift();
 
         this.schedulerUsage += Game.cpu.getUsed() - cpu;
 
-        return this.processTable[name!];
+        return name !== undefined ? this.processTable[name] : undefined;
     }
 
-    private loadProcessTable()
+    private loadProcessTable(): void
     {
         _.forEach(Memory.os.processTable, (process: any) =>
         {
@@ -205,7 +219,7 @@ export class Scheduler
         }
     }
 
-    private save()
+    private save(): void
     {
         // Save processes still running to memory.
         const list: SerializedProcess[] = [];
@@ -217,12 +231,6 @@ export class Scheduler
             }
         });
         Memory.os.processTable = list;
-
-        // Build stats.
-        if (Memory.stats.enabled)
-        {
-            Stats.build(this);
-        }
     }
 
     private sigmoid(x: number): number

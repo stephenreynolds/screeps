@@ -1,5 +1,5 @@
-import { Process } from "processes/process";
 import { MoveProcess } from "./move";
+import { Process } from "processes/process";
 
 interface HarvestMetaData extends CreepMetaData
 {
@@ -11,13 +11,13 @@ export class HarvestProcess extends Process
     public metaData!: HarvestMetaData;
     public type = "harvest";
 
-    public run()
+    public run(): void
     {
         const creep = Game.creeps[this.metaData.creep];
 
         const source = Game.getObjectById(this.metaData.source) as Source;
 
-        if (!creep || _.sum(creep.carry) === creep.carryCapacity || !source)
+        if (!creep || creep.store.getFreeCapacity() === 0 || !source)
         {
             this.completed = true;
             this.resumeParent();

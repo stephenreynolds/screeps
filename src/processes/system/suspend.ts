@@ -4,7 +4,7 @@ export class SuspendProcess extends Process
 {
     public type = "suspend";
 
-    public run()
+    public run(): void
     {
         this.scheduler.suspendCount = 0;
 

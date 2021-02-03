@@ -1,10 +1,10 @@
-import { Scheduler } from "scheduler";
 import { ProcessTypes } from "processes/processTypes";
+import { Scheduler } from "scheduler";
 import { Utils } from "./utils";
 
 export class Stats
 {
-    public static build(scheduler: Scheduler)
+    public static build(scheduler: Scheduler): void
     {
         if (!Memory.stats)
         {

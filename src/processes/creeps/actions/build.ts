@@ -1,6 +1,5 @@
-import { Process } from "processes/process";
-
 import { MoveProcess } from "./move";
+import { Process } from "processes/process";
 
 interface BuildProcessMetaData extends CreepMetaData
 {
@@ -12,12 +11,12 @@ export class BuildProcess extends Process
     public metaData!: BuildProcessMetaData;
     public type = "build";
 
-    public run()
+    public run(): void
     {
         const creep = Game.creeps[this.metaData.creep];
         const site = Game.getObjectById(this.metaData.site) as ConstructionSite;
 
-        if (!site || !creep || _.sum(creep.carry) === 0)
+        if (!site || !creep || creep.store.getUsedCapacity() === 0)
         {
             this.completed = true;
             this.resumeParent();

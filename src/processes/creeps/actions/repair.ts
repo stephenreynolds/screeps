@@ -1,7 +1,6 @@
+import { MoveProcess } from "./move";
 import { Process } from "processes/process";
 import { Utils } from "utils/utils";
-
-import { MoveProcess } from "./move";
 
 interface RepairProcessMetaData
 {
@@ -14,12 +13,12 @@ export class RepairProcess extends Process
     public metaData!: RepairProcessMetaData;
     public type = "repair";
 
-    public run()
+    public run(): void
     {
         const creep = Game.creeps[this.metaData.creep];
-        const target = Game.getObjectById(this.metaData.target) as Structure;
+        const target = Game.getObjectById(this.metaData.target) as Structure; // TODO: Why is this deprecated?
 
-        if (!target || !creep || _.sum(creep.carry) === 0)
+        if (!target || !creep || creep.store.getUsedCapacity() === 0)
         {
             this.completed = true;
             this.resumeParent();

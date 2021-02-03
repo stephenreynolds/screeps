@@ -9,7 +9,7 @@ interface WeightList
 }
 
 export const CreepBuilder = {
-    design: (creepType: string, room: Room) =>
+    design: (creepType: string, room: Room): BodyPartConstant[] =>
     {
         const body = [].concat(CreepBuilder.typeStarts[creepType] as never[]) as BodyPartConstant[];
         const spendCap = Math.max(room.energyAvailable * 0.5, 300);
@@ -44,14 +44,14 @@ export const CreepBuilder = {
         });
     },
 
-    bodyCost: (body: BodyPartConstant[]) =>
+    bodyCost: (body: BodyPartConstant[]): number =>
     {
         let cost = 0;
 
-        for (const part in body)
+        _.forEach(body, part =>
         {
-            cost += BODYPART_COST[body[part]];
-        }
+            cost += BODYPART_COST[part];
+        });
 
         return cost;
     },
@@ -62,6 +62,7 @@ export const CreepBuilder = {
         claim: 9,
         heal: 20,
         move: 5,
+        // eslint-disable-next-line camelcase
         ranged_attack: 14,
         tough: 1,
         work: 10

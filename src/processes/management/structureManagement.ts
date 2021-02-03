@@ -1,7 +1,7 @@
-import { Process } from "processes/process";
-import { Utils } from "utils/utils";
 import { BuilderCreepProcess } from "processes/creeps/builder";
+import { Process } from "processes/process";
 import { RepairerCreepProcess } from "processes/creeps/repairer";
+import { Utils } from "utils/utils";
 
 interface StructureManagementProcessMetaData
 {
@@ -16,7 +16,7 @@ export class StructureManagementProcess extends Process
     public metaData!: StructureManagementProcessMetaData;
     public type = "sman";
 
-    public ensureMetaData()
+    public ensureMetaData(): void
     {
         if (!this.metaData.spareCreeps)
         {
@@ -34,8 +34,15 @@ export class StructureManagementProcess extends Process
         }
     }
 
-    public run()
+    public run(): void
     {
+        const room = this.room();
+        if (!(room.controller && room.controller.my))
+        {
+            console.log("StructureManagement run on a non-owned room.")
+            return;
+        }
+
         this.ensureMetaData();
 
         if (!this.scheduler.data.roomData[this.metaData.roomName])
@@ -53,7 +60,7 @@ export class StructureManagementProcess extends Process
         const numBuilders = _.min([
             3,
             this.scheduler.data.roomData[this.metaData.roomName].constructionSites.length,
-            this.room().controller!.level - 1
+            room.controller.level - 1
         ]);
 
         this.metaData.buildCreeps = Utils.getLiveCreeps(this.metaData.buildCreeps);
@@ -64,7 +71,7 @@ export class StructureManagementProcess extends Process
         {
             if (this.metaData.spareCreeps.length === 0)
             {
-                const creepName = "sman-b-" + this.metaData.roomName + "-" + Game.time;
+                const creepName = `sman-b-${this.metaData.roomName}-${Game.time}`;
                 const spawned = Utils.spawn(this.scheduler, this.metaData.roomName, "worker", creepName, {});
                 if (spawned)
                 {
@@ -102,7 +109,7 @@ export class StructureManagementProcess extends Process
                 {
                     if (this.metaData.spareCreeps.length === 0)
                     {
-                        const creepName = "sman-r-" + this.metaData.roomName + "-" + Game.time;
+                        const creepName = `sman-r-${this.metaData.roomName}-${Game.time}`;
                         const spawned = Utils.spawn(this.scheduler, this.metaData.roomName, "worker", creepName, {});
                         if (spawned)
                         {

@@ -1,11 +1,11 @@
-import { Process } from "processes/process";
-import { Utils } from "utils/utils";
+import { CourierCreepProcess } from "processes/creeps/courier";
 import { HarvesterCreepProcess } from "processes/creeps/harvester";
 import { MinerCreepProcess } from "processes/creeps/miner";
-import { UpgraderCreepProcess } from "processes/creeps/upgrader";
-import { TransporterCreepProcess } from "processes/creeps/transporter";
+import { Process } from "processes/process";
 import { StorageManagerCreepProcess } from "processes/creeps/storageManager";
-import { CourierCreepProcess } from "processes/creeps/courier";
+import { TransporterCreepProcess } from "processes/creeps/transporter";
+import { UpgraderCreepProcess } from "processes/creeps/upgrader";
+import { Utils } from "utils/utils";
 
 interface EnergyManagementMetaData
 {
@@ -23,7 +23,7 @@ export class EnergyManagementProcess extends Process
     public type = "eman";
     public metaData!: EnergyManagementMetaData;
 
-    public run()
+    public run(): void
     {
         this.initMetaData();
 
@@ -73,8 +73,6 @@ export class EnergyManagementProcess extends Process
 
     private harvesters(sources: Source[]): boolean
     {
-        let ret = false;
-
         _.forEach(sources, (source: Source) =>
         {
             if (!this.metaData.harvestCreeps[source.id])
@@ -114,7 +112,7 @@ export class EnergyManagementProcess extends Process
             }
         });
 
-        return ret;
+        return false;
     }
 
     private miners(sources: Source[]): boolean
@@ -161,7 +159,7 @@ export class EnergyManagementProcess extends Process
      * Create transporters.
      * @returns Returns whether energy management should return early.
      */
-    private transporters(sourceContainers: StructureContainer[], generalContainers: StructureContainer[])
+    private transporters(sourceContainers: StructureContainer[], generalContainers: StructureContainer[]): boolean
     {
         let ret = false;
 
@@ -180,7 +178,7 @@ export class EnergyManagementProcess extends Process
 
                     if (!this.metaData.transportCreeps[container.id])
                     {
-                        const creepName = "eman-tr-" + this.metaData.roomName + "-" + Game.time;
+                        const creepName = `eman-tr-${this.metaData.roomName}-${Game.time}`;
                         const spawned = Utils.spawn(
                             this.scheduler,
                             this.metaData.roomName,
@@ -217,14 +215,16 @@ export class EnergyManagementProcess extends Process
      * Create miners.
      * @returns Returns whether energy management should return early.
      */
-    private couriers(generalContainers: StructureContainer[])
+    private couriers(generalContainers: StructureContainer[]): boolean
     {
         let ret = false;
 
         this.metaData.courierCreeps = Utils.getLiveCreeps(this.metaData.courierCreeps);
         if (this.metaData.courierCreeps.length < 1)
         {
-            const storedEnergy = (this.room().storage && _.sum(this.room().storage!.store) > 0) ||
+            const storage = this.room().storage;
+
+            const storedEnergy = (storage && storage.store.getUsedCapacity() > 0) ||
                 _.filter(generalContainers, (c: StructureContainer) =>
                 {
                     return c.store[RESOURCE_ENERGY] > 0;
@@ -232,7 +232,7 @@ export class EnergyManagementProcess extends Process
 
             if (storedEnergy)
             {
-                const creepName = "eman-c-" + this.metaData.roomName + "-" + Game.time;
+                const creepName = `eman-c-${this.metaData.roomName}-${Game.time}`;
                 const spawned = Utils.spawn(
                     this.scheduler,
                     this.metaData.roomName,
@@ -261,7 +261,7 @@ export class EnergyManagementProcess extends Process
      * Create storage managers.
      * @returns Returns whether energy management should return early.
      */
-    private storageManagers()
+    private storageManagers(): boolean
     {
         this.metaData.storageCreep = Utils.getLiveCreeps([this.metaData.storageCreep as string])[0];
         if (!this.metaData.storageCreep && this.room().storage)
@@ -269,12 +269,17 @@ export class EnergyManagementProcess extends Process
             const links = this.scheduler.data.roomData[this.room().name].links;
             const storageLink = _.find(links, (l: StructureLink) =>
             {
-                return l.pos.inRangeTo(this.room().storage!, 2);
+                const storage = this.room().storage;
+                if (!storage)
+                {
+                    return false;
+                }
+                return l.pos.inRangeTo(storage, 2);
             });
 
             if (storageLink)
             {
-                const creepName = "eman-sm-" + this.metaData.roomName + "-" + Game.time;
+                const creepName = `eman-sm-${this.metaData.roomName}-${Game.time}`;
                 const spawned = Utils.spawn(
                     this.scheduler,
                     this.metaData.roomName,
@@ -299,14 +304,14 @@ export class EnergyManagementProcess extends Process
         return false;
     }
 
-    private upgraders()
+    private upgraders(): void
     {
         this.metaData.upgradeCreeps = Utils.getLiveCreeps(this.metaData.upgradeCreeps);
         if (this.metaData.upgradeCreeps.length < 1 &&
             (this.scheduler.data.roomData[this.metaData.roomName].generalContainers.length > 0 ||
                 this.room().storage || this.scheduler.data.roomData[this.metaData.roomName].links.length >= 2))
         {
-            const creepName = "eman-u-" + this.metaData.roomName + "-" + Game.time;
+            const creepName = `eman-u-${this.metaData.roomName}-${Game.time}`;
             const spawned = Utils.spawn(
                 this.scheduler,
                 this.metaData.roomName,
@@ -324,7 +329,7 @@ export class EnergyManagementProcess extends Process
         }
     }
 
-    private initMetaData()
+    private initMetaData(): void
     {
         if (!this.metaData.miningCreeps)
         {

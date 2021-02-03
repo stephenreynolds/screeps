@@ -1,10 +1,10 @@
+import { DefenseManagementProcess } from "processes/management/defenseManagement";
+import { LinkProcess } from "processes/buildings/links";
+import { MineralManagementProcess } from "processes/management/mineralManagement";
 import { Process } from "processes/process";
 import { RoomLayoutManagementProcess } from "processes/management/roomLayoutManagement";
-import { DefenseManagementProcess } from "processes/management/defenseManagement";
-import { TowerRepairProcess } from "processes/buildings/towerRepair";
-import { LinkProcess } from "processes/buildings/links";
 import { SpawnRemoteBuilderProcess } from "processes/empire/spawnRemoteBuilder";
-import { MineralManagementProcess } from "processes/management/mineralManagement";
+import { TowerRepairProcess } from "processes/buildings/towerRepair";
 
 interface RoomDataMeta
 {
@@ -29,7 +29,7 @@ export class RoomDataProcess extends Process
         "extractor", "mineral", "coreLink"
     ];
 
-    public run()
+    public run(): void
     {
         const room = Game.rooms[this.metaData.roomName];
 
@@ -58,12 +58,16 @@ export class RoomDataProcess extends Process
             }
         }
 
-        if (room.controller && room.controller.my && this.roomData().mineral &&
-            this.roomData().mineral!.mineralAmount > 0 && this.roomData().extractor)
+        const mineral = this.roomData().mineral;
+        if (mineral)
         {
-            this.scheduler.addProcessIfNotExist(MineralManagementProcess, "minerals-" + this.metaData.roomName, 20, {
-                roomName: room.name
-            });
+            if (room.controller && room.controller.my
+                && mineral.mineralAmount > 0 && this.roomData().extractor)
+            {
+                this.scheduler.addProcessIfNotExist(MineralManagementProcess, "minerals-" + this.metaData.roomName, 20, {
+                    roomName: room.name
+                });
+            }
         }
 
         if (room.controller && room.controller.my)
@@ -93,7 +97,7 @@ export class RoomDataProcess extends Process
     }
 
     /** Returns the room data */
-    public build(room: Room)
+    public build(room: Room): void
     {
         const structures = room.find(FIND_STRUCTURES) as Structure[];
         const myStructures = room.find(FIND_MY_STRUCTURES) as Structure[];
@@ -150,8 +154,8 @@ export class RoomDataProcess extends Process
         }) as StructureLink[];
 
         const roomData: RoomData = {
-            constructionSites: room.find(FIND_CONSTRUCTION_SITES) as ConstructionSite[],
-            containers: containers,
+            constructionSites: room.find(FIND_CONSTRUCTION_SITES),
+            containers,
             extensions: _.filter(myStructures, (structure: Structure) =>
             {
                 return (structure.structureType === STRUCTURE_EXTENSION);
@@ -160,20 +164,20 @@ export class RoomDataProcess extends Process
             {
                 return (structure.structureType === STRUCTURE_EXTRACTOR);
             })[0] as StructureExtractor,
-            generalContainers: generalContainers,
-            mineral: room.find(FIND_MINERALS)[0] as Mineral,
-            labs: labs,
-            links: links,
-            myStructures: myStructures,
-            ramparts: ramparts,
-            roads: roads,
+            generalContainers,
+            mineral: room.find(FIND_MINERALS)[0],
+            labs,
+            links,
+            myStructures,
+            ramparts,
+            roads,
             spawns: _.filter(myStructures, (structure: Structure) =>
             {
                 return (structure.structureType === STRUCTURE_SPAWN);
             }) as StructureSpawn[],
-            sources: room.find(FIND_SOURCES) as Source[],
-            sourceContainers: sourceContainers,
-            sourceContainerMaps: sourceContainerMaps,
+            sources: room.find(FIND_SOURCES),
+            sourceContainers,
+            sourceContainerMaps,
             towers: _.filter(myStructures, (structure: Structure) =>
             {
                 return (structure.structureType === STRUCTURE_TOWER);
@@ -216,7 +220,7 @@ export class RoomDataProcess extends Process
     }
 
     /** Import the room data from memory */
-    public importFromMemory(room: Room)
+    public importFromMemory(room: Room): void
     {
         if (!room.memory.cache)
         {
@@ -278,7 +282,7 @@ export class RoomDataProcess extends Process
             }
 
             i += 1;
-            if (i === this.fields.length) { run = false; }
+            run = i !== this.fields.length;
         }
 
         run = true;
@@ -349,10 +353,7 @@ export class RoomDataProcess extends Process
             }
 
             i += 1;
-            if (i === this.singleFields.length)
-            {
-                run = false;
-            }
+            run = i !== this.singleFields.length;
         }
 
         this.scheduler.data.roomData[this.metaData.roomName] = roomData;
@@ -361,7 +362,7 @@ export class RoomDataProcess extends Process
     /** Inflate the IDs in the array.
      * Returns an object, result is the resuting array and rebuild is wether the data is wrong
      */
-    public inflate(ids: string[])
+    public inflate(ids: string[]): { result: Structure[], rebuild: boolean }
     {
         let rebuild = false;
         const result: Structure[] = [];
@@ -380,13 +381,10 @@ export class RoomDataProcess extends Process
             }
         });
 
-        return {
-            result: result,
-            rebuild: rebuild
-        };
+        return { result, rebuild };
     }
 
-    public deflate(objects: Structure[])
+    public deflate(objects: Structure[]): string[]
     {
         const result: string[] = [];
 
@@ -402,9 +400,9 @@ export class RoomDataProcess extends Process
     }
 
     /** Find enemies in the room */
-    public enemyDetection(room: Room)
+    public enemyDetection(room: Room): void
     {
-        const enemies = room.find(FIND_HOSTILE_CREEPS) as Creep[];
+        const enemies = room.find(FIND_HOSTILE_CREEPS);
 
         if (enemies.length > 0)
         {
@@ -413,9 +411,10 @@ export class RoomDataProcess extends Process
             });
         }
 
-        if (room.controller!.level === 2 && room.controller!.ticksToDowngrade < 30)
+        const controller = room.controller;
+        if (controller && controller.level === 2 && controller.ticksToDowngrade < 30)
         {
-            room.controller!.activateSafeMode();
+            controller.activateSafeMode();
         }
     }
 }

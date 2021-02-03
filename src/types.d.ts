@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 declare const __REVISION__: string;
 declare const __BRANCH__: string;
 declare const __DATE__: string;
@@ -16,13 +17,25 @@ declare namespace NodeJS
     }
 }
 
-interface CreepMemory { [name: string]: any }
+interface CreepMemory
+{
+    [name: string]: any
+}
 
-interface FlagMemory { [name: string]: any }
+interface FlagMemory
+{
+    [name: string]: any
+}
 
-interface SpawnMemory { [name: string]: any }
+interface SpawnMemory
+{
+    [name: string]: any
+}
 
-interface RoomMemory { [name: string]: any }
+interface RoomMemory
+{
+    [name: string]: any
+}
 
 interface RawMemory
 {
@@ -41,6 +54,8 @@ interface SerializedProcess
 {
     name: string
     priority: number
+    // TODO: Try to fix the below rule
+    // eslint-disable-next-line @typescript-eslint/ban-types
     metaData: object
     suspend: string | number | boolean
     parent: string | undefined

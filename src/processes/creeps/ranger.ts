@@ -5,7 +5,7 @@ export class RangerCreepProcess extends CreepProcess
 {
     public type = "racreep";
 
-    public run()
+    public run(): void
     {
         const creep = this.getCreep();
 

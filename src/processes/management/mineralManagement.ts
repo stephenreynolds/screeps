@@ -1,16 +1,19 @@
+import { MineralHarvesterCreepProcess } from "processes/creeps/mineralHarvester";
 import { Process } from "processes/process";
 import { Utils } from "utils/utils";
-import { MineralHarvesterCreepProcess } from "processes/creeps/mineralHarvester";
 
 export class MineralManagementProcess extends Process
 {
     public type = "minman";
 
-    public run()
+    public run(): void
     {
-        if (this.roomData().mineral && this.roomData().extractor)
+        const mineral = this.roomData().mineral;
+        const extractor = this.roomData().extractor;
+
+        if (mineral && extractor)
         {
-            if (this.roomData().mineral!.mineralAmount > 0)
+            if (mineral.mineralAmount > 0)
             {
                 const creep = Game.creeps[this.metaData.creep];
 
@@ -20,20 +23,20 @@ export class MineralManagementProcess extends Process
                         this.scheduler,
                         this.metaData.roomName,
                         "worker",
-                        "min-" + this.metaData.roomName + "-" + Game.time
+                        `min-${this.metaData.roomName}-${Game.time}`
                     );
 
                     if (spawned)
                     {
-                        this.metaData.creep = "min-" + this.metaData.roomName + "-" + Game.time;
+                        this.metaData.creep = `min-${this.metaData.roomName}-${Game.time}`;
                     }
                 }
                 else
                 {
                     this.fork(MineralHarvesterCreepProcess, "mhlf-" + creep.name, 20, {
                         creep: creep.name,
-                        extractor: this.roomData().extractor!.id,
-                        mineral: this.roomData().mineral!.id
+                        extractor: extractor.id,
+                        mineral: mineral.id
                     });
                 }
             }

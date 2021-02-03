@@ -2,18 +2,18 @@ import { ConsoleCommands } from "utils/consoleCommands";
 import { CreepBuilder } from "utils/creepBuilder";
 import { ErrorMapper } from "utils/errorMapper";
 import { ProcessTypes } from "processes/processTypes";
+import { RCLPlan } from "processes/management/rclPlans/rclPlan";
 import { RoomPathFinder } from "utils/roomPathFinder";
 import { Scheduler } from "scheduler";
 import { Utils } from "utils/utils";
 import profiler from "screeps-profiler";
-import { RCLPlan } from "processes/management/rclPlans/rclPlan";
 
-const enableProfiling = __SCRIPT_BRANCH__!.match("dev");
+const enableProfiling = /dev/.exec(__SCRIPT_BRANCH__);
 setupProfiling();
 
 export const loop = ErrorMapper.wrapLoop(() => enableProfiling ? profiler.wrap(() => main()) : main());
 
-function main()
+function main(): void
 {
     global.cc = ConsoleCommands;
     global.cc.profiler = Game.profiler;
@@ -22,7 +22,7 @@ function main()
     scheduler.run();
 }
 
-function setupProfiling()
+function setupProfiling(): void
 {
     if (enableProfiling)
     {

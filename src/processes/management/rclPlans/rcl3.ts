@@ -2,9 +2,9 @@ import { RCLPlan } from "./rclPlan";
 
 export class RCL3 extends RCLPlan
 {
-    protected rcl: number = 3;
+    protected rcl = 3;
 
-    public generate()
+    public generate(): void
     {
         this.init();
 
@@ -31,7 +31,7 @@ export class RCL3 extends RCLPlan
         this.room.memory.roomPlan.rcl[this.rcl].rampart = [];
     }
 
-    private addExtensions()
+    private addExtensions(): void
     {
         this.room.memory.roomPlan.rcl[this.rcl].extension = this.room.memory.roomPlan.rcl[this.rcl].extension.concat([
             new RoomPosition(this.baseSpawn.pos.x - 3, this.baseSpawn.pos.y, this.room.name),
@@ -42,7 +42,7 @@ export class RCL3 extends RCLPlan
         ]);
     }
 
-    private addExtensionRoads()
+    private addExtensionRoads(): void
     {
         this.room.memory.roomPlan.rcl[this.rcl].road = this.room.memory.roomPlan.rcl[this.rcl].road.concat([
             new RoomPosition(this.baseSpawn.pos.x - 4, this.baseSpawn.pos.y + 3, this.room.name),
@@ -54,14 +54,14 @@ export class RCL3 extends RCLPlan
         ]);
     }
 
-    private addTower()
+    private addTower(): void
     {
         this.room.memory.roomPlan.rcl[this.rcl].tower = [
             new RoomPosition(this.baseSpawn.pos.x, this.baseSpawn.pos.y + 1, this.room.name)
         ];
     }
 
-    private addWalls()
+    private addWalls(): void
     {
         this.room.memory.roomPlan.rcl[this.rcl].constructedWall = [];
         const exitPositions = this.room.find(FIND_EXIT);
@@ -94,7 +94,7 @@ export class RCL3 extends RCLPlan
                 //     }
                 // }
 
-                const path = PathFinder.search(pos, this.baseSpawn.pos,
+                path = PathFinder.search(pos, this.baseSpawn.pos,
                     {
                         maxRooms: 1,
                         swampCost: 1,
@@ -117,7 +117,7 @@ export class RCL3 extends RCLPlan
         }
     }
 
-    private addRamparts()
+    private addRamparts(): void
     {
         this.replaceNearestWall(TOP);
         this.replaceNearestWall(BOTTOM);
@@ -125,10 +125,10 @@ export class RCL3 extends RCLPlan
         this.replaceNearestWall(RIGHT);
     }
 
-    private replaceNearestWall(direction: DirectionConstant)
+    private replaceNearestWall(direction: DirectionConstant): void
     {
-        let closest: number = -1;
-        let distance: number = 99;
+        let closest = -1;
+        let distance = 99;
         for (let i = 0; i < this.room.memory.roomPlan.rcl[this.rcl].constructedWall.length; ++i)
         {
             const wall = this.room.memory.roomPlan.rcl[this.rcl].constructedWall[i];

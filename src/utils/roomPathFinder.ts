@@ -15,7 +15,7 @@ export class RoomPathFinder
     public targetRoom: string;
     public startRoom: string;
 
-    constructor(sourceRoom: string, targetRoom: string)
+    public constructor(sourceRoom: string, targetRoom: string)
     {
         this.currentRoom = {
             name: sourceRoom,
@@ -30,40 +30,45 @@ export class RoomPathFinder
         this.step();
     }
 
-    public step()
+    public step(): void
     {
         if (this.currentRoom.name !== this.targetRoom)
         {
-            const pathFinder = this;
-            const roomNames = _.values(Game.map.describeExits(this.currentRoom.name)) as string[];
+            const roomNames = _.values(Game.map.describeExits(this.currentRoom.name));
 
             _.forEach(roomNames, (roomName: string) =>
             {
-                const distanceToTarget = Game.map.getRoomLinearDistance(roomName, pathFinder.targetRoom);
-                const distanceFromStart = Game.map.getRoomLinearDistance(roomName, pathFinder.startRoom);
+                const distanceToTarget = Game.map.getRoomLinearDistance(roomName, this.targetRoom);
+                const distanceFromStart = Game.map.getRoomLinearDistance(roomName, this.startRoom);
 
-                if (!_.include(pathFinder.usedRooms, roomName))
+                if (!_.include(this.usedRooms, roomName))
                 {
-                    pathFinder.openRooms.push({
+                    this.openRooms.push({
                         name: roomName,
-                        distanceToTarget: distanceToTarget,
-                        distanceFromStart: distanceFromStart,
+                        distanceToTarget,
+                        distanceFromStart,
                         score: (distanceFromStart + distanceToTarget),
-                        path: [].concat(pathFinder.currentRoom.path as never[], [roomName] as never[])
+                        path: [].concat(this.currentRoom.path as never[], [roomName] as never[])
                     });
                 }
             });
 
             this.openRooms = _.sortBy(this.openRooms, "score").reverse();
 
-            this.currentRoom = this.openRooms.pop()!;
+            const currentRoom = this.openRooms.pop();
+            if (!currentRoom)
+            {
+                return;
+            }
+
+            this.currentRoom = currentRoom;
             this.usedRooms.push(this.currentRoom.name);
 
             this.step();
         }
     }
 
-    public results()
+    public results(): { length: number, details: string[] }
     {
         return {
             length: this.currentRoom.path.length,

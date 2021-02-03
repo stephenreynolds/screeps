@@ -1,12 +1,12 @@
-import { CreepProcess } from "./creepProcess";
 import { CollectProcess } from "./actions/collect";
+import { CreepProcess } from "./creepProcess";
 import { DeliverProcess } from "./actions/deliver";
 
 export class TransporterCreepProcess extends CreepProcess
 {
     public type = "trcreep";
 
-    public run()
+    public run(): void
     {
         const creep = this.getCreep();
 
@@ -15,7 +15,7 @@ export class TransporterCreepProcess extends CreepProcess
             return;
         }
 
-        if (_.sum(creep.carry) === 0)
+        if (creep.store.getUsedCapacity() === 0)
         {
             const sourceContainer = Game.getObjectById<StructureContainer>(this.metaData.sourceContainer);
 
@@ -40,14 +40,14 @@ export class TransporterCreepProcess extends CreepProcess
         // Prefer delivering to general containers, fallback to storage, then other structures.
         const generalContainer = _.filter(this.scheduler.data.roomData[this.metaData.roomName].generalContainers, (c: StructureContainer) =>
         {
-            return c.store[RESOURCE_ENERGY] < c.storeCapacity && c.isActive();
+            return c.store.getFreeCapacity(RESOURCE_ENERGY) > 0 && c.isActive();
         })[0];
 
         if (generalContainer)
         {
             target = generalContainer;
         }
-        else if (creep.room.storage && creep.room.storage.isActive() && _.sum(creep.room.storage.store) < creep.room.storage.storeCapacity)
+        else if (creep.room.storage && creep.room.storage.isActive() && creep.room.storage.store.getFreeCapacity() > 0)
         {
             target = creep.room.storage;
         }

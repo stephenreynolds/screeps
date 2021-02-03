@@ -1,9 +1,7 @@
-import { Process } from "processes/process";
-
 import { ClaimProcess } from "../empire/claim";
 import { HoldRoomProcess } from "../empire/holdRoom";
-
 import { InvasionManagementProcess } from "./invasionManagement";
+import { Process } from "processes/process";
 import { RangerManagementProcess } from "./rangerManagement";
 import { RemoteMiningManagementProcess } from "./remoteMiningManagement";
 
@@ -11,7 +9,7 @@ export class FlagManagementProcess extends Process
 {
     public type = "flagman";
 
-    public run()
+    public run(): void
     {
         this.completed = true;
 
@@ -43,7 +41,7 @@ export class FlagManagementProcess extends Process
         });
     }
 
-    private claimFlag(flag: Flag)
+    private claimFlag(flag: Flag): void
     {
         this.scheduler.addProcessIfNotExist(
             ClaimProcess,
@@ -56,7 +54,7 @@ export class FlagManagementProcess extends Process
         );
     }
 
-    private holdFlag(flag: Flag)
+    private holdFlag(flag: Flag): void
     {
         this.scheduler.addProcessIfNotExist(
             HoldRoomProcess,
@@ -68,7 +66,7 @@ export class FlagManagementProcess extends Process
         );
     }
 
-    private remoteMiningFlag(flag: Flag)
+    private remoteMiningFlag(flag: Flag): void
     {
         this.scheduler.addProcessIfNotExist(
             RemoteMiningManagementProcess,
@@ -80,17 +78,17 @@ export class FlagManagementProcess extends Process
         );
     }
 
-    private rangerFlag(flag: Flag)
+    private rangerFlag(flag: Flag): void
     {
-        const count = parseInt(flag.name.split(".")[1], undefined);
+        const count = parseInt(flag.name.split(".")[1], 10);
         this.scheduler.addProcessIfNotExist(RangerManagementProcess, flag.name + "-rangers", 70, {
             flag: flag.name,
             rangers: [],
-            count: count
+            count
         });
     }
 
-    private invasionFlag(flag: Flag)
+    private invasionFlag(flag: Flag): void
     {
         this.scheduler.addProcessIfNotExist(InvasionManagementProcess, `${flag.name}-invasion`, 70, {
             flag: flag.name

@@ -4,7 +4,7 @@ export class EscortCreepProcess extends CreepProcess
 {
     public type = "ecreep";
 
-    public run()
+    public run(): void
     {
         const creep = this.getCreep();
         const defendCreep = Game.creeps[this.metaData.defendCreep];

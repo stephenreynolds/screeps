@@ -1,6 +1,5 @@
-import { CreepProcess } from "./creepProcess";
-
 import { CollectProcess } from "./actions/collect";
+import { CreepProcess } from "./creepProcess";
 import { HarvestProcess } from "./actions/harvest";
 import { UpgradeProcess } from "./actions/upgrade";
 
@@ -8,7 +7,7 @@ export class UpgraderCreepProcess extends CreepProcess
 {
     public type = "ucreep";
 
-    public run()
+    public run(): void
     {
         const creep = this.getCreep();
 
@@ -18,7 +17,7 @@ export class UpgraderCreepProcess extends CreepProcess
         }
 
         // Collect energy.
-        if (_.sum(creep.carry) === 0)
+        if (creep.store.getUsedCapacity() === 0)
         {
             let target: Structure | undefined;
 
@@ -30,10 +29,10 @@ export class UpgraderCreepProcess extends CreepProcess
                 // Collect from upgrade link if it exists.
                 const link = _.find(links, (l: StructureLink) =>
                 {
-                    return l.energy > 0 && l.pos.inRangeTo(creep.room.controller!.pos, 3);
+                    return l.store[RESOURCE_ENERGY] > 0 && creep.room.controller && l.pos.inRangeTo(creep.room.controller.pos, 3);
                 });
 
-                if (link && link.energy > 0)
+                if (link && link.store[RESOURCE_ENERGY] > 0)
                 {
                     target = link;
 
@@ -47,7 +46,7 @@ export class UpgraderCreepProcess extends CreepProcess
                         creep.room.storage as never
                     ) as DeliveryTarget[];
 
-                    const capacity = creep.carryCapacity;
+                    const capacity = creep.store.getCapacity();
 
                     targets = _.filter(targets, (t: DeliveryTarget) =>
                     {
@@ -62,14 +61,14 @@ export class UpgraderCreepProcess extends CreepProcess
                     {
                         // Collect from source containers if no storage or general containers.
                         const sourceContainers = this.scheduler.data.roomData[creep.room.name].sourceContainers;
-                        const targets = _.filter(sourceContainers, (c: StructureContainer) =>
+                        const targetContainers = _.filter(sourceContainers, (c: StructureContainer) =>
                         {
                             return c.store[RESOURCE_ENERGY] > 0;
                         });
 
-                        if (targets)
+                        if (targetContainers)
                         {
-                            target = creep.pos.findClosestByPath(targets) as Structure;
+                            target = creep.pos.findClosestByPath(targetContainers) as Structure;
                         }
                     }
                 }
@@ -88,7 +87,7 @@ export class UpgraderCreepProcess extends CreepProcess
                 // Harvest from source if nothing to collect from.
                 const source = creep.pos.findClosestByPath(this.scheduler.data.roomData[creep.room.name].sources);
                 this.fork(HarvestProcess, `harvest-${creep.name}`, this.priority - 1, {
-                    source: source,
+                    source,
                     creep: creep.name
                 });
             }

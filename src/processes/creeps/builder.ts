@@ -1,16 +1,15 @@
-import { CreepProcess } from "./creepProcess";
-import { Utils } from "utils/utils";
-
 import { BuildProcess } from "./actions/build";
 import { CollectProcess } from "./actions/collect";
+import { CreepProcess } from "./creepProcess";
 import { DeliverProcess } from "./actions/deliver";
 import { RepairProcess } from "./actions/repair";
+import { Utils } from "utils/utils";
 
 export class BuilderCreepProcess extends CreepProcess
 {
     public type = "bcreep";
 
-    public run()
+    public run(): void
     {
         const creep = this.getCreep();
 
@@ -19,7 +18,7 @@ export class BuilderCreepProcess extends CreepProcess
             return;
         }
 
-        if (_.sum(creep.carry) === 0)
+        if (creep.store.getUsedCapacity() === 0)
         {
             this.collect(creep);
         }
@@ -65,7 +64,7 @@ export class BuilderCreepProcess extends CreepProcess
         }
     }
 
-    private collect(creep: Creep)
+    private collect(creep: Creep): void
     {
         const withdrawTarget = Utils.withdrawTarget(creep, this);
 
@@ -86,7 +85,7 @@ export class BuilderCreepProcess extends CreepProcess
         }
     }
 
-    private buildNow(sites: ConstructionSite[])
+    private buildNow(sites: ConstructionSite[]): ConstructionSite<BuildableStructureConstant>[]
     {
         const towerSites = _.filter(sites, (site: ConstructionSite) =>
         {
@@ -156,7 +155,7 @@ export class BuilderCreepProcess extends CreepProcess
         return buildNow;
     }
 
-    private deliver(creep: Creep)
+    private deliver(creep: Creep): void
     {
         let deliverTargets;
 

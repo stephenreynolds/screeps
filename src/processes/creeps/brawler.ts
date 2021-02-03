@@ -5,7 +5,7 @@ export class BrawlerCreepProcess extends CreepProcess
 {
     public type = "brawlcreep";
 
-    public run()
+    public run(): void
     {
         const creep = this.getCreep();
 
@@ -55,9 +55,9 @@ export class BrawlerCreepProcess extends CreepProcess
 
             if (hostileStructures[0])
             {
-                const hostileStructure = creep.pos.findClosestByRange<Structure>(hostileStructures)!;
+                const hostileStructure = creep.pos.findClosestByRange<Structure>(hostileStructures);
 
-                if (creep.attack(hostileStructure) === ERR_NOT_IN_RANGE)
+                if (hostileStructure && creep.attack(hostileStructure) === ERR_NOT_IN_RANGE)
                 {
                     creep.moveTo(hostileStructure);
                 }

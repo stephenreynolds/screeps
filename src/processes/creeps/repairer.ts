@@ -1,23 +1,27 @@
+import { CollectProcess } from "./actions/collect";
 import { CreepProcess } from "./creepProcess";
+import { RepairProcess } from "./actions/repair";
 import { Utils } from "utils/utils";
 
-import { CollectProcess } from "./actions/collect";
-import { RepairProcess } from "./actions/repair";
-
-export class RepairerCreepProcess extends CreepProcess {
+export class RepairerCreepProcess extends CreepProcess
+{
     public type = "rcreep";
 
-    public run() {
+    public run(): void
+    {
         const creep = this.getCreep();
 
-        if (!creep) {
+        if (!creep)
+        {
             return;
         }
 
-        if (_.sum(creep.carry) === 0) {
+        if (creep.store.getUsedCapacity() === 0)
+        {
             const target = Utils.withdrawTarget(creep, this);
 
-            if (target) {
+            if (target)
+            {
                 this.fork(CollectProcess, "collect-" + creep.name, this.priority - 1, {
                     creep: creep.name,
                     target: target.id,
@@ -26,7 +30,8 @@ export class RepairerCreepProcess extends CreepProcess {
 
                 return;
             }
-            else {
+            else
+            {
                 this.suspend = 10;
                 return;
             }
@@ -38,28 +43,36 @@ export class RepairerCreepProcess extends CreepProcess {
 
         const useableTowers = _.filter(this.roomData().towers, (tower: StructureTower) =>
         {
-            return tower.energy >= 500;
+            return tower.store[RESOURCE_ENERGY] >= 500;
         });
 
-        if (useableTowers.length === 0) {
+        if (useableTowers.length === 0)
+        {
             let repairableObjects = [].concat(
                 this.scheduler.data.roomData[this.metaData.roomName].containers as never[],
                 this.roomData().ramparts as never[]
-            ) as Array<StructureRoad | StructureRampart | StructureContainer>;
+            ) as (StructureRoad | StructureRampart | StructureContainer)[];
 
             repairTargets = _.filter(repairableObjects,
-                (object: StructureRoad | StructureRampart | StructureContainer) => {
-                    if (object.ticksToDecay < shortestDecay) { shortestDecay = object.ticksToDecay; }
+                (object: StructureRoad | StructureRampart | StructureContainer) =>
+                {
+                    if (object.ticksToDecay < shortestDecay)
+                    {
+                        shortestDecay = object.ticksToDecay;
+                    }
 
-                    if (object.structureType !== STRUCTURE_RAMPART) {
+                    if (object.structureType !== STRUCTURE_RAMPART)
+                    {
                         return (object.hits < object.hitsMax);
                     }
-                    else {
+                    else
+                    {
                         return (object.hits < Utils.rampartHealth(this.scheduler, this.metaData.roomName));
                     }
                 });
 
-            if (repairTargets.length === 0) {
+            if (repairTargets.length === 0)
+            {
                 repairableObjects = [].concat(
                     this.scheduler.data.roomData[this.metaData.roomName].roads as never[]
                 ) as StructureRoad[];
@@ -67,51 +80,63 @@ export class RepairerCreepProcess extends CreepProcess {
                 shortestDecay = 100;
 
                 repairTargets = _.filter(repairableObjects,
-                    (object: StructureRoad | StructureRampart | StructureContainer) => {
-                        if (object.ticksToDecay < shortestDecay) {
+                    (object: StructureRoad | StructureRampart | StructureContainer) =>
+                    {
+                        if (object.ticksToDecay < shortestDecay)
+                        {
                             shortestDecay = object.ticksToDecay;
                         }
 
-                        if (object.structureType !== STRUCTURE_RAMPART) {
+                        if (object.structureType !== STRUCTURE_RAMPART)
+                        {
                             return (object.hits < object.hitsMax);
                         }
-                        else {
+                        else
+                        {
                             return (object.hits < Utils.rampartHealth(this.scheduler, this.metaData.roomName));
                         }
                     });
             }
         }
-        else {
-            let repairableObjects = [].concat(
+        else
+        {
+            const repairableObjects = [].concat(
                 this.roomData().walls as never[]
-            ) as Array<StructureWall>;
+            ) as StructureWall[];
 
-            repairTargets = _.filter(repairableObjects, (wall: StructureWall) => {
+            repairTargets = _.filter(repairableObjects, (wall: StructureWall) =>
+            {
                 return wall.hits < wall.hitsMax;
             });
         }
 
-        repairTargets = repairTargets.sort((a, b) => {
-            if (a.hits < b.hits) {
+        repairTargets = repairTargets.sort((a, b) =>
+        {
+            if (a.hits < b.hits)
+            {
                 return -1;
             }
-            else if (a.hits > b.hits) {
+            else if (a.hits > b.hits)
+            {
                 return 1;
             }
-            else {
+            else
+            {
                 return 0;
             }
         });
 
-        if (repairTargets.length > 0) {
+        if (repairTargets.length > 0)
+        {
             const target = repairTargets[0];
 
             this.fork(RepairProcess, "repair-" + creep.name, this.priority - 1, {
                 creep: creep.name,
-                target: target!.id
+                target: target.id
             });
         }
-        else {
+        else
+        {
             this.suspend = shortestDecay;
             return;
         }

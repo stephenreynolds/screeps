@@ -2,9 +2,9 @@ import { RCLPlan } from "./rclPlan";
 
 export class RCL4 extends RCLPlan
 {
-    protected rcl: number = 4;
+    protected rcl = 4;
 
-    public generate()
+    public generate(): void
     {
         this.init();
 
@@ -30,26 +30,39 @@ export class RCL4 extends RCLPlan
         this.room.memory.roomPlan.rcl[this.rcl].rampart = _.clone(this.room.memory.roomPlan.rcl[this.rcl - 1].rampart);
     }
 
-    private addStorage()
+    private addStorage(): void
     {
+        if (!this.room.controller)
+        {
+            console.log("Tried to build storage in a room without a controller.")
+            return;
+        }
+
         // Find source nearest to the controller.
-        let nearestSource: Source;
-        let nearestRange: number = 99;
+        let nearestSource: Source | undefined;
+        let nearestRange = 99;
         for (const source of this.scheduler.data.roomData[this.room.name].sources)
         {
-            const range = source.pos.getRangeTo(this.room.controller!.pos);
+            const range = source.pos.getRangeTo(this.room.controller.pos);
             if (range < nearestRange)
             {
                 nearestSource = source;
             }
         }
+
+        if (!nearestSource)
+        {
+            console.log("Could not find any sources.")
+            return;
+        }
+
         // Find storage pos nearest to nearest source.
         // Top
         let nearest = new RoomPosition(this.baseSpawn.pos.x, this.baseSpawn.pos.y - 6, this.room.name);
-        nearestRange = nearest.getRangeTo(nearestSource!.pos);
+        nearestRange = nearest.getRangeTo(nearestSource.pos);
         // Bottom
         let newPos = new RoomPosition(this.baseSpawn.pos.x, this.baseSpawn.pos.y + 10, this.room.name);
-        let newRange = newPos.getRangeTo(nearestSource!.pos);
+        let newRange = newPos.getRangeTo(nearestSource.pos);
         if (newRange < nearestRange && this.isBuildablePos(newPos.x, newPos.y))
         {
             nearestRange = newRange;
@@ -57,7 +70,7 @@ export class RCL4 extends RCLPlan
         }
         // Left
         newPos = new RoomPosition(this.baseSpawn.pos.x - 8, this.baseSpawn.pos.y + 2, this.room.name);
-        newRange = newPos.getRangeTo(nearestSource!.pos);
+        newRange = newPos.getRangeTo(nearestSource.pos);
         if (newRange < nearestRange && this.isBuildablePos(newPos.x, newPos.y))
         {
             nearestRange = newRange;
@@ -65,17 +78,17 @@ export class RCL4 extends RCLPlan
         }
         // Right
         newPos = new RoomPosition(this.baseSpawn.pos.x + 8, this.baseSpawn.pos.y + 2, this.room.name);
-        newRange = newPos.getRangeTo(nearestSource!.pos);
+        newRange = newPos.getRangeTo(nearestSource.pos);
         if (newRange < nearestRange && this.isBuildablePos(newPos.x, newPos.y))
         {
             nearestRange = newRange;
             nearest = newPos;
         }
 
-        this.room.memory.roomPlan.rcl[this.rcl].storage = [nearest!];
+        this.room.memory.roomPlan.rcl[this.rcl].storage = [nearest];
     }
 
-    private addExtensions()
+    private addExtensions(): void
     {
         this.room.memory.roomPlan.rcl[this.rcl].extension = this.room.memory.roomPlan.rcl[this.rcl].extension.concat([
             new RoomPosition(this.baseSpawn.pos.x + 2, this.baseSpawn.pos.y - 1, this.room.name),
@@ -91,7 +104,7 @@ export class RCL4 extends RCLPlan
         ]);
     }
 
-    private addExtensionRoads()
+    private addExtensionRoads(): void
     {
         this.room.memory.roomPlan.rcl[this.rcl].road = this.room.memory.roomPlan.rcl[this.rcl].road.concat([
             new RoomPosition(this.baseSpawn.pos.x + 4, this.baseSpawn.pos.y + 1, this.room.name),
@@ -106,7 +119,7 @@ export class RCL4 extends RCLPlan
         ]);
     }
 
-    private addRamparts()
+    private addRamparts(): void
     {
         for (let x = -5; x <= 5; x++)
         {

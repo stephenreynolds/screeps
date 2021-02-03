@@ -1,15 +1,14 @@
-import { CreepProcess } from "./creepProcess";
-import { Utils } from "utils/utils";
-
 import { BuildProcess } from "./actions/build";
+import { CreepProcess } from "./creepProcess";
 import { HarvestProcess } from "./actions/harvest";
 import { UpgradeProcess } from "./actions/upgrade";
+import { Utils } from "utils/utils";
 
 export class RemoteBuilderCreepProcess extends CreepProcess
 {
     public type = "rbcreep";
 
-    public run()
+    public run(): void
     {
         const creep = this.getCreep();
         const site = Game.getObjectById(this.metaData.site) as ConstructionSite;
@@ -49,19 +48,22 @@ export class RemoteBuilderCreepProcess extends CreepProcess
             }
         }
 
-        if (_.sum(creep.carry) === 0)
+        if (creep.store.getUsedCapacity() === 0)
         {
-            const source = site.pos.findClosestByRange(this.scheduler.data.roomData[site.pos.roomName].sources)!;
+            const source = site.pos.findClosestByRange(this.scheduler.data.roomData[site.pos.roomName].sources);
+            if (source)
+            {
+                this.fork(HarvestProcess, "harvest-" + creep.name, this.priority - 1, {
+                    creep: creep.name,
+                    source: source.id
+                });
 
-            this.fork(HarvestProcess, "harvest-" + creep.name, this.priority - 1, {
-                creep: creep.name,
-                source: source.id
-            });
-
-            return;
+                return;
+            }
         }
 
-        if (creep.room.controller!.level < 2 || creep.room.controller!.ticksToDowngrade < 4000)
+        const controller = creep.room.controller;
+        if (controller && (controller.level < 2 || controller.ticksToDowngrade < 4000))
         {
             this.fork(UpgradeProcess, "upgrade-" + creep.name, this.priority - 1, {
                 creep: creep.name

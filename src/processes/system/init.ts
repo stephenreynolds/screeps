@@ -1,15 +1,15 @@
-import { Process } from "processes/process";
-import { SuspendProcess } from "./suspend";
-import { RoomDataProcess } from "./roomData";
 import { EnergyManagementProcess } from "processes/management/energyManagement";
 import { FlagManagementProcess } from "processes/management/flagManagement";
+import { Process } from "processes/process";
+import { RoomDataProcess } from "./roomData";
 import { StructureManagementProcess } from "processes/management/structureManagement";
+import { SuspendProcess } from "./suspend";
 
 export class InitProcess extends Process
 {
     public type = "init";
 
-    public run()
+    public run(): void
     {
         // Delete nonexistent creeps and draw visuals.
         for (const name in Memory.creeps)

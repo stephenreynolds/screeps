@@ -1,12 +1,12 @@
-import { CreepProcess } from "./creepProcess";
 import { CollectProcess } from "./actions/collect";
+import { CreepProcess } from "./creepProcess";
 import { DeliverProcess } from "./actions/deliver";
 
 export class StorageManagerCreepProcess extends CreepProcess
 {
     public type = "smcreep";
 
-    public run()
+    public run(): void
     {
         const creep = this.getCreep();
 
@@ -23,9 +23,9 @@ export class StorageManagerCreepProcess extends CreepProcess
             return;
         }
 
-        if (_.sum(creep.carry) === 0)
+        if (creep.store.getUsedCapacity() === 0)
         {
-            if (link.energy > 0)
+            if (link.store[RESOURCE_ENERGY] > 0)
             {
                 this.fork(CollectProcess, "collect-" + creep.name, this.priority - 1, {
                     target: link.id,
@@ -37,7 +37,7 @@ export class StorageManagerCreepProcess extends CreepProcess
             return;
         }
 
-        if (_.sum(creep.room.storage.store) < creep.room.storage.storeCapacity)
+        if (creep.room.storage.store.getFreeCapacity() > 0)
         {
             this.fork(DeliverProcess, "deliver-" + creep.name, this.priority - 1, {
                 creep: creep.name,

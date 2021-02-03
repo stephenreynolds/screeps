@@ -1,13 +1,12 @@
 import { Process } from "processes/process";
-import { Utils } from "utils/utils";
-
 import { RemoteBuilderCreepProcess } from "../creeps/remoteBuilder";
+import { Utils } from "utils/utils";
 
 export class SpawnRemoteBuilderProcess extends Process
 {
     public type = "spawnRemoteBuilder";
 
-    public run()
+    public run(): void
     {
         const site = this.metaData.site;
 
@@ -17,9 +16,9 @@ export class SpawnRemoteBuilderProcess extends Process
             return;
         }
 
-        if (!this.scheduler.hasProcess("rbcreep-" + site))
+        if (!this.scheduler.hasProcess(`rbcreep-${site}`))
         {
-            const creepName = "rbcreep-" + Game.time;
+            const creepName = `rbcreep-${Game.time}`;
 
             const spawned = Utils.spawn(
                 this.scheduler,
@@ -30,9 +29,9 @@ export class SpawnRemoteBuilderProcess extends Process
 
             if (spawned)
             {
-                this.scheduler.addProcess(RemoteBuilderCreepProcess, "rbcreep-" + site, 70, {
+                this.scheduler.addProcess(RemoteBuilderCreepProcess, `rbcreep-${site}`, 70, {
                     creep: creepName,
-                    site: site
+                    site
                 });
             }
         }

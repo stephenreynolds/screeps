@@ -2,9 +2,9 @@ import { RCLPlan } from "./rclPlan";
 
 export class RCL8 extends RCLPlan
 {
-    protected rcl: number = 8;
+    protected rcl = 8;
 
-    public generate()
+    public generate(): void
     {
         this.init();
 
@@ -39,13 +39,13 @@ export class RCL8 extends RCLPlan
         this.room.memory.roomPlan.rcl[this.rcl].constructedWall = _.clone(this.room.memory.roomPlan.rcl[this.rcl - 1].constructedWall);
     }
 
-    private addSpawn()
+    private addSpawn(): void
     {
         this.room.memory.roomPlan.rcl[this.rcl].spawn[2] =
             new RoomPosition(this.baseSpawn.pos.x - 2, this.baseSpawn.pos.y + 2, this.room.name);
     }
 
-    private addExtensions()
+    private addExtensions(): void
     {
         this.room.memory.roomPlan.rcl[this.rcl].extension = this.room.memory.roomPlan.rcl[this.rcl].extension.concat([
             new RoomPosition(this.baseSpawn.pos.x + 3, this.baseSpawn.pos.y - 3, this.room.name),
@@ -61,7 +61,7 @@ export class RCL8 extends RCLPlan
         ]);
     }
 
-    private addTowers()
+    private addTowers(): void
     {
         this.room.memory.roomPlan.rcl[this.rcl].tower = this.room.memory.roomPlan.rcl[this.rcl].tower.concat([
             new RoomPosition(this.baseSpawn.pos.x - 1, this.baseSpawn.pos.y + 1, this.room.name),
@@ -70,7 +70,7 @@ export class RCL8 extends RCLPlan
         ]);
     }
 
-    private addLabs()
+    private addLabs(): void
     {
         this.room.memory.roomPlan.rcl[this.rcl].lab = this.room.memory.roomPlan.rcl[this.rcl].lab.concat([
             new RoomPosition(this.baseSpawn.pos.x - 4, this.baseSpawn.pos.y + 4, this.room.name),
@@ -80,34 +80,34 @@ export class RCL8 extends RCLPlan
         ]);
     }
 
-    private addObserver()
+    private addObserver(): void
     {
         this.room.memory.roomPlan.rcl[this.rcl].observer = [
             new RoomPosition(this.baseSpawn.pos.x - 5, this.baseSpawn.pos.y + 7, this.room.name)
         ];
     }
 
-    private addPowerSpawn()
+    private addPowerSpawn(): void
     {
         this.room.memory.roomPlan.rcl[this.rcl].powerSpawn = [
             new RoomPosition(this.baseSpawn.pos.x, this.baseSpawn.pos.y + 4, this.room.name)
         ];
     }
 
-    private addNuker()
+    private addNuker(): void
     {
         this.room.memory.roomPlan.rcl[this.rcl].nuker = [
             new RoomPosition(this.baseSpawn.pos.x, this.baseSpawn.pos.y + 8, this.room.name)
         ];
     }
 
-    private addLinks()
+    private addLinks(): void
     {
         const sourceContainers = _.filter(this.room.memory.roomPlan.rcl[this.rcl].container, (c: RoomPosition) =>
         {
             return c.findInRange(this.scheduler.data.roomData[this.room.name].sources, 1) &&
                 !c.findInRange(this.scheduler.data.roomData[this.room.name].links, 1);
-        }) as RoomPosition[];
+        });
 
         if (sourceContainers[0])
         {

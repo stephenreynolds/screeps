@@ -1,6 +1,5 @@
-import { Process } from "processes/process";
-
 import { BuildPriorities } from "./rclPlans/buildPriorities";
+import { Process } from "processes/process";
 import { RCL0 } from "./rclPlans/rcl0";
 import { RCL1 } from "./rclPlans/rcl1";
 import { RCL2 } from "./rclPlans/rcl2";
@@ -18,11 +17,11 @@ export class RoomLayoutManagementProcess extends Process
 
     public readonly maxSites = 10;  // Max number of sites per room.
 
-    public run()
+    public run(): void
     {
         const room = Game.rooms[this.metaData.roomName];
 
-        if (!room)
+        if (!(room && room.controller))
         {
             delete Memory.rooms[this.metaData.roomName];
             this.completed = true;
@@ -33,7 +32,7 @@ export class RoomLayoutManagementProcess extends Process
         {
             const siteCount = room.memory.numSites;
 
-            if (siteCount < this.maxSites && !RCLPlan.isFinished(room, room.controller!.level))
+            if (siteCount < this.maxSites && !RCLPlan.isFinished(room, room.controller.level))
             {
                 this.createSites(room);
             }
@@ -44,7 +43,7 @@ export class RoomLayoutManagementProcess extends Process
         }
     }
 
-    private generateRoomPlan(room: Room)
+    private generateRoomPlan(room: Room): void
     {
         room.memory.roomPlan = {};
         room.memory.roomPlan.rcl = [];
@@ -60,36 +59,42 @@ export class RoomLayoutManagementProcess extends Process
         new RCL8(room, this.scheduler).generate();
     }
 
-    private createSites(room: Room)
+    private createSites(room: Room): void
     {
-        const buildableRCL = this.getBuildableRCL(room, room.controller!.level);
+        if (!room.controller)
+        {
+            console.log("Room layout management tried to create sites in a non-owned room.");
+            return;
+        }
+
+        const buildableRCL = this.getBuildableRCL(room, room.controller.level);
         const roomPlan = room.memory.roomPlan.rcl[buildableRCL];
         let siteCount = room.memory.numSites;
 
         // For each building...
         for (const key of BuildPriorities)
         {
-            if (!roomPlan.hasOwnProperty(key))
+            if (!Object.prototype.hasOwnProperty.call(roomPlan, key))
             {
                 continue;
             }
 
             // Get each position...
-            for (let i = 0; i < roomPlan[key].length; ++i)
+            for (const structure of roomPlan)
             {
-                const position = new RoomPosition(
-                    roomPlan[key][i].x, roomPlan[key][i].y, room.name);
+                const position = new RoomPosition(structure.x, structure.y, room.name);
 
+                // Check if structure or construction site already exists here.
                 // Check if structure or construction site already exists here.
                 const structures = _.filter(position.look(), (r: LookAtResult) =>
                 {
-                    if (r.type === "structure")
+                    if (r.type === "structure" && r.structure)
                     {
-                        return r.structure!.structureType === key;
+                        return r.structure.structureType === key;
                     }
-                    else if (r.type === "constructionSite")
+                    else if (r.type === "constructionSite" && r.constructionSite)
                     {
-                        return r.constructionSite!.structureType === key;
+                        return r.constructionSite.structureType === key;
                     }
                     else
                     {

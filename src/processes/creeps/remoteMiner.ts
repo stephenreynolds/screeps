@@ -1,16 +1,16 @@
-import { CreepProcess } from "./creepProcess";
-import { Utils } from "utils/utils";
-import { MoveProcess } from "./actions/move";
-import { HarvestProcess } from "./actions/harvest";
 import { BuildProcess } from "./actions/build";
-import { RepairProcess } from "./actions/repair";
+import { CreepProcess } from "./creepProcess";
 import { DeliverProcess } from "./actions/deliver";
+import { HarvestProcess } from "./actions/harvest";
+import { MoveProcess } from "./actions/move";
+import { RepairProcess } from "./actions/repair";
+import { Utils } from "utils/utils";
 
 export class RemoteMinerCreepProcess extends CreepProcess
 {
     public type = "rmcreep";
 
-    public run()
+    public run(): void
     {
         const creep = this.getCreep();
 
@@ -51,7 +51,7 @@ export class RemoteMinerCreepProcess extends CreepProcess
             }
         }
 
-        if (_.sum(creep.carry) === 0)
+        if (creep.store.getUsedCapacity() === 0)
         {
             if (!creep.pos.isNearTo(flag))
             {
@@ -85,7 +85,7 @@ export class RemoteMinerCreepProcess extends CreepProcess
             const site = creep.pos.findClosestByRange(constructionSites);
             this.fork(BuildProcess, "build-" + creep.name, this.priority - 1, {
                 creep: creep.name,
-                site: site!.id
+                site: site?.id
             });
         }
         else
@@ -100,14 +100,14 @@ export class RemoteMinerCreepProcess extends CreepProcess
                 const structure = creep.pos.findClosestByRange<Structure>(structures);
                 this.fork(RepairProcess, "repair-" + creep.name, this.priority - 1, {
                     creep: creep.name,
-                    target: structure!.id
+                    target: structure?.id
                 });
             }
             else
             {
                 this.fork(DeliverProcess, "deliver-" + creep.name, this.priority - 1, {
                     creep: creep.name,
-                    target: Game.rooms[this.metaData.deliverRoom].storage!.id,
+                    target: Game.rooms[this.metaData.deliverRoom].storage?.id,
                     resource: RESOURCE_ENERGY
                 });
             }

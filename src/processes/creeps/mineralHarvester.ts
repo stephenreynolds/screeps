@@ -6,7 +6,7 @@ export class MineralHarvesterCreepProcess extends CreepProcess
 {
     public type = "mhcreep";
 
-    public run()
+    public run(): void
     {
         const creep = this.getCreep();
 
@@ -15,7 +15,7 @@ export class MineralHarvesterCreepProcess extends CreepProcess
             return;
         }
 
-        if (_.sum(creep.carry) === 0)
+        if (creep.store.getUsedCapacity() === 0)
         {
             this.fork(MineralHarvestProcess, "mineralharvest-" + creep.name, this.priority - 1, {
                 mineral: this.metaData.mineral,
@@ -30,8 +30,8 @@ export class MineralHarvesterCreepProcess extends CreepProcess
 
         this.fork(DeliverProcess, "deliver-" + creep.name, this.priority - 1, {
             creep: creep.name,
-            resource: mineral!.mineralType,
-            target: creep.room.storage!.id
+            resource: mineral.mineralType,
+            target: creep.room.storage?.id
         });
     }
 }

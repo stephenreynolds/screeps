@@ -1,12 +1,12 @@
 import { Process } from "processes/process";
-import { Utils } from "utils/utils";
 import { RangerCreepProcess } from "processes/creeps/ranger";
+import { Utils } from "utils/utils";
 
 export class RangerManagementProcess extends Process
 {
     public type = "raman";
 
-    public run()
+    public run(): void
     {
         this.metaData.rangers = Utils.getLiveCreeps(this.metaData.rangers);
 
@@ -20,13 +20,17 @@ export class RangerManagementProcess extends Process
         const counted = _.filter(this.metaData.rangers, (creepName: string) =>
         {
             const creep = Game.creeps[creepName];
+            if (!creep.ticksToLive)
+            {
+                return false;
+            }
 
-            return (creep.ticksToLive! > 300);
+            return creep.ticksToLive > 300;
         }).length;
 
         if (_.min([count, counted]) < this.metaData.count)
         {
-            const creepName = "racreep-" + Game.time;
+            const creepName = `racreep-${Game.time}`;
 
             const spawned = Utils.spawn(
                 this.scheduler,

@@ -1,25 +1,16 @@
-const Colors = [
-    "cyan",
-    "red",
-    "green",
-    "yellow",
-    "white",
-    "purple",
-    "pink",
-    "orange"
-];
+const Colors = ["cyan", "red", "green", "yellow", "white", "purple", "pink", "orange"];
 
 export const ConsoleCommands = {
     removeConstructionSites(roomName: string, leaveProgressStarted = true, structureType?: string): string
     {
         let count = 0;
 
-        Game.rooms[roomName].find(FIND_MY_CONSTRUCTION_SITES).forEach((site) =>
+        Game.rooms[roomName].find(FIND_MY_CONSTRUCTION_SITES).forEach((site: ConstructionSite) =>
         {
-            if ((!structureType || (site as ConstructionSite).structureType === structureType) &&
-                (!leaveProgressStarted || (site as ConstructionSite).progress === 0))
+            if ((!structureType || site.structureType === structureType) &&
+                (!leaveProgressStarted || site.progress === 0))
             {
-                (site as ConstructionSite).remove();
+                site.remove();
                 count++;
             }
         });
@@ -27,7 +18,7 @@ export const ConsoleCommands = {
         return `Removed ${count} construction sites.`;
     },
 
-    rc(roomName: string, leaveProgressStarted: boolean = true, structureType?: string): string
+    rc(roomName: string, leaveProgressStarted = true, structureType?: string): string
     {
         return this.removeConstructionSites(roomName, leaveProgressStarted, structureType);
     },
@@ -43,6 +34,7 @@ export const ConsoleCommands = {
                 if (entry.split("-")[1] === roomName)
                 {
                     delete Memory.os.processTable[entry];
+                    count++;
                 }
             });
         }
@@ -100,7 +92,7 @@ export const ConsoleCommands = {
         return `Destroyed ${count} ${structureType}s.`;
     },
 
-    showCreepPrefix(roomName: string, prefix: string)
+    showCreepPrefix(roomName: string, prefix: string): void
     {
         const room = Game.rooms[roomName];
         let success = false;
@@ -199,7 +191,7 @@ export const ConsoleCommands = {
 
     help(): string
     {
-        const profilingMessage = __SCRIPT_BRANCH__!.match("dev") ?
+        const profilingMessage = /dev/.exec(__SCRIPT_BRANCH__) ?
             "PROFILER\n" +
             "\tprofiler.profile(ticks: number, functionFilter?: string)\n\t\tWill run for the given number of ticks, then will output the gather information.\n" +
             "\tprofiler.stream(ticks: number, functionFilter?: string)\n\t\tWill run for the given number of ticks, and will output the gathered information each tick.\n" +

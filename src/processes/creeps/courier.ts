@@ -1,12 +1,12 @@
-import { CreepProcess } from "./creepProcess";
 import { CollectProcess } from "./actions/collect";
+import { CreepProcess } from "./creepProcess";
 import { DeliverProcess } from "./actions/deliver";
 
 export class CourierCreepProcess extends CreepProcess
 {
     public type = "ccreep";
 
-    public run()
+    public run(): void
     {
         const creep = this.getCreep();
 
@@ -15,7 +15,7 @@ export class CourierCreepProcess extends CreepProcess
             return;
         }
 
-        if (_.sum(creep.carry) === creep.carryCapacity)
+        if (creep.store.getFreeCapacity() === 0)
         {
             this.deliverEnergy(creep);
         }
@@ -25,11 +25,11 @@ export class CourierCreepProcess extends CreepProcess
         }
     }
 
-    private collectEnergy(creep: Creep)
+    private collectEnergy(creep: Creep): void
     {
         // Prefer collecting energy from storage, fallback to containers.
         let collectTarget: Structure;
-        if (creep.room.storage && _.sum(creep.room.storage.store) > 0)
+        if (creep.room.storage && creep.room.storage.store.getUsedCapacity() > 0)
         {
             collectTarget = creep.room.storage;
         }
@@ -38,7 +38,7 @@ export class CourierCreepProcess extends CreepProcess
             const generalContainers = this.scheduler.data.roomData[this.metaData.roomName].generalContainers;
             collectTarget = creep.pos.findClosestByPath(_.filter(generalContainers, (c: StructureContainer) =>
             {
-                return _.sum(c.store) > 0;
+                return c.store.getUsedCapacity() > 0;
             })) as Structure;
         }
 
@@ -53,14 +53,14 @@ export class CourierCreepProcess extends CreepProcess
 
             return;
         }
-        else if (_.sum(creep.carry) === 0)
+        else if (creep.store.getUsedCapacity() === 0)
         {
             this.suspend = 10;
             return;
         }
     }
 
-    private deliverEnergy(creep: Creep)
+    private deliverEnergy(creep: Creep): void
     {
         /**
          * Transfer energy to spawns or extensions.

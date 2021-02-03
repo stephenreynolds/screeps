@@ -2,9 +2,9 @@ import { RCLPlan } from "./rclPlan";
 
 export class RCL1 extends RCLPlan
 {
-    protected rcl: number = 1;
+    protected rcl = 1;
 
-    public generate()
+    public generate(): void
     {
         this.init();
 
@@ -18,7 +18,7 @@ export class RCL1 extends RCLPlan
         this.room.memory.roomPlan.rcl[this.rcl] = {};
     }
 
-    private addSpawn()
+    private addSpawn(): void
     {
         this.room.memory.roomPlan.rcl[this.rcl].spawn = [this.baseSpawn.pos];
     }

@@ -30,6 +30,7 @@ module.exports = {
   },
   rules: {
     "@typescript-eslint/array-type": "error",
+    "@typescript-eslint/brace-style": ["error", "allman"],
     "@typescript-eslint/consistent-type-assertions": "error",
     "@typescript-eslint/consistent-type-definitions": "error",
     "@typescript-eslint/explicit-function-return-type": "off",
@@ -46,13 +47,14 @@ module.exports = {
     "@typescript-eslint/no-unsafe-assignment": "off",
     "@typescript-eslint/no-unsafe-call": "off",
     "@typescript-eslint/no-unsafe-member-access": "off",
-    "@typescript-eslint/no-use-before-define": ["error", { functions: false }],
+    "@typescript-eslint/no-use-before-define": ["error", {
+      functions: false
+    }],
     "@typescript-eslint/prefer-for-of": "error",
     "@typescript-eslint/restrict-template-expressions": "off",
     "@typescript-eslint/space-within-parens": ["off", "never"],
     "@typescript-eslint/unified-signatures": "error",
     "arrow-parens": ["off", "as-needed"],
-    "brace-style": "stroustrup",
     camelcase: "error",
     complexity: "off",
     "dot-notation": "error",

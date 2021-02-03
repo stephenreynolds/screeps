@@ -14,14 +14,15 @@ export class SignProcess extends Process
     public run(): void
     {
         const creep = Game.creeps[this.metaData.creep];
-        const controller = creep.room.controller;
 
-        if (!(creep && controller))
+        if (!(creep && creep.room.controller))
         {
             this.completed = true;
             this.resumeParent();
             return;
         }
+
+        const controller = creep.room.controller;
 
         if (!creep.pos.isNearTo(controller.pos))
         {

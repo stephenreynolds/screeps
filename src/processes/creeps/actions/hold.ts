@@ -9,13 +9,14 @@ export class HoldProcess extends Process
     {
         const creep = Game.creeps[this.metaData.creep];
         const flag = Game.flags[this.metaData.flag];
-        const controller = creep.room.controller;
 
-        if (!(creep && flag && controller))
+        if (!(creep && flag && creep.room.controller))
         {
             this.completed = true;
             return;
         }
+
+        const controller = creep.room.controller;
 
         if (creep.room.name === flag.pos.roomName)
         {

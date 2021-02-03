@@ -1,3 +1,4 @@
+/* eslint-disable */
 "use strict";
 
 import clear from 'rollup-plugin-clear';

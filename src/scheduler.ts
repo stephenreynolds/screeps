@@ -52,12 +52,12 @@ export class Scheduler
         this.addProcess(InitProcess, "init", 99);
     }
 
-    public addProcess(processClass: any, name: string, priority: number, meta = {}, parent?: string | undefined): void
+    public addProcess(processClass: any, name: string, priority: number, metaData = {}, parent?: string | undefined): void
     {
         const process = new processClass({
             name,
             priority,
-            meta,
+            metaData,
             suspend: false,
             parent
         }, this);
@@ -66,11 +66,11 @@ export class Scheduler
         this.toRunProcesses = [];
     }
 
-    public addProcessIfNotExist(processClass: any, name: string, priority: number, meta = {}): void
+    public addProcessIfNotExist(processClass: any, name: string, priority: number, metaData = {}): void
     {
         if (!this.hasProcess(name))
         {
-            this.addProcess(processClass, name, priority, meta);
+            this.addProcess(processClass, name, priority, metaData);
         }
     }
 

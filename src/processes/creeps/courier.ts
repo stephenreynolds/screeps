@@ -27,6 +27,13 @@ export class CourierCreepProcess extends CreepProcess
 
     private collectEnergy(creep: Creep): void
     {
+        const deliverTarget = this.findDeliverTarget(creep);
+        if (!deliverTarget)
+        {
+            this.suspend = 10;
+            return;
+        }
+
         // Prefer collecting energy from storage, fallback to containers.
         let collectTarget: Structure;
         if (creep.room.storage && creep.room.storage.store.getUsedCapacity() > 0)
@@ -40,6 +47,12 @@ export class CourierCreepProcess extends CreepProcess
             {
                 return c.store.getUsedCapacity() > 0;
             })) as Structure;
+        }
+
+        if (collectTarget.id === deliverTarget.id)
+        {
+            this.suspend = 10;
+            return;
         }
 
         // Collect from target if one exists, suspend if not.
@@ -61,6 +74,23 @@ export class CourierCreepProcess extends CreepProcess
     }
 
     private deliverEnergy(creep: Creep): void
+    {
+        const target = this.findDeliverTarget(creep);
+        if (target)
+        {
+            this.fork(DeliverProcess, "deliver-" + creep.name, this.priority - 1, {
+                creep: creep.name,
+                target: target.id,
+                resource: RESOURCE_ENERGY
+            });
+        }
+        else
+        {
+            this.suspend = 10;
+        }
+    }
+
+    private findDeliverTarget(creep: Creep): DeliveryTarget | null
     {
         /**
          * Transfer energy to spawns or extensions.
@@ -109,19 +139,6 @@ export class CourierCreepProcess extends CreepProcess
             });
         }
 
-        const target = creep.pos.findClosestByPath(deliverTargets) as Structure;
-
-        if (target)
-        {
-            this.fork(DeliverProcess, "deliver-" + creep.name, this.priority - 1, {
-                creep: creep.name,
-                target: target.id,
-                resource: RESOURCE_ENERGY
-            });
-        }
-        else
-        {
-            this.suspend = 10;
-        }
+        return creep.pos.findClosestByPath(deliverTargets);
     }
 }

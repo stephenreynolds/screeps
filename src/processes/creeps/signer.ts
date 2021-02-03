@@ -1,5 +1,4 @@
 import { CreepProcess } from "./creepProcess";
-import { MoveProcess } from "./actions/move";
 import { SignProcess } from "./actions/sign";
 
 export class SignerCreepProcess extends CreepProcess
@@ -21,15 +20,6 @@ export class SignerCreepProcess extends CreepProcess
                     creep: creep.name,
                     text: this.metaData.text
                 });
-            }
-            else if (!creep.pos.isEqualTo(this.roomData().spawns[0].pos))
-            {
-                this.scheduler.addProcess(MoveProcess, creep.name + "-die-move", this.priority + 1, {
-                    creep: creep.name,
-                    pos: this.roomData().spawns[0].pos,
-                    range: 0
-                });
-                this.suspend = creep.name + "-sign-move";
             }
             else
             {

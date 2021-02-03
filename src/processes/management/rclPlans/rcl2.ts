@@ -11,9 +11,9 @@ export class RCL2 extends RCLPlan
         const baseToController = PathFinder.search(
             this.baseSpawn.pos, { pos: this.controller.pos, range: 3 }).path;
 
-        this.addControllerRoads(baseToController);
         const generalContainerPos = this.addGeneralContainer(baseToController);
         this.addSourceContainer(generalContainerPos);
+        this.addControllerRoads(baseToController);
         this.addBaseRoads();
         this.addExtensions();
         this.addExtensionRoads();

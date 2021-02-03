@@ -2,11 +2,11 @@ import { CourierCreepProcess } from "processes/creeps/courier";
 import { HarvesterCreepProcess } from "processes/creeps/harvester";
 import { MinerCreepProcess } from "processes/creeps/miner";
 import { Process } from "processes/process";
+import { SignerCreepProcess } from "processes/creeps/signer";
 import { StorageManagerCreepProcess } from "processes/creeps/storageManager";
 import { TransporterCreepProcess } from "processes/creeps/transporter";
 import { UpgraderCreepProcess } from "processes/creeps/upgrader";
 import { Utils } from "utils/utils";
-import { SignerCreepProcess } from "processes/creeps/signer";
 
 interface EnergyManagementMetaData
 {

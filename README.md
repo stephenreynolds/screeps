@@ -1,8 +1,8 @@
 ![](/assets/kuminet-logo.png)
 
-[![Build Status](https://travis-ci.org/stephenreynolds/kuminet.svg?branch=master)](https://travis-ci.org/stephenreynolds/kuminet)
+[![Build Status](https://travis-ci.com/stephenreynolds/screeps.svg?branch=master)](https://travis-ci.com/stephenreynolds/screeps)
 &nbsp;&nbsp;
-[![Maintainability](https://api.codeclimate.com/v1/badges/72ace084bfdc9b5f1604/maintainability)](https://codeclimate.com/github/stephenreynolds/kuminet/maintainability)
+[![Maintainability](https://api.codeclimate.com/v1/badges/72ace084bfdc9b5f1604/maintainability)](https://codeclimate.com/github/stephenreynolds/screeps/maintainability)
 
 # kumikill's Screeps AI
 

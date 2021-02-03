@@ -12,6 +12,9 @@
   "bugs": {
     "url": "https://github.com/stephenreynolds/kuminet/issues"
   },
+  "engines": {
+    "node": "10.x || 12.x"
+  },
   "main": "index.js",
   "//": "If you add or change the names of destinations in screeps.json, make sure you update these scripts to reflect the changes",
   "scripts": {

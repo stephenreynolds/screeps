@@ -16,6 +16,7 @@ export class RoomDataProcess extends Process
     public type = "roomdata";
 
     public metaData!: RoomDataMeta;
+
     public fields = [
         "constructionSites", "containers", "extensions", "generalContainers", "labs",
         "links", "myStructures", "ramparts", "roads", "spawns", "sources", "sourceContainers", "towers"

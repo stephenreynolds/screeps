@@ -1,12 +1,12 @@
 "use strict";
 
-import clear from "rollup-plugin-clear";
-import resolve from "rollup-plugin-node-resolve";
-import commonjs from "rollup-plugin-commonjs";
-import typescript from "rollup-plugin-typescript2";
-import replace from "rollup-plugin-replace";
-import screeps from "rollup-plugin-screeps";
+import clear from 'rollup-plugin-clear';
+import commonjs from '@rollup/plugin-commonjs';
 import git from "git-rev-sync";
+import replace from "rollup-plugin-replace";
+import resolve from '@rollup/plugin-node-resolve';
+import screeps from 'rollup-plugin-screeps';
+import typescript from 'rollup-plugin-typescript2';
 
 let cfg;
 const dest = process.env.DEST;

@@ -29,7 +29,7 @@ export const ConsoleCommands = {
 
         if (roomName)
         {
-            _.forEach(Memory.os.processTable, (entry: any) =>
+            _.forEach(Memory.os.processTable, (entry: string) =>
             {
                 if (entry.split("-")[1] === roomName)
                 {

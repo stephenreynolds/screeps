@@ -11,14 +11,15 @@ export class UpgradeProcess extends Process
     public run(): void
     {
         const creep = Game.creeps[this.metaData.creep];
-        const controller = creep.room.controller;
 
-        if (!creep || creep.store.getUsedCapacity() === 0 || !controller)
+        if (!creep || creep.store.getUsedCapacity() === 0 || !creep.room.controller)
         {
             this.completed = true;
             this.resumeParent();
             return;
         }
+
+        const controller = creep.room.controller;
 
         if (!creep.pos.inRangeTo(controller, 3))
         {

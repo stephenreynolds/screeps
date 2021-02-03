@@ -30,6 +30,8 @@ import { RepairProcess } from "processes/creeps/actions/repair";
 import { RepairerCreepProcess } from "processes/creeps/repairer";
 import { RoomDataProcess } from "processes/system/roomData";
 import { RoomLayoutManagementProcess } from "processes/management/roomLayoutManagement";
+import { SignProcess } from "./creeps/actions/sign";
+import { SignerCreepProcess } from "./creeps/signer";
 import { SpawnRemoteBuilderProcess } from "processes/empire/spawnRemoteBuilder";
 import { StorageManagerCreepProcess } from "processes/creeps/storageManager";
 import { StructureManagementProcess } from "processes/management/structureManagement";
@@ -73,6 +75,8 @@ export const ProcessTypes = {
     rmman: RemoteMiningManagementProcess,
     roomdata: RoomDataProcess,
     roomlayout: RoomLayoutManagementProcess,
+    screep: SignerCreepProcess,
+    sign: SignProcess,
     sman: StructureManagementProcess,
     smcreep: StorageManagerCreepProcess,
     spawnRemoteBuilder: SpawnRemoteBuilderProcess,

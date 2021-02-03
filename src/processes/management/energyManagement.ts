@@ -6,6 +6,7 @@ import { StorageManagerCreepProcess } from "processes/creeps/storageManager";
 import { TransporterCreepProcess } from "processes/creeps/transporter";
 import { UpgraderCreepProcess } from "processes/creeps/upgrader";
 import { Utils } from "utils/utils";
+import { SignerCreepProcess } from "processes/creeps/signer";
 
 interface EnergyManagementMetaData
 {
@@ -14,6 +15,7 @@ interface EnergyManagementMetaData
     harvestCreeps: { [source: string]: string[] }
     courierCreeps: string[]
     upgradeCreeps: string[]
+    signCreep: string | undefined
     storageCreep: string | undefined
     transportCreeps: { [container: string]: string }
 }
@@ -36,6 +38,12 @@ export class EnergyManagementProcess extends Process
         // Harvsters: harvest energy and transfer to structures when no coursiers or transporters.
         const sources = this.scheduler.data.roomData[this.metaData.roomName].sources;
         if (this.harvesters(sources))
+        {
+            return;
+        }
+
+        // Signer: sign the controller if it isn't.
+        if (this.signer())
         {
             return;
         }
@@ -329,6 +337,40 @@ export class EnergyManagementProcess extends Process
         }
     }
 
+    private signer(): boolean
+    {
+        const controller = Game.rooms[this.metaData.roomName].controller;
+        if (controller && controller.my && controller.owner &&
+            (!controller.sign || controller.sign.username !== controller.owner.username))
+        {
+            this.metaData.signCreep = Utils.getLiveCreeps([this.metaData.signCreep as string])[0];
+            if (!this.metaData.signCreep)
+            {
+                const creepName = `eman-s-${this.metaData.roomName}-${Game.time}`;
+                const spawnRoom = this.metaData.roomName;
+                const spawned = Utils.spawn(
+                    this.scheduler,
+                    spawnRoom,
+                    "signer",
+                    creepName
+                );
+
+                if (spawned)
+                {
+                    this.metaData.signCreep = creepName;
+                    this.scheduler.addProcessIfNotExist(SignerCreepProcess, `screep-${creepName}`, 49, {
+                        creep: creepName,
+                        text: "💪🦊💪"
+                    });
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     private initMetaData(): void
     {
         if (!this.metaData.miningCreeps)
@@ -359,6 +401,11 @@ export class EnergyManagementProcess extends Process
         if (!this.metaData.storageCreep)
         {
             this.metaData.storageCreep = undefined;
+        }
+
+        if (!this.metaData.signCreep)
+        {
+            this.metaData.signCreep = undefined;
         }
     }
 }

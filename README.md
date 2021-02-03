@@ -6,7 +6,7 @@
 
 # kumikill's Screeps AI
 
-> Uses [Screeps Typescript Starter v3.0](https://github.com/screepers/screeps-typescript-starter), with tests removed.
+> Uses [Screeps Typescript Starter](https://github.com/screepers/screeps-typescript-starter), with tests removed.
 
 # Setup
 

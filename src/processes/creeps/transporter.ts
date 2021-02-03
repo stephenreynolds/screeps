@@ -101,6 +101,7 @@ export class TransporterCreepProcess extends CreepProcess
         if (!target)
         {
             this.suspend = 10;
+            return;
         }
 
         this.fork(DeliverProcess, "deliver-" + creep.name, this.priority - 1, {

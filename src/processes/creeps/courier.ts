@@ -49,15 +49,15 @@ export class CourierCreepProcess extends CreepProcess
             })) as Structure;
         }
 
-        if (collectTarget.id === deliverTarget.id)
-        {
-            this.suspend = 10;
-            return;
-        }
-
         // Collect from target if one exists, suspend if not.
         if (collectTarget)
         {
+            if (collectTarget.id === deliverTarget.id)
+            {
+                this.suspend = 10;
+                return;
+            }
+
             this.fork(CollectProcess, "collect-" + creep.name, this.priority - 1, {
                 target: collectTarget.id,
                 creep: creep.name,

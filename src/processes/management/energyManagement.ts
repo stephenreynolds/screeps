@@ -220,13 +220,11 @@ export class EnergyManagementProcess extends Process
     }
 
     /**
-     * Create miners.
+     * Create couriers.
      * @returns Returns whether energy management should return early.
      */
     private couriers(generalContainers: StructureContainer[]): boolean
     {
-        let ret = false;
-
         this.metaData.courierCreeps = Utils.getLiveCreeps(this.metaData.courierCreeps);
         if (this.metaData.courierCreeps.length < 1)
         {
@@ -258,11 +256,11 @@ export class EnergyManagementProcess extends Process
                     });
                 }
 
-                ret = true;
+                return true;
             }
         }
 
-        return ret;
+        return false;
     }
 
     /**

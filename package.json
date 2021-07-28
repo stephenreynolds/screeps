@@ -14,7 +14,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "lint": "tslint -p tsconfig.json \"src/**/*.ts\"",
+    "lint": "eslint \"src/**/*.ts\"",
     "build": "rollup -c",
     "push-main": "rollup -c --environment DEST:main",
     "push-sim": "rollup -c --environment DEST:sim",

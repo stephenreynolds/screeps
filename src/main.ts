@@ -12,41 +12,36 @@ setupProfiling();
 
 export const loop = ErrorMapper.wrapLoop(() => enableProfiling ? profiler.wrap(() => main()) : main());
 
-function main()
-{
-    global.cc = ConsoleCommands;
-    global.cc.profiler = Game.profiler;
+function main() {
+  global.cc = ConsoleCommands;
+  global.cc.profiler = Game.profiler;
 
-    const scheduler = new Scheduler();
-    scheduler.run();
+  const scheduler = new Scheduler();
+  scheduler.run();
 
-    getStats();
+  getStats();
 }
 
-function getStats()
-{
-    Memory.stats["cpu.getUsed"] = Game.cpu.getUsed();
-    Memory.stats["cpu.limit"] = Game.cpu.limit;
-    Memory.stats["cpu.bucket"] = Game.cpu.bucket;
-    Memory.stats["gcl.progress"] = Game.gcl.progress;
-    Memory.stats["gcl.progressTotal"] = Game.gcl.progressTotal;
-    Memory.stats["gcl.level"] = Game.gcl.level;
+function getStats() {
+  Memory.stats["cpu.getUsed"] = Game.cpu.getUsed();
+  Memory.stats["cpu.limit"] = Game.cpu.limit;
+  Memory.stats["cpu.bucket"] = Game.cpu.bucket;
+  Memory.stats["gcl.progress"] = Game.gcl.progress;
+  Memory.stats["gcl.progressTotal"] = Game.gcl.progressTotal;
+  Memory.stats["gcl.level"] = Game.gcl.level;
 }
 
-function setupProfiling()
-{
-    if (enableProfiling)
-    {
-        profiler.enable();
+function setupProfiling() {
+  if (enableProfiling) {
+    profiler.enable();
 
-        profiler.registerClass(RoomPathFinder, "RoomPathFinder");
-        profiler.registerObject(CreepBuilder, "CreepBuilder");
-        profiler.registerObject(Utils, "Utils");
+    profiler.registerClass(RoomPathFinder, "RoomPathFinder");
+    profiler.registerObject(CreepBuilder, "CreepBuilder");
+    profiler.registerObject(Utils, "Utils");
 
-        for (const processType in ProcessTypes)
-        {
-            const type = ProcessTypes[processType];
-            profiler.registerClass(type, type.name);
-        }
+    for (const processType in ProcessTypes) {
+      const type = ProcessTypes[processType];
+      profiler.registerClass(type, type.name);
     }
+  }
 }

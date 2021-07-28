@@ -5,204 +5,170 @@ import { BuildProcess } from "./actions/build";
 import { CollectProcess } from "./actions/collect";
 import { DeliverProcess } from "./actions/deliver";
 import { RepairProcess } from "./actions/repair";
+import _ from "lodash";
 
-export class BuilderCreepProcess extends CreepProcess
-{
-    public type = "bcreep";
+export class BuilderCreepProcess extends CreepProcess {
+  public type = "bcreep";
 
-    public run()
-    {
-        const creep = this.getCreep();
+  public run() {
+    const creep = this.getCreep();
 
-        if (!creep)
-        {
-            return;
-        }
-
-        if (_.sum(creep.carry) === 0)
-        {
-            this.collect(creep);
-        }
-
-        // If the creep has been refilled
-        const sites = this.scheduler.data.roomData[creep.room.name].constructionSites;
-        const buildNow = this.buildNow(sites);
-        const target = creep.pos.findClosestByRange(buildNow);
-
-        if (target)
-        {
-            this.fork(BuildProcess, "build-" + creep.name, this.priority - 1, {
-                creep: creep.name,
-                site: target.id
-            });
-        }
-        else
-        {
-            const repairTarget = creep.pos.findClosestByRange<Structure>(
-                _.filter(this.scheduler.data.roomData[creep.room.name].myStructures, (s: Structure) =>
-                {
-                    if (s.structureType === STRUCTURE_RAMPART)
-                    {
-                        return s.hits < Utils.rampartHealth(this.scheduler, creep.room.name);
-                    }
-                    else
-                    {
-                        return s.hits < s.hitsMax;
-                    }
-                }));
-
-            if (repairTarget)
-            {
-                this.fork(RepairProcess, "repair-" + creep.name, this.priority - 1, {
-                    creep: creep.name,
-                    target: repairTarget.id
-                });
-            }
-            else
-            {
-                this.deliver(creep);
-            }
-        }
+    if (!creep) {
+      return;
     }
 
-    private collect(creep: Creep)
-    {
-        const withdrawTarget = Utils.withdrawTarget(creep, this);
-
-        if (withdrawTarget)
-        {
-            this.fork(CollectProcess, "collect-" + creep.name, this.priority - 1, {
-                creep: creep.name,
-                target: withdrawTarget.id,
-                resource: RESOURCE_ENERGY
-            });
-
-            return;
-        }
-        else
-        {
-            this.suspend = 10;
-            return;
-        }
+    if (creep.store.getUsedCapacity() === 0) {
+      this.collect(creep);
     }
 
-    private buildNow(sites: ConstructionSite[])
-    {
-        const towerSites = _.filter(sites, (site: ConstructionSite) =>
-        {
-            return (site.structureType === STRUCTURE_TOWER);
+    // If the creep has been refilled
+    const sites = this.scheduler.data.roomData[creep.room.name].constructionSites;
+    const buildNow = this.buildNow(sites);
+    const target = creep.pos.findClosestByRange(buildNow);
+
+    if (target) {
+      this.fork(BuildProcess, "build-" + creep.name, this.priority - 1, {
+        creep: creep.name,
+        site: target.id
+      });
+    }
+    else {
+      const repairTarget = creep.pos.findClosestByRange<Structure>(
+        _.filter(this.scheduler.data.roomData[creep.room.name].myStructures, (s: Structure) => {
+          if (s.structureType === STRUCTURE_RAMPART) {
+            return s.hits < Utils.rampartHealth(this.scheduler, creep.room.name);
+          }
+          else {
+            return s.hits < s.hitsMax;
+          }
+        }));
+
+      if (repairTarget) {
+        this.fork(RepairProcess, "repair-" + creep.name, this.priority - 1, {
+          creep: creep.name,
+          target: repairTarget.id
         });
+      }
+      else {
+        this.deliver(creep);
+      }
+    }
+  }
 
-        const extensionSites = _.filter(sites, (site: ConstructionSite) =>
-        {
-            return (site.structureType === STRUCTURE_EXTENSION);
-        });
+  private collect(creep: Creep) {
+    const withdrawTarget = Utils.withdrawTarget(creep, this);
 
-        const containerSites = _.filter(sites, (site: ConstructionSite) =>
-        {
-            return (site.structureType === STRUCTURE_CONTAINER);
-        });
+    if (withdrawTarget) {
+      this.fork(CollectProcess, "collect-" + creep.name, this.priority - 1, {
+        creep: creep.name,
+        target: withdrawTarget.id,
+        resource: RESOURCE_ENERGY
+      });
 
-        const rampartSites = _.filter(sites, (site: ConstructionSite) =>
-        {
-            return (site.structureType === STRUCTURE_RAMPART);
-        });
+      return;
+    }
+    else {
+      this.suspend = 10;
+      return;
+    }
+  }
 
-        const normalSites = _.filter(sites, (site: ConstructionSite) =>
-        {
-            return !(
-                site.structureType === STRUCTURE_TOWER
-                ||
-                site.structureType === STRUCTURE_EXTENSION
-                ||
-                site.structureType === STRUCTURE_RAMPART
-                ||
-                site.structureType === STRUCTURE_CONTAINER
-            );
-        });
+  private buildNow(sites: ConstructionSite[]) {
+    const towerSites = _.filter(sites, (site: ConstructionSite) => {
+      return (site.structureType === STRUCTURE_TOWER);
+    });
 
-        let buildNow: ConstructionSite[];
+    const extensionSites = _.filter(sites, (site: ConstructionSite) => {
+      return (site.structureType === STRUCTURE_EXTENSION);
+    });
 
-        if (towerSites.length > 0)
-        {
-            buildNow = towerSites;
+    const containerSites = _.filter(sites, (site: ConstructionSite) => {
+      return (site.structureType === STRUCTURE_CONTAINER);
+    });
+
+    const rampartSites = _.filter(sites, (site: ConstructionSite) => {
+      return (site.structureType === STRUCTURE_RAMPART);
+    });
+
+    const normalSites = _.filter(sites, (site: ConstructionSite) => {
+      return !(
+        site.structureType === STRUCTURE_TOWER
+        ||
+        site.structureType === STRUCTURE_EXTENSION
+        ||
+        site.structureType === STRUCTURE_RAMPART
+        ||
+        site.structureType === STRUCTURE_CONTAINER
+      );
+    });
+
+    let buildNow: ConstructionSite[];
+
+    if (towerSites.length > 0) {
+      buildNow = towerSites;
+    }
+    else {
+      if (extensionSites.length > 0) {
+        buildNow = extensionSites;
+      }
+      else {
+        if (containerSites.length > 0) {
+          buildNow = containerSites;
         }
-        else
-        {
-            if (extensionSites.length > 0)
-            {
-                buildNow = extensionSites;
-            }
-            else
-            {
-                if (containerSites.length > 0)
-                {
-                    buildNow = containerSites;
-                }
-                else
-                {
-                    if (rampartSites.length > 0)
-                    {
-                        buildNow = rampartSites;
-                    }
-                    else
-                    {
-                        buildNow = normalSites;
-                    }
-                }
-            }
+        else {
+          if (rampartSites.length > 0) {
+            buildNow = rampartSites;
+          }
+          else {
+            buildNow = normalSites;
+          }
         }
-
-        return buildNow;
+      }
     }
 
-    private deliver(creep: Creep)
-    {
-        let deliverTargets;
+    return buildNow;
+  }
 
-        const targets = [].concat(
-            this.scheduler.data.roomData[creep.room.name].spawns as never[],
-            this.scheduler.data.roomData[creep.room.name].extensions as never[]
-        );
+  private deliver(creep: Creep) {
+    let deliverTargets;
 
-        deliverTargets = _.filter(targets, (t: DeliveryTarget) =>
-        {
-            return (t.energy < t.energyCapacity);
-        });
+    const targets = [].concat(
+      this.scheduler.data.roomData[creep.room.name].spawns as never[],
+      this.scheduler.data.roomData[creep.room.name].extensions as never[]
+    );
 
-        if (deliverTargets.length === 0)
-        {
-            const targs = [].concat(
-                this.scheduler.data.roomData[creep.room.name].towers as never[]
-            );
+    deliverTargets = _.filter(targets, (t: DeliveryTarget) => {
+      return (t.energy < t.energyCapacity);
+    });
 
-            deliverTargets = _.filter(targs, (t: DeliveryTarget) =>
-            {
-                return t.energy < t.energyCapacity;
-            });
-        }
+    if (deliverTargets.length === 0) {
+      const targs = [].concat(
+        this.scheduler.data.roomData[creep.room.name].towers as never[]
+      );
 
-        if (creep.room.storage && deliverTargets.length === 0)
-        {
-            const targs = [].concat(
-                [creep.room.storage] as never[]
-            );
-
-            deliverTargets = _.filter(targs, (t: DeliveryTarget) =>
-            {
-                return (_.sum(t.store) < t.storeCapacity);
-            });
-        }
-
-        const deliverTarget = creep.pos.findClosestByPath(deliverTargets) as Structure;
-
-        if (deliverTarget)
-        {
-            this.fork(DeliverProcess, creep.name + "-deliver", this.priority, {
-                creep: creep.name,
-                target: deliverTarget.id,
-                resource: RESOURCE_ENERGY
-            });
-        }
+      deliverTargets = _.filter(targs, (t: DeliveryTarget) => {
+        return t.energy < t.energyCapacity;
+      });
     }
+
+    if (creep.room.storage && deliverTargets.length === 0) {
+      const targs = [].concat(
+        [creep.room.storage] as never[]
+      );
+
+      deliverTargets = _.filter(targs, (t: DeliveryTarget) => {
+        return (_.sum(t.store) < t.storeCapacity);
+      });
+    }
+
+    const deliverTarget = creep.pos.findClosestByPath(deliverTargets) as Structure;
+
+    if (deliverTarget) {
+      this.fork(DeliverProcess, creep.name + "-deliver", this.priority, {
+        creep: creep.name,
+        target: deliverTarget.id,
+        resource: RESOURCE_ENERGY
+      });
+    }
+  }
 }

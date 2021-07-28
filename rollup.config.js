@@ -28,7 +28,7 @@ export default {
         clear({
             targets: ["dist"]
         }),
-        resolve(),
+        resolve({ rootDir: "src" }),
         commonjs(),
         replace({
             __REVISION__: JSON.stringify(git.short()),

@@ -1,4 +1,4 @@
-import {ErrorMapper} from "./utils/errorMapper";
+import { ErrorMapper } from "./utils/errorMapper";
 
 export const loop = ErrorMapper.wrapLoop(() => {
   // Delete memory of missing creeps

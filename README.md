@@ -1,4 +1,4 @@
-[![experimental](https://github.com/stephenreynolds/screeps/actions/workflows/experimental.yml/badge.svg?branch=experimental)](https://github.com/stephenreynolds/screeps/actions/workflows/experimental.yml)
+[![experimental](https://github.com/stephenreynolds/screeps/actions/workflows/experimental.yml/badge.svg)](https://github.com/stephenreynolds/screeps/actions/workflows/experimental.yml)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/2f69c97361624ee382e3d30913f51931)](https://www.codacy.com/gh/stephenreynolds/screeps/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=stephenreynolds/screeps&amp;utm_campaign=Badge_Grade)
 
 ![](/assets/kuminet-logo.png)

@@ -7,6 +7,6 @@ declare const __SCRIPT_BRANCH__: string;
 
 declare namespace NodeJS {
   interface Global {
-    Memory: Memory
+    Memory: Memory;
   }
 }

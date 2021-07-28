@@ -7,11 +7,11 @@
 
 > Uses [Screeps Typescript Starter](https://github.com/screepers/screeps-typescript-starter), with tests removed.
 
-# Setup
+## Setup
 
 Follow the instructions in the [Screeps Typescript Starter readme](https://github.com/screepers/screeps-typescript-starter) to download the necessary files. You will need to create your own screeps.json file from the sample given there.
 
-# Compiling and Deploying
+## Compiling and Deploying
 
 To build and deploy to a server, run `npm run push-DESTINATION` to push to DESTINATION. Current destinations are main, pserver, and sim.
 

@@ -1,0 +1,37 @@
+name: experimental
+
+on:
+  push:
+    branches: [ experimental ]
+  pull_request:
+    branches: [ experimental ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Cache
+        uses: actions/cache@v2.1.5
+        with:
+          # A list of files, directories, and wildcard patterns to cache and restore
+          path: ~/.npm
+          # An explicit key for restoring and saving the cache
+          key: ${{ runner.OS }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
+          # An ordered list of keys to use for restoring the cache if no cache hit occurred for key
+          restore-keys: ${{ runner.OS }}-npm-cache-
+      - name: Set up Node.js environment
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: '12.x'
+      - name: Install dependencies
+        run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Build
+        run: npm run build
+      - name: Test
+        run: npm test
